@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
 <html lang="kr">
   <head>
@@ -40,62 +41,31 @@
         
         <!-- 본문 영역 -->
         <div class="main-panel">
-<!-- 			<h1>사원 등록</h1> -->
 		
-		<!-- 사원 등록 table -->	
+		<!-- 사원 정보 table -->	
         <div class="col-12 grid-margin">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">사원 상세정보</h4>
-              <form action="#" class="form-sample">
-                <p class="card-description">employee regist<br>관리자일땐 비밀번호 제외 모든정보 수정가능, 사원 본인은
-                	연락처, 사진이미지, 비밀번호만 변경 가능하게 구현</p>
-       			<div class="nav-profile-image">
-         		 <img src="${pageContext.request.contextPath }/resources/assets/images/roopy.jpg" alt="profile" width="100" height="100" style="margin-bottom: 40px;"/>
-         		 <!--change to offline or busy as needed-->
-       			</div>
+              <h4 class="card-title">사원 정보</h4>
+              <form action="RegistPro.hr" method="post" enctype="multipart/form-data" class="form-sample">
+                <p class="card-description">employee information</p>
+	              <div class="col-sm-4 stretch-card grid-margin" style="margin:0 auto;">
+	                <div class="card_photo">
+	                  <div class="card-body p-0">
+	                  <img src="${pageContext.request.contextPath }/resources/upload/${emp.photo}" alt="image"/>
+	                  </div>
+	                  <div class="card-body px-3 text-dark">
+	                    <h5 class="font-weight-semibold">${emp.emp_num }</h5>
+	                  </div>
+	                </div>
+	              </div>
+	            <hr>  
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">사원명</label>
+                     <label class="col-sm-3 col-form-label">사원명</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="김루피"/>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">사원코드</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="2121312"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">비밀번호</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="본인일때만 보이게 하기"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">새 비밀번호</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="본인일때만 보이게 하기"/>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">새 비밀번호 확인</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="본인일때만 보이게 하기"/>
+                        <input type="text" name="emp_name" class="form-control" value="${emp.emp_name }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -105,7 +75,7 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">부서코드</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" />
+                      	<input type="text" name="dept_cd" class="form-control" value="${emp.dept_cd }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -113,7 +83,7 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">직급코드</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" />
+                      	<input type="text" name="grade_cd" class="form-control" value="${emp.grade_cd }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -123,7 +93,7 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">연락처<br>(개인)</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" />
+                        <input type="text" name="emp_tel" class="form-control" value="${emp.emp_tel }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -131,71 +101,19 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">연락처<br>(사무실)</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" />
+                         <input type="text" name="emp_dtel" class="form-control" value="${emp.emp_dtel }" readonly/>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">성별</label>
-                      <div class="col-sm-9">
-                        <select class="form-control">
-                          <option>Male</option>
-                          <option>Female</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">생일</label>
-                      <div class="col-sm-9">
-                        <input class="form-control" placeholder="yyyy/mm/dd" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<!--                 <div class="row"> -->
-<!--                   <div class="col-md-6"> -->
-<!--                     <div class="form-group row"> -->
-<!--                       <label class="col-sm-3 col-form-label">Category</label> -->
-<!--                       <div class="col-sm-9"> -->
-<!--                         <select class="form-control"> -->
-<!--                           <option>Category1</option> -->
-<!--                           <option>Category2</option> -->
-<!--                           <option>Category3</option> -->
-<!--                           <option>Category4</option> -->
-<!--                         </select> -->
-<!--                       </div> -->
-<!--                     </div> -->
-<!--                   </div> -->
-<!--                   <div class="col-md-6"> -->
-<!--                     <div class="form-group row"> -->
-<!--                       <label class="col-sm-3 col-form-label">Membership</label> -->
-<!--                       <div class="col-sm-4"> -->
-<!--                         <div class="form-check"> -->
-<!--                           <label class="form-check-label"> -->
-				<!-- 혹시 radio 버튼 필요할까봐 주석처리 -->
-<!--                             <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked /> Free </label> -->
-<!--                         </div> -->
-<!--                       </div> -->
-<!--                       <div class="col-sm-5"> -->
-<!--                         <div class="form-check"> -->
-<!--                           <label class="form-check-label"> -->
-<!--                             <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2" /> Professional </label> -->
-<!--                         </div> -->
-<!--                       </div> -->
-<!--                     </div> -->
-<!--                   </div> -->
-<!--                 </div> -->
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">이메일</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="추후 자동선택 가능하게 수정"/>
+                      	<span class="input-group-append">
+	                        <input type="text" name="emp_email" class="form-control file-upload-info" value="${emp.emp_email }" readonly/>
+                     	</span>
                       </div>
                     </div>
                   </div>
@@ -203,25 +121,20 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">우편번호</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="api사용하여 자동입력"/>
+                    	<span class="input-group-append">
+                       		<input type="text" name="emp_post_no" class="form-control file-upload-info" value="${emp.emp_post_no }" id="sample6_postcode" readonly>
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- 주소, 상세주소를 따로 입력받기 위해 속성명을 emp_addr1, emp_addr2로 나눔-->    
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">주소</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="api사용하여 자동입력"/>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">상세주소</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" />
+						<input type="text" name="emp_addr" class="form-control" value="${emp.emp_addr }" id="sample6_postcode"readonly><br>
                       </div>
                     </div>
                   </div>
@@ -231,7 +144,7 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">입사일</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
+                        <input type="date" name="hire_date" class="form-control" value="${emp.hire_date }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -240,11 +153,7 @@
                       <label class="col-sm-3 col-form-label">재직여부</label>
                       <!-- 재직 코드 컬럼에서 연결, 목록에서 재직(1), 휴직(2), 퇴사(3) 선택 -->
                       <div class="col-sm-9">
-                        <select class="form-control">
-                          <option>재직</option>
-                          <option>휴직</option>
-                          <option>퇴사</option>
-                        </select>
+                       <input type="text" name="work_cd" class="form-control" value="${emp.work_cd }" readonly/>
                       </div>
                     </div>
                   </div>
@@ -253,40 +162,22 @@
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">권한</label>
-                      <div class="col-sm-9">
-                        <select class="form-control">
-                          <option>권한선택</option>
-                          <option>사원조회</option>
-                          <option>사원관리</option>
-                          <option>재고조회</option>
-                          <option>재고관리</option>
-                        </select>
+                      	<div class="col-sm-9">
+                      		<input type="text" name="priv_cd" class="form-control" value="${emp.priv_cd }" readonly/>
+                     	</div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                     <label class="col-sm-3 col-form-label">사진 업로드</label>
-                      <input type="file" name="img[]" class="file-upload-default" />
-                      <div class="col-sm-9">
-                        <span class="input-group-append">
-                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" />
-                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                        </span>
-                      </div>
-                    </div>
-                   </div>
                   </div>
                   <div class="template-demo" style="text-align: right;">
-                  <button type="submit" class="btn btn-primary mr-2">수정</button>
-                  <button class="btn btn-light">취소</button>
+<!-- 	                  <button type="submit" class="btn btn-primary mr-2">수정</button> -->
+	                  <input type="button" class="btn btn-light" value="목록" onclick="history.back()">
                   </div>
-                 </div>
-                </div>
+              	</form>
                </div>
-              </form>
+              </div>
              </div>
             </div>
+           </div>
           </div>
         
 		<!-- 사원 등록 table -->	
