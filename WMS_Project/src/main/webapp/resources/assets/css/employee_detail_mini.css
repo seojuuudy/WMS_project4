@@ -1,0 +1,6 @@
+@charset "UTF-8";
+.main-panel {
+	width: 300px;
+	height: 400px;
+	writing-mode: horizontal-tb;
+}

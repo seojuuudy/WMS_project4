@@ -2,6 +2,8 @@ package com.itwillbs.wms4.vo;
 
 import java.sql.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class EmployeesVO {
 	
 //	CREATE TABLE employees(
@@ -34,18 +36,22 @@ public class EmployeesVO {
 	private String emp_passwd;
 	private String emp_post_no;
 	private String emp_addr;
-	private Date emp_date;
+	private String emp_addr1;
+	private String emp_addr2;
+	private Date hire_date;
 	private String work_cd;
 	private String priv_cd;
 	private String photo;
+	// 사원 사진등록을 위한 MultipartFile 객체
+	private MultipartFile file;
 	
 	public EmployeesVO() {
 		super();
 	}
 	
 	public EmployeesVO(int idx, String emp_num, String emp_name, String dept_cd, String grade_cd, String emp_tel,
-			String emp_dtel, String emp_email, String emp_passwd, String emp_post_no, String emp_addr, Date emp_date,
-			String work_cd, String priv_cd, String photo) {
+			String emp_dtel, String emp_email, String emp_passwd, String emp_post_no, String emp_addr, String emp_addr1,
+			String emp_addr2, Date hire_date, String work_cd, String priv_cd, String photo, MultipartFile file) {
 		super();
 		this.idx = idx;
 		this.emp_num = emp_num;
@@ -58,11 +64,16 @@ public class EmployeesVO {
 		this.emp_passwd = emp_passwd;
 		this.emp_post_no = emp_post_no;
 		this.emp_addr = emp_addr;
-		this.emp_date = emp_date;
+		this.emp_addr1 = emp_addr1;
+		this.emp_addr2 = emp_addr2;
+		this.hire_date = hire_date;
 		this.work_cd = work_cd;
 		this.priv_cd = priv_cd;
 		this.photo = photo;
+		this.file = file;
 	}
+
+
 	public int getIdx() {
 		return idx;
 	}
@@ -129,11 +140,23 @@ public class EmployeesVO {
 	public void setEmp_addr(String emp_addr) {
 		this.emp_addr = emp_addr;
 	}
-	public Date getEmp_date() {
-		return emp_date;
+	public String getEmp_addr1() {
+		return emp_addr1;
 	}
-	public void setEmp_date(Date emp_date) {
-		this.emp_date = emp_date;
+	public void setEmp_addr1(String emp_addr1) {
+		this.emp_addr1 = emp_addr1;
+	}
+	public String getEmp_addr2() {
+		return emp_addr2;
+	}
+	public void setEmp_addr2(String emp_addr2) {
+		this.emp_addr2 = emp_addr2;
+	}
+	public Date getHire_date() {
+		return hire_date;
+	}
+	public void setHire_date(Date hire_date) {
+		this.hire_date = hire_date;
 	}
 	public String getWork_cd() {
 		return work_cd;
@@ -153,16 +176,19 @@ public class EmployeesVO {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+	public MultipartFile getFile() {
+		return file;
+	}
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
 
 	@Override
 	public String toString() {
 		return "EmployeesVO [idx=" + idx + ", emp_num=" + emp_num + ", emp_name=" + emp_name + ", dept_cd=" + dept_cd
 				+ ", grade_cd=" + grade_cd + ", emp_tel=" + emp_tel + ", emp_dtel=" + emp_dtel + ", emp_email="
 				+ emp_email + ", emp_passwd=" + emp_passwd + ", emp_post_no=" + emp_post_no + ", emp_addr=" + emp_addr
-				+ ", emp_date=" + emp_date + ", work_cd=" + work_cd + ", priv_cd=" + priv_cd + ", photo=" + photo + "]";
+				+ ", emp_addr1=" + emp_addr1 + ", emp_addr2=" + emp_addr2 + ", hire_date=" + hire_date + ", work_cd="
+				+ work_cd + ", priv_cd=" + priv_cd + ", photo=" + photo + ", file=" + file + "]";
 	}
-	
-	
-	
-	
 }
