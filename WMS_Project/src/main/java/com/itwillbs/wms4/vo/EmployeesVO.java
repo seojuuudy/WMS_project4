@@ -33,6 +33,8 @@ public class EmployeesVO {
 	private String emp_tel;
 	private String emp_dtel;
 	private String emp_email;
+	private String emp_email1;
+	private String emp_email2;
 	private String emp_passwd;
 	private String emp_post_no;
 	private String emp_addr;
@@ -50,7 +52,7 @@ public class EmployeesVO {
 	}
 	
 	public EmployeesVO(int idx, String emp_num, String emp_name, String dept_cd, String grade_cd, String emp_tel,
-			String emp_dtel, String emp_email, String emp_passwd, String emp_post_no, String emp_addr, String emp_addr1,
+			String emp_dtel, String emp_email, String emp_email1, String emp_email2, String emp_passwd, String emp_post_no, String emp_addr, String emp_addr1,
 			String emp_addr2, Date hire_date, String work_cd, String priv_cd, String photo, MultipartFile file) {
 		super();
 		this.idx = idx;
@@ -61,6 +63,8 @@ public class EmployeesVO {
 		this.emp_tel = emp_tel;
 		this.emp_dtel = emp_dtel;
 		this.emp_email = emp_email;
+		this.emp_email1 = emp_email1;
+		this.emp_email2 = emp_email2;
 		this.emp_passwd = emp_passwd;
 		this.emp_post_no = emp_post_no;
 		this.emp_addr = emp_addr;
@@ -121,6 +125,18 @@ public class EmployeesVO {
 	}
 	public void setEmp_email(String emp_email) {
 		this.emp_email = emp_email;
+	}
+	public String getEmp_email1() {
+		return emp_email1;
+	}
+	public void setEmp_email1(String emp_email1) {
+		this.emp_email1 = emp_email1;
+	}
+	public String getEmp_email2() {
+		return emp_email2;
+	}
+	public void setEmp_email2(String emp_email2) {
+		this.emp_email2 = emp_email2;
 	}
 	public String getEmp_passwd() {
 		return emp_passwd;
@@ -187,8 +203,10 @@ public class EmployeesVO {
 	public String toString() {
 		return "EmployeesVO [idx=" + idx + ", emp_num=" + emp_num + ", emp_name=" + emp_name + ", dept_cd=" + dept_cd
 				+ ", grade_cd=" + grade_cd + ", emp_tel=" + emp_tel + ", emp_dtel=" + emp_dtel + ", emp_email="
-				+ emp_email + ", emp_passwd=" + emp_passwd + ", emp_post_no=" + emp_post_no + ", emp_addr=" + emp_addr
-				+ ", emp_addr1=" + emp_addr1 + ", emp_addr2=" + emp_addr2 + ", hire_date=" + hire_date + ", work_cd="
-				+ work_cd + ", priv_cd=" + priv_cd + ", photo=" + photo + ", file=" + file + "]";
+				+ emp_email + ", emp_email1=" + emp_email1 + ", emp_email2=" + emp_email2 + ", emp_passwd=" + emp_passwd
+				+ ", emp_post_no=" + emp_post_no + ", emp_addr=" + emp_addr + ", emp_addr1=" + emp_addr1
+				+ ", emp_addr2=" + emp_addr2 + ", hire_date=" + hire_date + ", work_cd=" + work_cd + ", priv_cd="
+				+ priv_cd + ", photo=" + photo + ", file=" + file + "]";
 	}
+	
 }

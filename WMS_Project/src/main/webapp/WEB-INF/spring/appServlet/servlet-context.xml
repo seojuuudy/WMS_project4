@@ -21,6 +21,13 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- 파일 업로드에 사용되는 객체 설정 -->
+	<!-- 주의! id 속성에 "multipartResolver" 이름 사용 필수! -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="10485760" /> <!-- 업로드 최대 파일 크기(10MB) -->
+		<beans:property name="defaultEncoding" value="UTF-8" /> <!-- 한글 파일명 인코딩 방식 -->
+	</beans:bean>
+	
 	<context:component-scan base-package="com.itwillbs.wms4" />
 	<context:component-scan base-package="com.itwillbs.wms4.controller" />
 	<context:component-scan base-package="com.itwillbs.wms4.service" />
