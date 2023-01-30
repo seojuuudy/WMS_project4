@@ -20,8 +20,8 @@ public class EmployeesService {
 		return mapper.selectIdx(emp_email);
 	}
 
-	public EmployeesVO getEmployee(int idx) {
-		return mapper.selectEmployee(idx);
+	public EmployeesVO getEmployee(String sId) {
+		return mapper.selectEmployee(sId);
 	}
 
 

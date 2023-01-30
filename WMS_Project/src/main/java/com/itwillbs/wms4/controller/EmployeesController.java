@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,7 @@ public class EmployeesController {
 		BCryptPasswordEncoder passwdEncoder = new BCryptPasswordEncoder();
 		
 		String passwd = service.getPasswd(employees.getEmp_email());
-		int idx = service.getIdx(employees.getEmp_email());
+//		int idx = service.getIdx(employees.getEmp_email());
 		
 		if(passwd == null || !passwdEncoder.matches(employees.getEmp_passwd(), passwd)) {
 			model.addAttribute("msg", "로그인 실패!");
@@ -63,10 +64,9 @@ public class EmployeesController {
 			}
 			session.setAttribute("sId", employees.getEmp_email());
 //			model.addAttribute("idx", employees.getIdx());
-			if(idx != 0) {
-				redirect.addAttribute("idx", idx);
-//				return "partials/navbar";
-			}
+//			if(idx != 0) {
+//				redirect.addAttribute("idx", idx);
+//			}
 			
 			return "redirect:/";
 		}
@@ -82,18 +82,25 @@ public class EmployeesController {
 	}
 	
 	@GetMapping(value = "/Employee_detail_mini.em")
-	public String detail_mini(@RequestParam(defaultValue = "1") int idx, Model model,
+	public void detail_mini(@RequestParam String sId, Model model,
 				HttpServletResponse response) {
-		System.out.println(idx);
-		EmployeesVO employees = service.getEmployee(idx);
+		System.out.println(sId);
+		EmployeesVO employees = service.getEmployee(sId);
 		
-		System.out.println(employees);
+		JSONObject jsonObject = new JSONObject(employees);
+		System.out.println(jsonObject);
 		
-		model.addAttribute("employees", employees);
+//		model.addAttribute("employees", employees);
+		
+		try {
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().print(jsonObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		
-		
-		return "employees/employee_detail_mini";
+//		return "employees/employee_detail_mini";
 	}
 	
 }

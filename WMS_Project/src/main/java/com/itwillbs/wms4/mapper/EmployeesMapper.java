@@ -6,7 +6,7 @@ public interface EmployeesMapper {
 
 	String selectPasswd(String emp_email);
 
-	EmployeesVO selectEmployee(int idx);
+	EmployeesVO selectEmployee(String sId);
 
 	int selectIdx(String emp_email);
 

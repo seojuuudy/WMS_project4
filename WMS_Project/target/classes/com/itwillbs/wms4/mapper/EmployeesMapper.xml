@@ -16,6 +16,6 @@
 	<select id="selectEmployee" resultType="com.itwillbs.wms4.vo.EmployeesVO">
 		SELECT * 
 			FROM employees
-			WHERE idx = #{idx}
+			WHERE EMP_EMAIL = #{sId}
 	</select>
 </mapper>
