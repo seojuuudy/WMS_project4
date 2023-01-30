@@ -1,4 +1,49 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <script src="${pageContext.request.contextPath}/resources/assets/js/jquery-3.6.3.js"></script>
+    <script type="text/javascript">
+    $(function() {
+		$("#profileDropdown").on("click", function() {
+// 	    	alert("확인");
+			$.ajax({
+				type: "GET", // AJAX 로 요청 시 HTTP 요청 방식(GET or POST) 지정
+				url: "Employee_detail_mini.em", // AJAX 로 요청할 요청 주소(URL)
+				data: { // 전송할 데이터(파라미터) 지정(일반 파라미터일 경우 중괄호로 묶음)
+					// 폼 데이터를 가져와서 파라미터로 표현(전송)하는 경우
+					// 파라미터명: 데이터 형식으로 지정
+					sId: "${sessionScope.sId }" 
+				},
+				dataType: "json", // 응답 데이터에 대한 타입 지정(일반 데이터는 text 이며 HTML 코드도 포함 가능, 자바스크립트 포함되면 html 사용)
+				success: function(employees) { // 요청에 대한 처리 성공 시(= 정답 응답) 처리할 함수 정의
+					// 익명 함수 파라미터로 응답 데이터가 전달됨(처리 페이지의 응답 결과)
+					// id 선택자 resultArea 영역에 응답 데이터(response) 출력하기
+					let result = "사진: " + employees.photo + "<br>"
+								+ "사원 이름: " + employees.emp_name + "<br>"
+								+ "이메일: " + employees.emp_email + "<br>"
+								+ "부서코드: " + employees.dept_cd + "<br>"
+								+ "직급코드: " + employees.grade_cd + "<br>"
+								+ "사무실 연락처: " + employees.emp_dtel + "<br>" 
+								+ "권한: " + employees.priv_cd + "<br>";
+					
+					$("#employee_detail_mini").html(result);
+				}, 
+				error: function(xhr, textStatus, errorThrown) { 
+					// 요청에 대한 처리 실패 시(= 에러 발생 시) 실행되는 이벤트
+					$("#employee_detail_mini").html("xhr = " + xhr + "<br>textStatus = " + textStatus + "<br>errorThrown = " + errorThrown);
+				}
+			});
+		});
+	});
+			function logout() {
+				let isLogout = confirm("로그아웃 하시겠습니까?");
+				
+				if(isLogout) {
+					location.href = "Logout.em";
+				}
+			}
+    
+    </script>
+
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="navbar-menu-wrapper d-flex align-items-stretch">
     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -65,31 +110,40 @@
       
     </ul>
     <ul class="navbar-nav navbar-nav-right">
-      <li class="nav-item nav-logout d-none d-md-block mr-3"> <!-- 조건절 -->
-        <a class="nav-link" href="login.me">login</a>
-      </li>
-      <li class="nav-item nav-logout d-none d-md-block mr-3"> 
-        <a class="nav-link" href="#">logout</a>
-      </li>
+      <li class="nav-item nav-logout d-none d-md-block mr-3">
+       <!-- 조건절 -->
+       <c:choose>
+		<%-- 로그인 상태가 아닐 경우 Login, Join 링크 표시 --%>
+		<%-- EL 을 사용하여 세션 객체 접근 시 sessionScope.속성명 으로 접근 --%>
+		<c:when test="${empty sessionScope.sId }">
+			 <a class="nav-link" href="LoginForm.em">login</a>
+		      </li>
+		      <li class="nav-item nav-logout d-none d-md-block mr-3"> 
+		        <a class="nav-link" href="#">join</a>
+		      </li>
+		</c:when>
+		<%-- 로그인 상태일 경우 아이디 표시, Logout 링크 표시 --%>
+		<c:otherwise>
+	      <li class="nav-item nav-profile dropdown d-none d-md-block">
+	        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+	          <div class="nav-profile-text">${sessionScope.sId } 님 
+	          </div>
+	        </a>
+	        <div class="dropdown-menu center navbar-dropdown" aria-labelledby="profileDropdown">
+		        
+		        <span id="employee_detail_mini" class="dropdown-item">
+<%-- 		        	<a class="dropdown-item" href="Employee_detail_mini.em?idx=${param.idx }">내 정보 확인</a> --%>
+		        </span>
+		        
+				<a class="dropdown-item" href="javascript:logout()">Logout</a>
+	        
+	        </div>
+	        
+	      </li>
+		</c:otherwise>
+	</c:choose>
+       
       
-      <li class="nav-item nav-profile dropdown d-none d-md-block">
-        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-          <div class="nav-profile-text">세션아이디 님 </div>
-        </a>
-        <div class="dropdown-menu center navbar-dropdown" aria-labelledby="profileDropdown">
-          <a class="dropdown-item" href="#">
-            <i class="flag-icon flag-icon-bl mr-3"></i> French </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">
-            <i class="flag-icon flag-icon-cn mr-3"></i> Chinese </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">
-            <i class="flag-icon flag-icon-de mr-3"></i> German </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">
-            <i class="flag-icon flag-icon-ru mr-3"></i>Russian </a>
-        </div>
-      </li>
       <li class="nav-item nav-logout d-none d-lg-block">
         <a class="nav-link" href="./">
           <i class="mdi mdi-home-circle"></i>

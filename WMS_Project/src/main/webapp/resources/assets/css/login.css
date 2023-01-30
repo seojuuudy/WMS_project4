@@ -3,7 +3,7 @@
     	height: 940px;
     	display: flex;
     }
-    .card {
+.card {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -12,6 +12,13 @@
     	line-height: 30px;
     	width: 400px;
     }
-    h3 {
+h3 {
     	text-align: center;
     }
+input[type=password] {
+   font-family: "굴림";
+   color: black;
+}
+.form-control::placeholder {
+  font-family: 'ONE-Mobile-Regular';
+}

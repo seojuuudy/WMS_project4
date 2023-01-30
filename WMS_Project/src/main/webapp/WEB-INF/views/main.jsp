@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>      
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -35,7 +36,9 @@
         <!-- 색상 커스텀 설정 -->
         
         <!-- 상단 메뉴바 -->
-      	<jsp:include page="partials/navbar.jsp"></jsp:include>
+      	<jsp:include page="partials/navbar.jsp">
+      		 <jsp:param name="idx" value="${param.idx }" />
+      	</jsp:include>
         <!-- 상단 메뉴바  -->
         
         <!-- 본문 영역 -->
