@@ -64,7 +64,7 @@
 	            <div class="collapse" id="ui-basic2">
 					<ul class="#">
 						<li class="nav-item"><a class="nav-link"
-							href="#">거래처 등록</a></li>
+							href="ClientRegist.cl">거래처 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="#">창고 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
