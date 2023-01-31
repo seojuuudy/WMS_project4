@@ -143,7 +143,7 @@
                         	<option value="03">과장</option>
                         	<option value="04">부장</option>
                         	<option value="05">이사</option>
-                        	<option value="05">대표</option>
+                        	<option value="06">대표</option>
                         </select>
                       </div>
                     </div>
