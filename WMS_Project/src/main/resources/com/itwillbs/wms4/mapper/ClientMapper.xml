@@ -1,5 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.ClientMapper">
-  
+  <insert id ="insertClint">
+  	INSERT
+ 		INTO client
+ 		VALUES(
+ 			#{business_no}
+ 			,#{cust_name}
+ 			,#{boss_name}
+ 			,#{uptae}
+ 			,#{jongmok}
+ 			,#{tel}
+ 			,#{email}
+ 			,#{post_no}
+ 			,#{addr}
+ 			,#{g_gubun}
+ 			,#{fax}
+ 			,#{mobile_no}
+ 			,#{url_path}
+ 			,#{man_name}
+ 			,#{man_tel}
+ 			,#{man_email}
+ 			,#{remarks}
+ 		)
+  </insert>
+  <!-- 전체 거래처 목록 조회하는 select 태그 -->
+	<select id="selectClientList" resultType="com.itwillbs.wms4.vo.ClientVO">
+		SELECT *
+			FROM client 
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<if test="!keyword.equals('')">
+			WHERE
+			<!-- 2. 검색타입(searchType) 에 따른 WHERE 대상 변경 -->
+			<!-- => 조건이 복수개이므로 choose 태그 사용 -->
+			<choose>
+				<when test="searchType.equals('business_no')">
+					BUSINESS_NO LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('cust_name')">
+					CUST_NAME LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('uptae_jongmok')">
+					uptae LIKE '%${keyword}%' 
+					OR jongmok LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+		LIMIT 
+			#{startRow}
+			, #{listLimit}
+	</select>
+	
+	<!-- 전체 게시물 목록 갯수 조회하는 select 태그 -->
+	<select id="selectClientListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM client -- 이후 작업 분기 일어남
+			<if test="!keyword.equals('')">
+				WHERE
+				<choose>
+				<when test="searchType.equals('business_no')">
+					BUSINESS_NO LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('cust_name')">
+					CUST_NAME LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('uptae_jongmok')">
+					uptae LIKE '%${keyword}%' 
+					OR jongmok LIKE '%${keyword}%'
+				</when>
+				</choose>			
+			</if>
+	</select>
+	<select id="selectClient" resultType="com.itwillbs.wms4.vo.ClientVO">
+		SELECT *
+			FROM client
+			WHERE 
+				business_no = #{business_no}
+				AND cust_name = #{cust_name}
+	</select>
+	<select id="selectBusinessNo" resultType="string">
+		SELECT business_no
+			FROM client
+			WHERE 
+				business_no = #{business_no}
+				AND cust_name = #{cust_name}
+	</select>
 </mapper>
