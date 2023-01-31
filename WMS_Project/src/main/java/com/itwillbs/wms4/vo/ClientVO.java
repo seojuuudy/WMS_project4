@@ -44,9 +44,9 @@ public class ClientVO {
 		super();
 	}
 
-	public ClientVO(String business_no, String cust_name, String boss_name, String uptae, String jongmok, String tel,
-			String email, String post_no, String addr, String g_gubun, String fax, String mobile_no, String url_path,
-			String man_name, String man_tel, String man_email, String remarks) {
+	public ClientVO(String business_no, String cust_name, String boss_name, String uptae, String jongmok,
+			String tel, String email, String post_no, String addr, String g_gubun, String fax,
+			String mobile_no, String url_path, String man_name, String man_tel, String man_email, String remarks) {
 		super();
 		this.business_no = business_no;
 		this.cust_name = cust_name;
@@ -206,12 +206,10 @@ public class ClientVO {
 	@Override
 	public String toString() {
 		return "ClientVO [business_no=" + business_no + ", cust_name=" + cust_name + ", boss_name=" + boss_name
-				+ ", uptae=" + uptae + ", jongmok=" + jongmok + ", tel=" + tel + ", email=" + email + ", post_no="
-				+ post_no + ", addr=" + addr + ", g_gubun=" + g_gubun + ", fax=" + fax + ", mobile_no=" + mobile_no
-				+ ", url_path=" + url_path + ", man_name=" + man_name + ", man_tel=" + man_tel + ", man_email="
-				+ man_email + ", remarks=" + remarks + "]";
-	} 
-	
-	
-	
+				+ ", uptae=" + uptae + ", jongmok=" + jongmok + ", tel=" + tel + ", email="
+				+ email + ", post_no=" + post_no + ", addr=" + addr + ", g_gubun=" + g_gubun + ", fax=" + fax
+				+ ", mobile_no=" + mobile_no + ", url_path=" + url_path + ", man_name=" + man_name + ", man_tel="
+				+ man_tel + ", man_email=" + man_email + ", remarks=" + remarks + "]";
+	}
+
 }
