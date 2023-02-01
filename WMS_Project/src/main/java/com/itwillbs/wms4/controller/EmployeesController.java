@@ -39,7 +39,6 @@ public class EmployeesController {
 		
 		System.out.println("rememberEmail - " + rememberEmail);
 		
-		
 		// 암호화된 패스워드끼리 비교하기 위한 BCryptPasswordEncoder 객체 생성
 		BCryptPasswordEncoder passwdEncoder = new BCryptPasswordEncoder();
 		
@@ -50,6 +49,9 @@ public class EmployeesController {
 			model.addAttribute("msg", "로그인 실패!");
 			return "fail_back";
 		} else {
+			// --- 지은 --- 로그인 성공시 권한 조회 ----------------
+			String priv_cd = service.getPriv_cd(employees.getEmp_email());
+			// -----------------------------------------------------
 			// 체크 박스 값이 true일 경우 쿠키에 이메일을 저장한 후 reseponse에도 쿠키 저장
 			if(rememberEmail.equals("true")) {
 				Cookie cookie = new Cookie("remembered_email", employees.getEmp_email());
@@ -63,6 +65,8 @@ public class EmployeesController {
 				
 			}
 			session.setAttribute("sId", employees.getEmp_email());
+			session.setAttribute("priv_cd", priv_cd);
+			System.out.println(employees);
 //			model.addAttribute("idx", employees.getIdx());
 //			if(idx != 0) {
 //				redirect.addAttribute("idx", idx);

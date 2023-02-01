@@ -10,4 +10,6 @@ public interface EmployeesMapper {
 
 	int selectIdx(String emp_email);
 
+	// 해당 회원의 권한 조회 
+	public String selectPriv_cd(String emp_email);
 }

@@ -25,6 +25,13 @@
     <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.png" />
   </head>
   <body>
+  <!-- 로그인 여부 확인 -->
+	<c:if test="${empty sessionScope.sId}">
+		<script type="text/javascript">
+		 	alert("로그인이 필요한 페이지입니다!");
+		 	history.back();
+		</script>
+	</c:if>
   
     <div class="container-scroller">
       <!-- 사이드바 -->
@@ -52,7 +59,7 @@
 	              <div class="col-sm-4 stretch-card grid-margin" style="margin:0 auto;">
 	                <div class="card_photo">
 	                  <div class="card-body p-0">
-	                  <img src="${pageContext.request.contextPath }/resources/upload/${emp.photo}" alt="image"/>
+	                  <img src="${pageContext.request.contextPath }/resources/upload/${emp.photo}" alt="image" width="150" height="150"/>
 	                  </div>
 	                  <div class="card-body px-3 text-dark">
 	                    <h5 class="font-weight-semibold">${emp.emp_num }</h5>
@@ -112,7 +119,7 @@
                       <label class="col-sm-3 col-form-label">이메일</label>
                       <div class="col-sm-9">
                       	<span class="input-group-append">
-	                        <input type="text" name="emp_email" class="form-control file-upload-info" value="${emp.emp_email }" readonly/>
+	                        <input type="text" name="emp_email" class="form-control" value="${emp.emp_email }" readonly/>
                      	</span>
                       </div>
                     </div>
@@ -122,7 +129,7 @@
                       <label class="col-sm-3 col-form-label">우편번호</label>
                       <div class="col-sm-9">
                     	<span class="input-group-append">
-                       		<input type="text" name="emp_post_no" class="form-control file-upload-info" value="${emp.emp_post_no }" id="sample6_postcode" readonly>
+                       		<input type="text" name="emp_post_no" class="form-control" value="${emp.emp_post_no }" id="sample6_postcode" readonly>
                         </span>
                       </div>
                     </div>
@@ -153,7 +160,11 @@
                       <label class="col-sm-3 col-form-label">재직여부</label>
                       <!-- 재직 코드 컬럼에서 연결, 목록에서 재직(1), 휴직(2), 퇴사(3) 선택 -->
                       <div class="col-sm-9">
-                       <input type="text" name="work_cd" class="form-control" value="${emp.work_cd }" readonly/>
+                      <select required="required" name="work_cd" class="form-control" readonly>
+                        	<option value="01" disabled<c:if test="${emp.work_cd eq '01'}">selected</c:if>>재직</option>
+                        	<option value="02" disabled<c:if test="${emp.work_cd eq '02'}">selected</c:if>>휴직</option>
+                        	<option value="03" disabled<c:if test="${emp.work_cd eq '03'}">selected</c:if>>퇴사</option>
+                        </select>
                       </div>
                     </div>
                   </div>
