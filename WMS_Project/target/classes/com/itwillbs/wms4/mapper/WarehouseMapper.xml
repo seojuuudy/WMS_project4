@@ -26,6 +26,71 @@
 			)
 	</insert>
 	
+	<!-- 창고 목록 작업 -->
+	<select id="warehouseList" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+		SELECT *
+			FROM warehouse
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<if test='!keyword.equals("")'>
+			WHERE
+			<choose>
+				<when test="searchType.equals('wh_cd')">
+					wh_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_name')">
+					wh_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_gubun')">
+					wh_gubun LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_man_name')">
+					wh_man_name LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_use')">
+					wh_use LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+		LIMIT 
+			#{startRow}
+			, #{listLimit}
+	</select>
+	
+	<!-- 창고 목록 페이징 처리 작업 -->
+	<select id="selectWhListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM warehouse -- 이후 작업 분기 일어남
+			<if test="!keyword.equals('')">
+				WHERE
+				<choose>
+					<when test="searchType.equals('wh_cd')">
+						wh_cd LIKE '%${keyword}%'
+					</when>
+					<when test="searchType.equals('wh_name')">
+						wh_name LIKE '%${keyword}%'
+					</when>
+					<when test="searchType.equals('wh_gubun')">
+						wh_gubun LIKE '%${keyword}%' 
+					</when>
+					<when test="searchType.equals('wh_man_name')">
+						wh_man_name LIKE '%${keyword}%' 
+					</when>
+					<when test="searchType.equals('wh_use')">
+						wh_use LIKE '%${keyword}%' 
+					</when>
+				</choose>					
+			</if>
+	</select>
+	
+	<!-- 창고 상세정보 조회 작업 -->
+	<select id="selectWarehouse" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+		SELECT *
+			FROM warehouse
+			WHERE 
+				wh_cd = #{wh_cd}
+				AND wh_name = #{wh_name}
+	</select>
 	
 	
 	

@@ -1,5 +1,7 @@
 package com.itwillbs.wms4.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,22 @@ public class WarehouseService {
 	public int regist_wh(WarehouseVO warehouse) {
 		return mapper.regist_wh_code(warehouse);
 	}
+
+	// 창고 목록
+	public List<WarehouseVO> getWhList(String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.warehouseList(searchType, keyword, startRow, listLimit);
+	}
+
+	// 창고 목록 페이징
+	public int getBoardListCount(String searchType, String keyword) {
+		return mapper.selectWhListCount(searchType, keyword);
+	}
+
+	// 창고 상세 정보 조회
+	public WarehouseVO getWarehouse(String wh_cd, String wh_name) {
+		return mapper.selectWarehouse(wh_cd, wh_name);
+	}
+
 
 
 
