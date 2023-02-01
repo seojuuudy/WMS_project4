@@ -47,8 +47,8 @@
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">거래처 상세정보</h4>
-<!--               <form action="" class="form-sample"> -->
-                <p class="card-description">${client.cust_name } client Information<br></p>
+              <form action="ClientModify.cl" class="form-sample">
+                <p class="card-description">${client.cust_name } Information<br></p>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
@@ -206,13 +206,14 @@
                   <div class="template-demo" style="text-align: right;">
 <!--                   <button type="submit" class="btn btn-primary mr-2"> 거래처 수정</button> -->
 <!--                   <input type="button" class="btn btn-primary btn-rounded btn-fw" value="거래처 삭제" onclick="location.href='ClientDelete.cl'" /> -->
-                  <input type="button" class="btn btn-primary mr-2" value="거래처 수정" onclick="location.href='ClientModify.cl'" />
-                  <input type="button" class="btn btn-primary mr-2" value="거래처 삭제" onclick="location.href='ClientDelete.cl'" />
+                  <input type="submit" class="btn btn-primary mr-2" value="거래처 수정" />
+<!--                   <input type="submit" class="btn btn-primary mr-2" value="거래처 수정" onclick="location.href='ClientModify.cl'" /> -->
+                  <input type="button" class="btn btn-primary mr-2" value="거래처 삭제" onclick="location.href='ClientDelete.cl?business_no=${client.business_no }&pageNum=${pageNum }&cust_name=${client.cust_name }'" />
                   </div>
+              </form>
                  </div>
                 </div>
                </div>
-<!--               </form> -->
 <!--              </div> -->
 <!--             </div> -->
 <!--           </div> -->

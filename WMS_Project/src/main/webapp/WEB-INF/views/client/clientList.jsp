@@ -48,21 +48,26 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">거래처 조회</h4>
-						<section id="buttonArea">
-							<form action="ClientList.cl">
-								<!-- 검색 타입 추가 -->
-								<select name="searchType">
-									<option value="business_no"
-										<c:if test="${param.searchType eq 'business_no'}">selected</c:if>>거래처 코드</option>
-									<option value="cust_name"
-										<c:if test="${param.searchType eq 'cust_name'}">selected</c:if>>거래처명</option>
-									<option value="uptae_jongmok"
-										<c:if test="${param.searchType eq 'uptae_jongmok'}">selected</c:if>>업태&종목</option>
-								</select> <input type="text" name="keyword" value="${param.keyword }">
-								<input type="submit" value="검색"> &nbsp;&nbsp; 
-	           					<input type="button" class="btn btn-primary btn-rounded btn-fw" value="신규 거래처 등록" onclick="location.href='ClientRegist.cl'" />
-							</form>
-						</section>
+<!-- 						<section id="buttonArea"> -->
+					<p class="card-description">client list</p>
+					 <form action="ClientList.cl">
+						<!-- 검색 타입 추가 -->
+						<div class="form-group">
+                      	<div class="input-group">
+                        <div class="input-group-prepend">
+                          <select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<option value="business_no" <c:if test="${param.searchType eq 'business_no'}">selected</c:if>>거래처 코드</option>
+							<option value="cust_name" <c:if test="${param.searchType eq 'cust_name'}">selected</c:if>>거래처명</option>
+							<option value="uptae_jongmok" <c:if test="${param.searchType eq 'uptae_jongmok'}">selected</c:if>>업태&종목</option>
+                          </select>
+                        </div>
+							<input type="text" class="form-control" name="keyword" value="${param.keyword }">
+							<input type="submit" class="btn btn-light" value="검색"> &nbsp;&nbsp; 
+		   					<input type="button" class="btn btn-primary btn-rounded btn-fw" value="신규 거래처 등록" onclick="location.href='ClientRegist.cl'" />
+                        </div>
+                   		</div>
+					</form>
+<!-- 						</section> -->
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -114,7 +119,7 @@
                         </tbody>
                       </table>
                     </div>
-			        <div class="template-demo" style="text-align: right;">
+			        <div class="template-demo" style="text-align: center;">
 <!-- 	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='Detail.hr'">임시 사원상세정보</button> -->
 <!-- 	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='Regist.hr'">신규사원 등록</button> -->
         <!-- table 영역 -->

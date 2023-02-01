@@ -27,5 +27,7 @@ public interface ClientMapper {
 	public String selectBusinessNo(
 			@Param("business_no")String business_no, 
 			@Param("cust_name")String cust_name);
+
+	public void deleteClient(ClientVO client);
 	
 }

@@ -34,4 +34,8 @@ public class ClientService {
 		
 		return mapper.selectBusinessNo(business_no, cust_name);
 	}
+
+	public void removeClient(ClientVO client) {
+		mapper.deleteClient(client);
+	}
 }
