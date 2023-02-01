@@ -119,19 +119,18 @@
 <!-- 			<h1>사원 등록</h1> -->
 		
 		<!-- 사원 등록 table -->	
-        <div class="col-12 grid-margin">
+        <div class="col-11 grid-margin">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">거래처 등록</h4>
               <form action="ClientRegistPro.cl" class="form-sample">
                 <p class="card-description">client regist</p>
-                  <div class="col-md-6">
+                  <div class="col-md-7">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">거래처 구분</label>
 <!--                       <div class="col-sm-4"> -->
                         <div class="form-check">
                           <label class="form-check-label">
-				<!-- 혹시 radio 버튼 필요할까봐 주석처리 -->
                             <input type="radio" class="form-check-input" name="g_gubun" id="g_gubun" value="01" checked /> 사업자(국내) </label>
                         </div>
 <!--                       </div> -->
@@ -217,10 +216,6 @@
                       <div class="col-sm-9" id ="uptae">
 	                      <input type="text" name ="uptae" class="form-control" required="required" />
 	                      <button class="btn btn-light" id = "uptaeButton" type="button">업태 추가</button>
-<!--                         <select class="form-control"> -->
-<!--                           <option>Male</option> -->
-<!--                           <option>Female</option> -->
-<!--                         </select> -->
                       </div>
                     </div>
                   </div>
@@ -273,8 +268,8 @@
                       <label class="col-sm-3 col-form-label">우편번호</label>
                       <div class="col-sm-9">
                         <input type="text" name = "post_no" class="form-control" id="postcode" />
-                      </div>
             			<input type="button" class="btn btn-primary btn-rounded btn-fw" value="우편번호 찾기" onclick="postSearch()" />
+                      </div>
                     </div>
                   </div>
                 </div>

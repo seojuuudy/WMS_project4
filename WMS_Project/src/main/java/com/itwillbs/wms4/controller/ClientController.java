@@ -1,6 +1,5 @@
 package com.itwillbs.wms4.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -114,16 +113,30 @@ public class ClientController {
 		return "client/clientDetail";
 	}
 	
+	// 거래처 수정
 	@PostMapping(value = "/ClientModify.cl")
-	public String clientModify() {
+	public String clientModify(
+			@ModelAttribute ClientVO client,
+			Model model
+			) {
 		
 		return "client/clientModify";
 	}
 	
-	@PostMapping(value = "/ClientDelete.cl")
-	public String clientDelete() {
+	// 거래처 삭제
+	@GetMapping(value = "/ClientDelete.cl")
+	public String clientDelete(
+			HttpSession session, @ModelAttribute ClientVO client, Model model) {
+		String sId = (String)session.getAttribute("sId");
 		
-		return "client/clientDelete";
+		// 1. 세션 아이디가 없을 경우 "잘못된 접근"
+		if(sId == null || sId.equals("")) {
+			model.addAttribute("msg", "잘못된 접근입니다!");
+			return "fail_back";
+		} else {
+			service.removeClient(client);
+			return "redirect:/ClientList.cl";
+		}
 	}
 	
 	@GetMapping(value="/CheckBusinessNo.cl")

@@ -86,4 +86,9 @@
 				business_no = #{business_no}
 				AND cust_name = #{cust_name}
 	</select>
+	<delete id="deleteClient">
+		DELETE 
+			FROM client
+			WHERE business_no = #{business_no}
+	</delete>
 </mapper>
