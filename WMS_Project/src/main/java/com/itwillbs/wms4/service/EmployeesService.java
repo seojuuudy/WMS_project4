@@ -24,6 +24,9 @@ public class EmployeesService {
 		return mapper.selectEmployee(sId);
 	}
 
+	// 해당 회원의 권한 조회 
+	public String getPriv_cd(String emp_email) {
+		return mapper.selectPriv_cd(emp_email);
+	}
 
-	
 }

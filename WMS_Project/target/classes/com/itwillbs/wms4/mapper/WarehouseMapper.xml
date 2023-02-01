@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.WarehouseMapper">
   
+	<!-- 창고코드 DB 존재여부 확인 -->
+	<select id="checkCode" resultType="int">
+		SELECT COUNT(*)
+			FROM warehouse
+				WHERE wh_cd = #{wh_cd}
+	</select>
+	
+	<!-- 창고 등록 작업 -->
+	<insert id="regist_wh_code">
+		INSERT 
+			INTO warehouse
+			VALUES (
+				#{wh_cd}, 
+				#{wh_name},
+				#{wh_gubun},
+				#{wh_location},
+				#{wh_addr},
+				#{wh_tel},
+				#{wh_man_name},
+				#{wh_use},
+				#{remarks}
+			)
+	</insert>
+	
+	
+	
+	
 </mapper>

@@ -18,4 +18,12 @@
 			FROM employees
 			WHERE EMP_EMAIL = #{sId}
 	</select>
+	
+	<!-- 해당 회원의 권한 조회 -->
+	<select id="selectPriv_cd" resultType="String">
+		SELECT priv_cd
+			FROM employees
+			WHERE EMP_EMAIL = #{emp_email}
+	</select>
+	
 </mapper>
