@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="Java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
@@ -106,6 +106,7 @@
             <div class="card-body">
               <h4 class="card-title">사원 정보수정</h4>
               <form action="UpdatePro.hr" method="post" enctype="multipart/form-data" class="form-sample">
+              	<input type="hidden" name="emp_email" value="${emp.emp_email}">
                 <p class="card-description">employee modify</p>
                 <div class="col-sm-4 stretch-card grid-margin" style="margin:0 auto;">
 	                <div class="card_photo">
@@ -149,7 +150,6 @@
                       <label class="col-sm-3 col-form-label">직급코드</label>
                       <div class="col-sm-9">
                         <select required="required" name="grade_cd" class="form-control">
-                        	<option value="" disabled selected>${emp.grade_cd}</option>
                         	<option value="01" <c:if test="${emp.grade_cd eq '01'}">selected</c:if>>사원</option>
                         	<option value="02" <c:if test="${emp.grade_cd eq '02'}">selected</c:if>>대리</option>
                         	<option value="03" <c:if test="${emp.grade_cd eq '03'}">selected</c:if>>과장</option>
@@ -185,12 +185,12 @@
                       <label class="col-sm-3 col-form-label">이메일</label>
                       <div class="col-sm-9">
                       	<span class="input-group-append">
-	                        <input type="text" name="emp_email" value="${emp.emp_email}" class="form-control" />
-<!-- 	                        <select required="required" name="emp_email2" class="form-control"> -->
-<!-- 		                          	<option value="wms4.com">wms4.com</option> -->
-<!-- 		                        	<option value="naver.com">naver.com</option> -->
-<!-- 		                        	<option value="gmail.com">gmail.com</option> -->
-<!--                         		</select> -->
+	                        <input type="text" name="emp_email1" value="${emp.emp_email1}" class="form-control" />@
+	                        <select required="required" name="emp_email2" class="form-control">
+		                          	<option value="wms4.com" <c:if test="${emp.emp_email2 eq 'wms4.com'}">selected</c:if>>wms4.com</option>
+		                        	<option value="naver.com" <c:if test="${emp.emp_email2 eq 'naver.com'}">selected</c:if>>naver.com</option>
+		                        	<option value="gmail.com" <c:if test="${emp.emp_email2 eq 'gmail.com'}">selected</c:if>>gmail.com</option>
+                        		</select>
                      	</span>
                       </div>
                     </div>
@@ -213,7 +213,7 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">주소</label>
                       <div class="col-sm-9">
-						<input type="text" name="emp_addr1" value="${emp.emp_addr }" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly"><br>
+						<input type="text" name="emp_addr1" value="${emp.emp_addr1 }" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly"><br>
                       </div>
                     </div>
                   </div>
@@ -242,7 +242,6 @@
                       <!-- 재직 코드 컬럼에서 연결, 목록에서 재직(1), 휴직(2), 퇴사(3) 선택 -->
                       <div class="col-sm-9">
                         <select required="required" name="work_cd" class="form-control">
-                          	<option value="" disabled selected>${emp.work_cd }</option>
                         	<option value="01" <c:if test="${emp.work_cd eq '01'}">selected</c:if>>재직</option>
                         	<option value="02" <c:if test="${emp.work_cd eq '02'}">selected</c:if>>휴직</option>
                         	<option value="03" <c:if test="${emp.work_cd eq '03'}">selected</c:if>>퇴사</option>
@@ -257,11 +256,11 @@
                       <label class="col-sm-3 col-form-label">권한</label>
                       	<div class="col-sm-9">
                       		<div class="form-control">
-		                      	<label class="form-check-label"><input type="checkbox" name="priv_cd" id="priv_cd">기본등록</label>
-		                      	<label class="form-check-label"><input type="checkbox" name="priv_cd" id="priv_cd">사원조회</label>
-		                      	<label class="form-check-label"><input type="checkbox" name="priv_cd" id="priv_cd">사원관리</label>
-		                      	<label class="form-check-label"><input type="checkbox" name="priv_cd" id="priv_cd">재고조회</label>
-		                      	<label class="form-check-label"><input type="checkbox" name="priv_cd" id="priv_cd">재고관리</label>
+		                      	<label class="form-check-label"><input type="checkbox" value="16" name="priv_cd" id="priv_cd">기본등록</label>
+		                      	<label class="form-check-label"><input type="checkbox" value="8" name="priv_cd" id="priv_cd">사원조회</label>
+		                      	<label class="form-check-label"><input type="checkbox" value="4" name="priv_cd" id="priv_cd">사원관리</label>
+		                      	<label class="form-check-label"><input type="checkbox" value="2" name="priv_cd" id="priv_cd">재고조회</label>
+		                      	<label class="form-check-label"><input type="checkbox" value="1" name="priv_cd" id="priv_cd">재고관리</label>
                       		</div>
                      	</div>
                       </div>

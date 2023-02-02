@@ -125,6 +125,9 @@ public class EmployeesVO {
 	}
 	public void setEmp_email(String emp_email) {
 		this.emp_email = emp_email;
+		
+		emp_email1 = emp_email.split("@")[0];
+		emp_email2 = emp_email.split("@")[1];
 	}
 	public String getEmp_email1() {
 		return emp_email1;
@@ -155,6 +158,9 @@ public class EmployeesVO {
 	}
 	public void setEmp_addr(String emp_addr) {
 		this.emp_addr = emp_addr;
+		
+		emp_addr1 = emp_addr.split(",")[0];
+		emp_addr2 = emp_addr.split(",")[1];
 	}
 	public String getEmp_addr1() {
 		return emp_addr1;

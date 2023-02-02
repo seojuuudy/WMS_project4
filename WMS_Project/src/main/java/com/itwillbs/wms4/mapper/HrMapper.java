@@ -34,4 +34,8 @@ public interface HrMapper {
 	
 	// 사원 정보수정 시 사원번호 수정
 	public int modifyEmp_num(EmployeesVO employees);
+
+	// 사원 등록시 이메일 중복검사
+	public int checkEmail(String emp_email);
+
 }

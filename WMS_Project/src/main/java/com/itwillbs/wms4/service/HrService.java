@@ -49,6 +49,11 @@ public class HrService {
 	// 사원 정보수정 시 사원번호 수정
 	public int modifyEmp_num(EmployeesVO employees) {
 		return mapper.modifyEmp_num(employees);
+	}
+
+	// 사원 등록시 이메일 중복검사 
+	public int getEmail(String emp_email) {
+		return mapper.checkEmail(emp_email);
 	}	
 
 }

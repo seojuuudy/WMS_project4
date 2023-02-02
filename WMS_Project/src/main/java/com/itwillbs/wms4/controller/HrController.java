@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.itwillbs.wms4.service.HrService;
@@ -64,6 +66,22 @@ public class HrController {
 		}
 	}
 	
+	// 이메일 중복체크
+	@ResponseBody
+	@GetMapping(value = "/checkEmail.hr")
+	public void checkEmail(@RequestParam("emp_email") String emp_email, HttpServletResponse response) {
+		
+		int count = service.getEmail(emp_email);
+		if(count != 0) {
+			try {
+				response.getWriter().print("1");
+				System.out.println("이미 사용되고 있단다");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	// 사원 등록을 위한 비지니스 로직 
 	@PostMapping(value = "/RegistPro.hr")
 	public String hrRegistPro(@ModelAttribute EmployeesVO employees, Model model, HttpSession session) {
@@ -101,7 +119,7 @@ public class HrController {
 		}
 		
 		privCd = String.format("%5s", Integer.toBinaryString(sum)).replaceAll(" ", "0");
-        employees.setPriv_cd(privCd);
+		employees.setPriv_cd(privCd);
         // ---------------------------------------------------
         // 임시 비밀번호 부여
  		UUID uid = UUID.randomUUID();
@@ -259,24 +277,66 @@ public class HrController {
 	}
 	
 	// 사원정보 수정을 위한 비즈니스 로직 수행
-	@PostMapping(value = "/UpdatePro.hr")
-	public String updateEmployeesPro(@ModelAttribute EmployeesVO employees, Model model, HttpSession session) {
-		
-		// 사원 정보 업데이트
-		int updateCount = service.modifyEmployees(employees);
-		
-		// 사원 번호 업데이트
-		int updateCount2 = service.modifyEmp_num(employees);
-		
-		if(updateCount > 0 && updateCount2 > 0) { // 사원정보 수정 성공
-			// 수정 된 권한을 세션에 다시 저장
-			session.setAttribute("priv_cd", employees.getPriv_cd());
-			return "redirect:/";
+		@PostMapping(value = "/UpdatePro.hr")
+		public String updateEmployeesPro(@ModelAttribute EmployeesVO employees, Model model, HttpSession session) {
 			
-		} else { // 사원정보 수정 실패
-			model.addAttribute("msg", "수정 실패!");
-			return "fail_back";
+			String sId = (String)session.getAttribute("sId");
+			
+			// 권한번호 수정
+			if(employees.getPriv_cd() != null && employees.getPriv_cd().equals("")) {
+				
+				int sum = 0;
+				String privCd = "";
+				String[] arr = employees.getPriv_cd().split(",");
+				int[] privArr = Arrays.stream(arr).mapToInt(Integer::parseInt).toArray();
+				
+				for(int i = 0; i < privArr.length; i++) {
+					System.out.println(privArr[i]);
+					sum += privArr[i];
+					System.out.println(sum);
+				}
+				
+				privCd = String.format("%5s", Integer.toBinaryString(sum)).replaceAll(" ", "0");
+		        employees.setPriv_cd(privCd);
+			}
+	        
+			// 사진 수정
+	        String uploadDir = "/resources/upload";
+			String saveDir = session.getServletContext().getRealPath(uploadDir);
+			
+			Path path = Paths.get(saveDir);
+//			System.out.println("실제경로 : " + saveDir);
+			
+			try {
+				Files.createDirectories(path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			MultipartFile pFile = employees.getFile();
+			String photoFile = pFile.getOriginalFilename();
+			System.out.println(photoFile);
+			
+			employees.setPhoto(photoFile);
+	        
+			// 사원 정보 업데이트
+			int updateCount = service.modifyEmployees(employees);
+			
+			// 사원 번호 업데이트
+			int updateCount2 = service.modifyEmp_num(employees);
+			
+			if(updateCount > 0 && updateCount2 > 0) { // 사원정보 수정 성공
+		        
+				// 수정 된 권한을 세션에 다시 저장
+				if(sId == employees.getEmp_email()) { // 세션 아이디와 수정된 사원이 같을때
+					session.setAttribute("priv_cd", employees.getPriv_cd());
+				}
+				return "redirect:/";
+				
+			} else { // 사원정보 수정 실패
+				model.addAttribute("msg", "수정 실패!");
+				return "fail_back";
+			}
 		}
-	}
 
-}
+	}
