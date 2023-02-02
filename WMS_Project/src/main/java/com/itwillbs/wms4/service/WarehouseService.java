@@ -39,6 +39,21 @@ public class WarehouseService {
 		return mapper.selectWarehouse(wh_cd, wh_name);
 	}
 
+	// 창고 삭제
+	public void removeWarehouse(WarehouseVO warehouse) {
+		mapper.deleteWarehouse(warehouse);
+	}
+
+	// 창고 수정폼 요청
+	public WarehouseVO getWarehouse(String wh_cd) {
+		return mapper.getWarehouse(wh_cd);
+	}
+
+	// 창고 수정 작업 요청
+	public int warehouseUpdate(WarehouseVO warehouse) {
+		return mapper.UpdateWarehouse(warehouse);
+	}
+
 
 
 

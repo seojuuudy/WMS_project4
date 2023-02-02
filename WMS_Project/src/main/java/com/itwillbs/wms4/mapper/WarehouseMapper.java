@@ -32,5 +32,14 @@ public interface WarehouseMapper {
 			@Param("wh_cd") String wh_cd, 
 			@Param("wh_name") String wh_name);
 
+	// 창고 삭제
+	public void deleteWarehouse(WarehouseVO warehouse);
+	
+	// 창고 수정 폼 요청
+	WarehouseVO getWarehouse(String wh_cd);
+
+	// 창고 수정 작업 요청
+	int UpdateWarehouse(WarehouseVO warehouse);
+
 
 }
