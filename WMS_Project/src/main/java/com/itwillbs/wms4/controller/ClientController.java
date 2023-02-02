@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.wms4.service.ClientService;
 import com.itwillbs.wms4.vo.ClientVO;
+import com.itwillbs.wms4.vo.EmployeesVO;
 import com.itwillbs.wms4.vo.PageInfo;
 
 @Controller
@@ -100,6 +101,7 @@ public class ClientController {
 			}
 	}
 	
+	// 거래처 상세정보
 	@GetMapping(value = "/ClientDetail.cl")
 	public String clientDetail(
 			@RequestParam(defaultValue = "") String business_no, 
@@ -119,8 +121,17 @@ public class ClientController {
 			@ModelAttribute ClientVO client,
 			Model model
 			) {
-		
-		return "client/clientModify";
+		System.out.println("수정하기전 " + client);
+		client.setUptae(client.getUptae().replaceAll(",", "/"));
+		client.setJongmok(client.getJongmok().replaceAll(",", "/"));
+		int updateCount = service.clientModify(client);
+		System.out.println("수정후 "+ client);
+		if(updateCount > 0) {
+			return "redirect:/ClientList.cl";
+		} else {
+			model.addAttribute("msg", "수정 실패!");
+			return "fail_back";
+		}
 	}
 	
 	// 거래처 삭제
@@ -146,7 +157,7 @@ public class ClientController {
 			Model model,
 			HttpServletResponse response) 
 			{
-		String isBusinessNo = service.CheckBusinessNo(business_no, cust_name);
+		ClientVO isBusinessNo = service.getClient(business_no, cust_name);
 		if(isBusinessNo == null) {
 			System.out.println("거래처코드 조회 완료");
 			System.out.println("check isBusinessNo : " + isBusinessNo);
