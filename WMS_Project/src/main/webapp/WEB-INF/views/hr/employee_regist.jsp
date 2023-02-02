@@ -23,7 +23,7 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.png" />
 
-	<script src="${pageContext.request.contextPath}/resources/js/jquery-3.6.3.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery-3.6.3.js"></script>
   	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
 		// 주소 Api
@@ -78,6 +78,49 @@
 	            }
 	        }).open();
 	    }
+		
+// 		// 아이디 중복체크
+// 		$(function() {
+// 			$("#emp_email").on("change", function() {
+				
+// 				let email = $("#emp_email").val();
+// 				alert(email);
+// 				$.ajax({
+// 					url: "checkEmail.hr?emp_email=" + email,
+// 					type: "GET",
+// 					success: function(result) {
+// 							if(result == "1") {
+// 								$("#resultArea").html("이미 존재하는 이메일입니다.").css("color", "red");
+// 								alert("OK");
+// 							} else {
+// 								$("#resultArea").html("등록 가능한 이메일입니다.").css("color", "blue");
+// 								alert("NO!");
+// 							}
+// 						}
+// 				}); //
+// 			});
+// 		});
+
+		// 아이디 중복체크
+		$(function() {
+			$("#emp_email2").on("change", function() {
+				
+				let email1 = $("#emp_email1").val();
+				let email2 = $("#emp_email2").val();
+// 				alert(email1 + "@" + email2);
+				$.ajax({
+					url: "checkEmail.hr?emp_email=" + email1 + "@" + email2,
+					type: "GET",
+					success: function(result) {
+							if(result == "1") {
+								$("#resultArea").html("이미 존재하는 이메일입니다.").css("color", "red");
+							} else {
+								$("#resultArea").html("등록 가능한 이메일입니다.").css("color", "blue");
+							}
+						}
+				}); //
+			});
+		});
 	</script>
   </head>
   <body>
@@ -172,14 +215,15 @@
                       <label class="col-sm-3 col-form-label">이메일</label>
                       <div class="col-sm-9">
                       	<span class="input-group-append">
-	                        <input type="text" name="emp_email1" class="form-control" />@
-	                        	<select required="required" name="emp_email2" class="form-control">
+<!-- 	                        <input type="text" name="emp_email" id="emp_email" class="form-control" /> -->
+	                        <input type="text" name="emp_email1" id="emp_email1" class="form-control" />@
+	                        	<select required="required" name="emp_email2" id="emp_email2" class="form-control">
 		                          	<option value="wms4.com">wms4.com</option>
 		                        	<option value="naver.com">naver.com</option>
 		                        	<option value="gmail.com">gmail.com</option>
                         		</select>
-<!-- 	                        <input type="text" class="form-control" value="@wms4.com" readonly="readonly"> -->
                      	</span>
+                        <span class="input-group-append_msg" id="resultArea"></span>
                       </div>
                     </div>
                   </div>
@@ -199,7 +243,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">주소</label>
+                      <label class="col-sm-3 col-form-label" for="click_postCode">주소</label>
                       <div class="col-sm-9">
 						<input type="text" name="emp_addr1" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly"><br>
                       </div>
@@ -207,7 +251,7 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">상세주소</label>
+                      <label class="col-sm-3 col-form-label" for="click_postCode">상세주소</label>
                       <div class="col-sm-9">
 						<input type="text" name="emp_addr2" class="form-control" id="sample6_detailAddress" placeholder="상세주소">
 <!--                       	<input type="text" class="form-control" name="emp_addr2" id="sample6_extraAddress" placeholder="참고항목"> -->

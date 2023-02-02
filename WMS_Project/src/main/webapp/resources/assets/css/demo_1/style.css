@@ -4968,7 +4968,13 @@ input[type="button"].btn-block {
     .input-group > .custom-file:not(:first-child) .custom-file-label {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0; }
+      
+/* 사원 테이블 css 추가 */
+.input-group-append_msg {
+	font-size: 13px;}
 
+
+	
 .input-group-prepend,
 .input-group-append {
   display: -webkit-box;
