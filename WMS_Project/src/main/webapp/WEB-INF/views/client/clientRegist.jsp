@@ -24,7 +24,7 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.png" />
   
- 	<script src="${pageContext.request.contextPath }/resources/js/jquery-3.6.3.js"></script>
+ 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script type="text/javascript">
 	$(function() {
@@ -39,7 +39,7 @@
 	            url:"CheckBusinessNo.cl?business_no=" + business_no + "&cust_name=" + cust_name,
 		          success: function(result){
 	                if(result == "true"){
-		            	alert("사용가넝");
+// 		            	alert("사용가넝");
 	                } else {
 		            	alert("이미 존재합니다");
 	               }
@@ -53,13 +53,13 @@
 		$("input:radio[name=g_gubun]").change(function(){
 			var test = $('input:radio[name=g_gubun]:checked').val();
 			if(test == '01') {
-				var holder = $('#business_no').attr("placeholder" ,"사업자번호");
+				var holder = $('#business_no').attr("placeholder" ,"사업자번호 - 제외하고 작성해주세요");
 			} else if(test == '02'){
-				var holder = $('#business_no').attr("placeholder", "해외사업자번호");
+				var holder = $('#business_no').attr("placeholder", "해외사업자번호 - 제외하고 작성해주세요");
 			} else if(test == '03'){
-				var holder = $('#business_no').attr("placeholder", "주민등록번호");
+				var holder = $('#business_no').attr("placeholder", "주민등록번호 - 제외하고 작성해주세요");
 			} else {
-				$('#business_no').attr("placeholder", "외국인등록번호");
+				$('#business_no').attr("placeholder", "외국인등록번호 - 제외하고 작성해주세요");
 			}
 		});
 		
@@ -96,7 +96,48 @@
 	            }
 		    }).open();
 		}
+		function checkForm() {
+			var Bnlength = fr.business_no.value.length;
+			var radioCheck = $('input:radio[name=g_gubun]:checked').val();
+			if((radioCheck == '02' || radioCheck == '01') && Bnlength != 10){
+				alert("사업자 번호 10자리를 '-'없이 정확히 입력해주세요")
+				fr.business_no.focus();
+				event.preventDefault();
+				return;
+			} if((radioCheck == '03' || radioCheck == '04') && Bnlength != 13){
+				alert("주민등록 번호 13자리를 '-'없이 정확히 입력해주세요")
+				fr.business_no.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.cust_name.value == ''){
+				fr.cust_name.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.boss_name.value == ''){
+				fr.boss_name.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.tel.value == ''){
+				fr.tel.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.uptae.value == ''){
+				fr.uptae.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.jongmok.value == ''){
+				fr.jongmok.focus();
+				event.preventDefault();
+				return;
+			} else if(fr.address.value == ''){
+				fr.address.focus();
+				event.preventDefault();
+				return;
+			} else {
+				return false;
+			}
 			
+		}	
 	</script>
   </head>
   <body>
@@ -116,14 +157,12 @@
         
         <!-- 본문 영역 -->
         <div class="main-panel">
-<!-- 			<h1>사원 등록</h1> -->
 		
-		<!-- 사원 등록 table -->	
         <div class="col-11 grid-margin">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">거래처 등록</h4>
-              <form action="ClientRegistPro.cl" class="form-sample">
+              <form action="ClientRegistPro.cl" class="form-sample" name = "fr" onsubmit="checkForm()">
                 <p class="card-description">client regist</p>
                   <div class="col-md-7">
                     <div class="form-group row">
@@ -157,18 +196,18 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">거래처명</label>
+                      <label class="col-sm-3 col-form-label">거래처명 <br> (필수)</label>
                       <div class="col-sm-9">
-                        <input type="text" name = "cust_name" id="cust_name"class="form-control" required="required"/>
+                        <input type="text" name = "cust_name" id="cust_name" class="form-control" />
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">거래처 코드</label>
+                      <label class="col-sm-3 col-form-label">거래처 코드 <br> (필수)</label>
                       <span id="checkBusinessNo"></span><br>
                       <div class="col-sm-9">
-                        <input type="text" name = "business_no" id="business_no" class="form-control" placeholder="사업자번호 10자리" required="required"/>
+                        <input type="text" name = "business_no" id="business_no" class="form-control" placeholder="사업자번호 10자리 - 제외하고 작성해주세요" required="required"/>
                       </div>
                     </div>
                   </div>
@@ -176,17 +215,17 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">대표자명</label>
+                      <label class="col-sm-3 col-form-label">대표자명 <br> (필수)</label>
                       <div class="col-sm-9">
-                        <input type="text" name="boss_name" class="form-control" required="required" />
+                        <input type="text" name="boss_name" id="boss_name" class="form-control" />
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">대표전화번호</label>
+                      <label class="col-sm-3 col-form-label">대표전화번호 <br> (필수)</label>
                       <div class="col-sm-9">
-                        <input type="text" name = "tel" class="form-control" required="required"/>
+                        <input type="text" name = "tel" id = "tel" class="form-control"/>
                       </div>
                     </div>
                   </div>
@@ -212,18 +251,18 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">업태</label>
+                      <label class="col-sm-3 col-form-label">업태 <br> (필수)</label>
                       <div class="col-sm-9" id ="uptae">
-	                      <input type="text" name ="uptae" class="form-control" required="required" />
+	                      <input type="text" name ="uptae" id="uptae" class="form-control" />
 	                      <button class="btn btn-light" id = "uptaeButton" type="button">업태 추가</button>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">종목</label>
+                      <label class="col-sm-3 col-form-label">종목 <br> (필수)</label>
                       <div class="col-sm-9" id = "jongmok">
-                        <input type="text" name="jongmok" class="form-control" required="required"/>
+                        <input type="text" name="jongmok" id="jongmok" class="form-control" />
 	                    <button class="btn btn-light" id = "jongmokButton" type="button">종목 추가</button>
                       </div>
                     </div>
@@ -276,9 +315,9 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">주소</label>
+                      <label class="col-sm-3 col-form-label">주소 <br> (필수)</label>
                       <div class="col-sm-9">
-                        <input type="text" name="addr" class="form-control" id="address" required="required">
+                        <input type="text" name="addr" class="form-control" id="address" >
                       </div>
                     </div>
                   </div>
@@ -324,17 +363,20 @@
                       </div>
                     </div>
                   </div>
+                  </div>
+                  <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">적요(비고)</label>
                       <div class="col-sm-9">
-                        <input type="text" name ="remarks" class="form-control" />
+                      	<textarea rows="15" cols="27" name ="remarks" class="form-control"></textarea>
+<!--                         <input type="text" name ="remarks" class="form-control" /> -->
                       </div>
                     </div>
                   </div>
                   </div>
                   <div class="template-demo" style="text-align: right;">
-                  <button type="submit" class="btn btn-primary mr-2">등록</button>
+                  <button type="submit" class="btn btn-primary mr-2" id="btn">등록</button>
                   <button class="btn btn-light">취소</button>
                   </div>
               </form>
@@ -342,7 +384,6 @@
             </div>
           </div>
         
-		<!-- 사원 등록 table -->	
 			
 		<footer class="footer">
           	<jsp:include page="../partials/footer.jsp"></jsp:include>

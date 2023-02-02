@@ -79,13 +79,34 @@
 				business_no = #{business_no}
 				AND cust_name = #{cust_name}
 	</select>
-	<select id="selectBusinessNo" resultType="string">
-		SELECT business_no
-			FROM client
-			WHERE 
+	
+	<update id="updateClient">
+		UPDATE client
+			SET
 				business_no = #{business_no}
+ 				, cust_name = #{cust_name}
+ 				, boss_name = #{boss_name}
+ 				, uptae = #{uptae}
+ 				, jongmok = #{jongmok}
+ 				, tel = #{tel}
+ 				, email = #{email}
+ 				, post_no = #{post_no}
+ 				, addr = #{addr}
+ 				, g_gubun = #{g_gubun}
+ 				, fax = #{fax}
+ 				, mobile_no = #{mobile_no}
+ 				, url_path = #{url_path}
+ 				, man_name = #{man_name}
+ 				, man_tel = #{man_tel}
+ 				, man_email = #{man_email}
+ 				, remarks = #{remarks}
+ 			
+ 			WHERE
+ 				business_no = #{business_no}
 				AND cust_name = #{cust_name}
-	</select>
+	
+	</update>
+	
 	<delete id="deleteClient">
 		DELETE 
 			FROM client

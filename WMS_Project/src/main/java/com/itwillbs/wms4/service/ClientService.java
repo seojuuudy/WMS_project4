@@ -30,12 +30,11 @@ public class ClientService {
 		return mapper.selectClient(business_no, cust_name);
 	}
 
-	public String CheckBusinessNo(String business_no, String cust_name) {
-		
-		return mapper.selectBusinessNo(business_no, cust_name);
-	}
-
 	public void removeClient(ClientVO client) {
 		mapper.deleteClient(client);
+	}
+
+	public int clientModify(ClientVO client) {
+		return mapper.updateClient(client);
 	}
 }
