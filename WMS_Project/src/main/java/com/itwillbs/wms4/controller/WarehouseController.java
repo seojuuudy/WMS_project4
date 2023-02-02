@@ -1,11 +1,9 @@
 package com.itwillbs.wms4.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.wms4.service.WarehouseService;
-import com.itwillbs.wms4.vo.ClientVO;
 import com.itwillbs.wms4.vo.EmployeesVO;
 import com.itwillbs.wms4.vo.PageInfo;
 import com.itwillbs.wms4.vo.WarehouseVO;
@@ -29,18 +26,38 @@ public class WarehouseController {
 	
 	// 창고 등록
 	@GetMapping("/Regist.wh")
-	public String regist() {
-		return "warehouse/wh_regist";
+	public String regist(HttpSession session, Model model) {
+
+		String sId = (String)session.getAttribute("sId");
+				
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 16; // 사원관리 권한 00100과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				return "warehouse/wh_regist";
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
 	}
 	
+	// 창고 등록작업
 	@PostMapping(value = "/RegistPro.wh")
 	public String joinPro(@ModelAttribute WarehouseVO warehouse, Model model) {
 		int insertCount = service.regist_wh(warehouse);
 		
+		System.out.println("창고등록작업 컨트롤러 : " + warehouse);
 		// 가입 성공/실패에 따른 포워딩 작업 수행
 		if(insertCount > 0) { // 성공
-			System.out.println("컨트롤러 : " + warehouse);
-			return "warehouse/wh_list";
+			return "redirect:/List.wh";
 		} else { // 실패
 			model.addAttribute("msg", "가입 실패!");
 			return "fail_back";
@@ -70,7 +87,7 @@ public class WarehouseController {
 			Model model) {
 		
 		// 페이징 처리를 위한 변수 선언
-		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
+		int listLimit = 14; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
 		int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
 		
 		List<WarehouseVO> warehouseList = service.getWhList(searchType, keyword, startRow, listLimit);
@@ -116,21 +133,49 @@ public class WarehouseController {
 		return "warehouse/wh_list_detail";
 	}
 	
-	@PostMapping("/WhModify.wh")
-	public String warehouseModify() {
+	// 창고 삭제
+	@GetMapping("/WhDelete.wh")
+	public String clientDelete(
+			HttpSession session, @ModelAttribute WarehouseVO warehouse, Model model) {
+		String sId = (String)session.getAttribute("sId");
 		
+		// 1. 세션 아이디가 없을 경우 "잘못된 접근"
+		if(sId == null || sId.equals("")) {
+			model.addAttribute("msg", "잘못된 접근입니다!");
+			return "fail_back";
+		} else {
+			service.removeWarehouse(warehouse);
+			return "redirect:/List.wh";
+		}
+	}
+	
+	// 창고 수정 폼 요청
+	@GetMapping("/WhModify.wh")
+	public String warehouseModify(String wh_cd, Model model) { // 권한부여시 세션 넣기
+		WarehouseVO warehouse = service.getWarehouse(wh_cd);
+		model.addAttribute("wh", warehouse);
 		return "warehouse/wh_modify";
 	}
 	
-	// 창고 삭제
-	@PostMapping(value = "/WhDelete.wh")
-	public String whDelete() {
+	// 창고 수정 작업
+	@PostMapping("WhUpdatePro.wh")
+	public String warehouseUpdatePro(
+			@ModelAttribute WarehouseVO warehouse,
+			Model model,
+			HttpSession session ) {
+		System.out.println("창고수정작업 컨트롤러 : " + warehouse);
 		
-		return "warehouse/wh_delete";
+		int modifyCount = service.warehouseUpdate(warehouse);
+		
+		if(modifyCount > 0) {
+			session.setAttribute("warehouse", warehouse);
+			return "redirect:/List.wh";
+			
+		} else {
+			model.addAttribute("msg", "수정에 실패하였습니다.");
+			return "fail_back";
+		}
 	}
-	
-	
-	
 	
 	
 	

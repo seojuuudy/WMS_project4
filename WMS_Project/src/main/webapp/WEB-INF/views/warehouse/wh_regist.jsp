@@ -27,25 +27,31 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 $(function() {
-	//창고코드 DB 조회
-	$("#wh_cd").on("change", function() {
-	   
-		var code  = $("#wh_cd").val();
-	   
-		$.ajax({
-		   url:"CheckCode.wh",
-		   data: {
-		      code
-	   	},
-		   success: function(result){
-		         if(result == "true"){
-		             $("#checkCodeResult").html("이미 존재하는 코드").css("color","red");
-		         } else {
-		        	 $("#checkCodeResult").html("사용 가능한 코드").css("color", "blue");
-		         }
-	       }
-		}); // ajax
-	});
+	//창고코드 유효성 검사
+    $("#wh_cd").on("change", function() {
+      
+	      var code = $("#wh_cd").val();
+	      var regex = /^[0-9]{10}$/;
+	      var result2 = regex.exec(code);
+	      
+	      if(!result2) {
+	         $("#checkCodeResult").html("코드 자리수를 확인하여주시기 바랍니다(10자)").css("color", "red");
+	      } else { // 정규표현식 성립 한다면 디비 조회
+	         $.ajax({
+	            url:"CheckCode.wh",
+	            data: {
+	            	code
+	            },
+	            success: function(result){
+	                  if(result == "true"){
+	                      $("#checkCodeResult").html("이미 존재하는 코드").css("color","red");
+	                  } else {
+	                 	 $("#checkCodeResult").html("사용 가능한 코드").css("color", "blue");
+	                 }
+	                }
+	         }); // ajax
+	      } // if
+	  });
 	
 	// 외부 선택시 주소창 표출
 	$(document).ready(function() {
@@ -58,6 +64,7 @@ $(function() {
 	    }
 	  }); 
 	}); 
+	
 });
 
 // 주소 Api
@@ -136,14 +143,14 @@ function sample6_execDaumPostcode() {
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">창고 등록</h4>
-              <form action="RegistPro.wh" class="form-sample"  method="post">
+              <form action="RegistPro.wh" class="form-sample"  method="post" onsubmit="return submitCheck();" id="registForm">
                 <p class="card-description">warehouse regist</p>
                 
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">창고코드</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_cd" id="wh_cd"/>
+                        <input type="text" class="form-control" name="wh_cd" id="wh_cd" required="required"/>
                         <span id="checkCodeResult" style="font-size: 0.4em;"></span>
                       </div>
                     </div>
@@ -153,7 +160,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">창고명</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_name" id="wh_name"/>
+                        <input type="text" class="form-control" name="wh_name" id="wh_name" required="required"/>
                       </div>
                     </div>
                   </div>
@@ -188,7 +195,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">주소</label>
                       <div class="col-sm-9">
-                      	<input type="text" name="wh_addr" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly"><br>
+                      	<input type="text" name="wh_addr" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly" required="required">
  						<input type="button" class="file-upload-browse btn btn-primary" onclick="sample6_execDaumPostcode()" value="주소 찾기"><br>
                       </div>
                     </div>
@@ -200,7 +207,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">전화번호</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_tel" id="wh_tel"/>
+                        <input type="text" class="form-control" name="wh_tel" id="wh_tel" required="required"/>
                       </div>
                     </div>
                   </div>
@@ -209,7 +216,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">관리자명</label>
                       <div class="col-sm-9">
-                      	<input type="text" class="form-control" name="wh_man_name" id="wh_man_name" />
+                      	<input type="text" class="form-control" name="wh_man_name" id="wh_man_name" required="required" />
                       </div>
                     </div>
                   </div>
@@ -237,15 +244,15 @@ function sample6_execDaumPostcode() {
                  </div>
                  
                 <div class="template-demo" style="text-align: right;">
-                 <input type="submit" class="btn btn-primary mr-2" value="등록">
+                 <input type="submit" id="sub-btn" class="btn btn-primary mr-2" value="등록" location.href='RegistPro.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }'">
                  <input type="button" class="btn btn-light" onclick="location.href='List.wh'" value="취소">
                 </div>
                </div>
               </div>
+        	 </form>
              </div>
            </div>
           </div>
-         </form>
 <!-- 창고 등록 table -->	
 			
 <footer class="footer">
