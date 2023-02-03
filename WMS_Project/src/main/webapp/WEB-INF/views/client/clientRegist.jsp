@@ -64,11 +64,11 @@
 		});
 		
 		$("#uptaeButton").click(function() {
-	          $("#uptae").append("<input type='text' name ='uptae' class='form-control' required='required'/>"); // 태그 추가
+	          $("#uptae").append("<input type='text' name ='uptae' class='form-control''/>"); // 태그 추가
 		});
 		
 		$("#jongmokButton").click(function() {
-	          $("#jongmok").append("<input type='text' name ='jongmok' class='form-control' required='required' />"); // 태그 추가
+	          $("#jongmok").append("<input type='text' name ='jongmok' class='form-control' />"); // 태그 추가
 		});
 	});	
 	
