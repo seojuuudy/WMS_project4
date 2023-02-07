@@ -26,6 +26,16 @@
  	<!-- jquery -->
 	<script src="${pageContext.request.contextPath }/resources/js/jquery-3.6.3.js"></script>
 	<!-- jquery -->
+	<script type="text/javascript">
+		function deleteGroup(product_group_bottom_cd) {
+			alert("group code : "+product_group_bottom_cd);
+			let result = confirm("품목 그룹을 삭제하시겠습니까?");
+			if(result) {
+				location.href = "DeleteGroup.pr?product_group_bottom_cd="+product_group_bottom_cd;
+			}
+			
+		}
+	</script>
   </head>
   <body>
   
@@ -49,7 +59,7 @@
        <div class="col-lg-12 grid-margin stretch-card">
            <div class="card">
               	<div class="card-body">
-                    <h4 class="card-title">품목 그룹 조회</h4>
+                    <h4 class="card-title"><a href="GroupList.pr">품목 그룹 조회</a></h4>
                     <p class="card-description">Product Group list</p>
 					 <form action="GroupList.pr">
 						<!-- 검색 타입 추가 -->
@@ -87,7 +97,7 @@
                             <td>${prgrlist.product_group_bottom_cd}</td>
                             <td>${prgrlist.product_group_bottom_name}</td>
                             <td>
-                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="location.href='DeleteGroup.pr?product_group_bottom_cd=${prgrlist.product_group_bottom_cd}'">삭제</button>
+                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="deleteGroup('${prgrlist.product_group_bottom_cd}')">삭제</button>
                             </td>
                           </tr>
                         </c:forEach>

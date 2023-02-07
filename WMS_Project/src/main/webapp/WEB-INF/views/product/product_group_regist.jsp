@@ -67,7 +67,7 @@ $(function() {
             <div class="card-body">
               <h4 class="card-title">품목 그룹 등록</h4>
               
-              <form action="GroupRegistPro.pr" class="form-sample" method="post" name="groupRegisterForm">
+              <form action="GroupRegistPro.pr" class="form-sample" method="post" >
                 <p class="card-description">product group regist</p>
                 
                 <div class="row">

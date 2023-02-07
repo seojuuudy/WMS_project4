@@ -47,7 +47,9 @@ public class ProductService {
 		public int getPrGrListCount(String searchType, String keyword) {
 			return mapper.selectPrGrListCount(searchType, keyword);
 		}
-
+		public int removeProductGroup(String product_group_bottom_cd) {
+			return mapper.deleteProductGroup(product_group_bottom_cd);
+		}
 		//====================== 품목 등록 관련 ======================
 		public List<ProductGroupBottomVO> getPrGrBottomNameList() {
 			return mapper.selectPrGrBottomNameList();
@@ -61,10 +63,29 @@ public class ProductService {
 			return mapper.insertProduct(product);
 		}
 
-		//====================== 품목 그룹 목록 조회 관련 ======================
+		//====================== 품목 목록 조회 관련 ======================
 		public List<ProductVO> getProductList(String searchType, String keyword, int startRow, int listLimit) {
 			return mapper.selectProductList(searchType, keyword, startRow, listLimit);
 		}
+
+		public int getProductListCount(String searchType, String keyword) {
+			return mapper.selectProductListCount(searchType, keyword);
+		}
+
+		//====================== 품목 상세정보 조회, 수정 및 삭제 관련 ======================
+		public ProductVO getProductDetail(int product_cd) {
+			return mapper.selectProductDetail(product_cd);
+		}
+
+		public int removeProduct(String product_cd) {
+			return mapper.deleteProduct(product_cd);
+		}
+
+		public String getRealFile(String product_cd) {
+			return mapper.selectRealFile(product_cd);
+		}
+
+		
 
 
 

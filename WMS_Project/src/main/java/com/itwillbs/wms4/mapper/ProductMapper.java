@@ -12,8 +12,6 @@ import com.itwillbs.wms4.vo.ProductVO;
 
 public interface ProductMapper {
 
-
-
 	//====================== 품목 그룹 등록 관련 ======================
 	List<ProductGroupTopVO> selectPrGrTopNameList();
 	
@@ -33,7 +31,7 @@ public interface ProductMapper {
 
 	int selectPrGrListCount(@Param("searchType") String searchType, 
 							@Param("keyword") String keyword);
-
+	int deleteProductGroup(String product_group_bottom_cd);
 	//====================== 품목 등록 관련 ======================
 	List<ProductGroupBottomVO> selectPrGrBottomNameList();
 
@@ -41,7 +39,23 @@ public interface ProductMapper {
 
 	int insertProduct(ProductVO product);
 
-	List<ProductVO> selectProductList(String searchType, String keyword, int startRow, int listLimit);
+	//====================== 품목 목록 조회 관련 ======================
+	List<ProductVO> selectProductList(@Param("searchType") String searchType,
+										@Param("keyword") String keyword, 
+										@Param("startRow") int startRow, 
+										@Param("listLimit") int listLimit);
+
+	int selectProductListCount(@Param("searchType") String searchType, 
+								@Param("keyword") String keyword);
+
+	//====================== 품목 상세정보 조회, 수정 및 삭제 관련 ======================
+	ProductVO selectProductDetail(int product_cd);
+
+	int deleteProduct(String product_cd);
+
+	String selectRealFile(String product_cd);
+
+	
 
 	
 	
