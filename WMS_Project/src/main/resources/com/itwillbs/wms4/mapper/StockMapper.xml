@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.StockMapper">
 	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.Stock_listVO">
-		SELECT S.STOCK_CD, S.PRODUCT_CD, S.WH_LOC_IN_AREA_CD, S.STOCK_QTY,
-			   P.PRODUCT_NAME, P.SIZE_DES, W.WH_NAME, W.WH_AREA, W.WH_LOC_IN_AREA
-		FROM STOCK S
-		JOIN PRODUCT P
-		ON S.PRODUCT_CD = P.PRODUCT_CD
-		JOIN WH_DETAIL W
-		ON S.WH_LOC_IN_AREA_CD = W.WH_LOC_IN_AREA_CD
+		SELECT s.stock_cd, s.product_cd, s.wh_loc_in_area_cd, s.stock_qty,
+			   p.product_name, p.size_des, w.wh_name, w.wh_area, w.wh_loc_in_area
+			FROM stock s
+			JOIN product p
+			ON s.product_cd = p.product_cd
+			JOIN wh_detail w
+			ON s.wh_loc_in_area_cd = w.wh_loc_in_area_cd
 		 <if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('stock_cd')">
