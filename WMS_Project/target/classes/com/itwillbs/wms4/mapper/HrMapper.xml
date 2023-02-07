@@ -94,8 +94,12 @@
 	  			, emp_addr = CONCAT(#{emp_addr1}, ", ", #{emp_addr2})
 	  			, hire_date = #{hire_date}
 	  			, work_cd = #{work_cd}
+	  			<if test="priv_cd neq null and priv_cd neq''">
 	  			, priv_cd = #{priv_cd}
+	  			</if>
+	  			<if test="photo neq null and photo neq ''">
 	  			, photo = #{photo}
+	  			</if>
 	  		WHERE 
 	  			emp_email = #{emp_email}	
   	</update>
@@ -111,5 +115,12 @@
 			SET emp_num = #{emp_num}
 			WHERE emp_email = #{emp_email}
 	</update>
+	
+	<!-- 이메일 중복체크 -->
+	<select id="checkEmail" resultType="int">
+		SELECT COUNT(*)
+			FROM employees
+			WHERE emp_email = #{emp_email}
+	</select>
 	  
 </mapper>

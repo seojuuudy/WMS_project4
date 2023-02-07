@@ -92,6 +92,37 @@
 				AND wh_name = #{wh_name}
 	</select>
 	
+	<!-- 창고정보 삭제 작업 -->
+	<delete id="deleteWarehouse">
+		DELETE 
+			FROM warehouse
+			WHERE wh_cd = #{wh_cd}
+	</delete>
 	
+	<!-- 창고 수정 폼 요청 작업-->
+	<select id="getWarehouse" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+		SELECT *
+			FROM warehouse
+			WHERE 
+				wh_cd = #{wh_cd}
+	</select>
+	
+	<!-- 창고 수정 작업 요청 -->
+	<update id="UpdateWarehouse">
+  		UPDATE warehouse
+  			SET
+  				wh_cd = #{wh_cd},
+  				wh_name = #{wh_name},
+  				wh_gubun = #{wh_gubun},
+  				wh_location = #{wh_location},
+  				wh_addr = #{wh_addr},
+  				wh_tel = #{wh_tel},
+  				wh_man_name = #{wh_man_name},
+  				wh_use = #{wh_use},
+  				remarks = #{remarks}
+  				
+  			WHERE 
+  				wh_cd = #{wh_cd}
+  	</update>
 	
 </mapper>

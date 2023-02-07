@@ -35,7 +35,7 @@
     </li>
     <!-- 사이드바 인사관리 B 부분 -->
     <li class="nav-item">
-      <a class="nav-link" href="index.html">
+      <a class="nav-link" href="Wh.wms">
         <i class="mdi mdi-compass-outline menu-icon"></i>
         <span class="menu-title">창고 관리</span>
       </a>
