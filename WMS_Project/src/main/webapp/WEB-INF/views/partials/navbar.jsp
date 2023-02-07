@@ -96,7 +96,7 @@
             </div>
           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item preview-item" href="#">
+          <a class="dropdown-item preview-item" href="Stock.st">
             <div class="preview-thumbnail">
             </div>
             <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
