@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itwillbs.wms4.mapper.ProductMapper">
+	<!-- ============================ 품목 그룹 등록 관련 ============================ -->
+	
+<!-- ============================ top group Name select ============================ -->
+	<select id="selectPrGrTopNameList" resultType="com.itwillbs.wms4.vo.ProductGroupTopVO">
+		SELECT *
+			FROM product_group_top
+	</select>
+<!-- ======================== top group count select ========================== -->
+	<select id="selectTopCount" resultType="integer">
+		SELECT COUNT(*)
+			FROM product_group_top
+			WHERE product_group_top_name=#{product_group_top_name}
+	</select>
+<!-- ============================ top group insert ============================ -->
+	<insert id="insertTopGroup" >
+		INSERT
+ 		INTO product_group_top(product_group_top_name)
+ 		VALUES(
+ 			#{product_group_top_name}
+ 		)
+	</insert>
+<!-- ============================ top code select ============================= -->
+	<select id="selectTopCode" resultType="integer">
+		SELECT product_group_top_cd
+			FROM product_group_top
+			WHERE product_group_top_name=#{product_group_top_name}
+	</select>
+<!-- ========================== bottom group insert =========================== -->
+	<insert id="insertBottomGroup">
+		INSERT
+ 		INTO product_group_bottom(product_group_top_cd, product_group_bottom_name)
+ 		VALUES(
+ 			#{product_group_top_cd}, 
+ 			#{product_group_bottom_name}
+ 		)
+	</insert>
+<!-- ========================== 품목 그룹 조회 관련 =========================== -->
+<!-- ========================== select product group =========================== -->
+	<select id="selectProductGroupList" resultType="com.itwillbs.wms4.vo.ProductGroupInfoVO">
+		SELECT *
+			FROM product_group_info
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<if test="!keyword.equals('')">
+			WHERE
+			<!-- 2. 검색타입(searchType) 에 따른 WHERE 대상 변경 -->
+			<!-- => 조건이 복수개이므로 choose 태그 사용 -->
+			<choose>
+				<when test="searchType.equals('topName')">
+					product_group_top_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('bottomName')">
+					product_group_bottom_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+		LIMIT 
+			#{startRow}, #{listLimit}
+	</select>	
+<!-- ==================== select product group list count ====================== -->
+	<select id="selectPrGrListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM product_group_info -- 이후 작업 분기 일어남
+			<if test="!keyword.equals('')">
+				WHERE
+				<choose>
+				<when test="searchType.equals('topName')">
+					product_group_top_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('bottomName')">
+					product_group_bottom_name LIKE '%${keyword}%'
+				</when>
+				
+				</choose>			
+			</if>
+	</select>
+<!-- ==================== select product group list count ====================== -->
+	<delete id="deleteProductGroup">
+		DELETE FROM product_group_bottom
+			WHERE product_group_bottom_cd = #{product_group_bottom_cd}
+	</delete>
+<!-- ============================ 품목 등록 관련 ============================ -->
+<!-- ============================ Bottom Name select ============================ -->
+	<select id="selectPrGrBottomNameList" resultType="com.itwillbs.wms4.vo.ProductGroupBottomVO">
+		SELECT *
+			FROM product_group_bottom
+	</select>
+<!-- ============================ Client Name select ============================ -->
+	<select id="selectClientNameList" resultType="com.itwillbs.wms4.vo.ClientVO">
+		SELECT *
+			FROM client
+	</select>
+<!-- =============================== insert product ================================ -->
+	<insert id="insertProduct">
+		INSERT 
+			INTO product(
+				product_name
+				, product_group_bottom_cd
+				, size_des
+				, unit
+				, barcode
+				, in_unit_price
+				, out_unit_price
+				, product_type_cd
+				, business_no
+				, product_image
+				, remarks
+				)
+ 			VALUES(
+ 				#{product_name}
+ 				, #{product_group_bottom_cd}
+ 				, #{size_des}
+ 				, #{unit}
+ 				, #{barcode}
+ 				, #{in_unit_price}
+ 				, #{out_unit_price}
+ 				, #{product_type_cd}
+ 				, #{business_no}
+ 				, #{product_image}
+ 				, #{remarks}
+ 			)
+	</insert>
+<!-- ========================== 품목 조회 관련 =========================== -->
+<!-- ========================== select product group =========================== -->
+	<select id="selectProductList" resultType="com.itwillbs.wms4.vo.ProductListVO">
+		SELECT *
+			FROM product_list
+		<if test="!keyword.equals('')">
+			WHERE
+			<choose>
+				<when test="searchType.equals('productName')">
+					product_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('productBottom')">
+					product_group_bottom_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('productTop')">
+					product_group_top_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+		LIMIT 
+			#{startRow}, #{listLimit}
+	</select>	
+<!-- ==================== select product list count ====================== -->
+	<select id="selectProductListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM product_list -- 이후 작업 분기 일어남
+			<if test="!keyword.equals('')">
+				WHERE
+				<choose>
+					<when test="searchType.equals('productName')">
+					product_name LIKE '%${keyword}%'
+					</when>
+					<when test="searchType.equals('productBottom')">
+						product_group_bottom_name LIKE '%${keyword}%'
+					</when>
+					<when test="searchType.equals('productTop')">
+						product_group_top_name LIKE '%${keyword}%'
+					</when>
+				</choose>			
+			</if>
+	</select>
+<!-- ========================== 품목 상세정보 조회, 수정 및 삭제 관련 =========================== -->	
+<!-- ==================== select product detail ====================== -->
+	<select id="selectProductDetail" resultType="com.itwillbs.wms4.vo.ProductVO">
+		SELECT * 
+			FROM product
+			WHERE product_cd= #{product_cd}
+	</select>
+<!-- ==================== delete product ====================== -->
+	<delete id="deleteProduct">
+		DELETE FROM product
+			WHERE product_cd = #{product_cd}
+	</delete>
+	
+<!-- ==================== select product file name ====================== -->
+	<select id="selectRealFile" resultType="string">
+		SELECT product_image
+			FROM product
+			WHERE
+				product_cd = #{product_cd}
+	</select>	
+	
+	
+	
+	
+</mapper>

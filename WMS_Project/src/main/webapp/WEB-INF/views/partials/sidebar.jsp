@@ -68,14 +68,14 @@
 						<li class="nav-item"><a class="nav-link"
 							href="Regist.wh">창고 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="List.pr">품목 관리</a></li>
+							href="#">품목 등록</a></li>
 					</ul>
 				</div>
             <a class="nav-link" href="WMS">WMS</a>
 	            <div class="collapse" id="ui-basic2">
 					<ul class="#">
 						<li class="nav-item"><a class="nav-link"
-							href="#">창고 관리</a></li>
+							href="Wh.wms">창고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="#">입고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itwillbs.wms4.mapper.WmsMapper">
+ 
+<!--   전체 창고 조회 -->
+  <select id="selectWhList" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+  	SELECT * 
+  		FROM warehouse
+  </select>
+  <select id="selectAreaList" resultType="com.itwillbs.wms4.vo.WhAreaVO">
+  	SELECT * 
+  		FROM wh_area
+  </select>
+  <select id="selectLocationList" resultType="com.itwillbs.wms4.vo.WhLocationVO">
+  	SELECT * 
+  		FROM wh_location
+  </select>
+  <select id="selectStockList" resultType="com.itwillbs.wms4.vo.StockVO">
+	SELECT *
+		FROM stock
+  </select>
+  <select id="selectStockListCount" resultType="int">
+	SELECT COUNT(*)
+		FROM stock
+  </select>
+<!-- 	구역명 등록 -->
+  <insert id="insertArea">
+	  	INSERT 
+	  		INTO wh_area
+		  		VALUES (
+		  			#{wh_cd}
+		  			, #{wh_area}
+		  			, #{wh_area_cd}
+		  		)
+	</insert>
+<!-- 	위치명 등록 -->
+  <insert id="insertLocation">
+	  	INSERT 
+	  		INTO wh_location
+		  		VALUES (
+		  			#{wh_area_cd}
+		  			, #{wh_loc_in_area}
+		  			, #{wh_loc_in_area_cd}
+		  		)
+  </insert>
+<!--   구역명 삭제 -->
+  <delete id="deleteArea">
+  		DELETE
+  			FROM wh_area
+  			WHERE wh_area_cd = #{wh_area_cd}
+  </delete>
+<!--   위치명 삭제 -->
+  <delete id="deleteLocation">
+  		DELETE
+  			FROM wh_location
+  			WHERE wh_loc_in_area_cd = #{wh_loc_in_area_cd}
+  </delete>
+<!--   구역명 수정 -->
+  <update id="updateArea">
+		UPDATE wh_area
+			SET
+				wh_area = #{wh_area}
+			WHERE
+				wh_area_cd = #{wh_area_cd}
+  </update>
+<!--   위치명 수정 -->
+  <update id="updateLocation">
+		UPDATE wh_location
+			SET
+				wh_loc_in_area = #{wh_loc_in_area}
+			WHERE
+				wh_loc_in_area_cd = #{wh_loc_in_area_cd}
+  </update>
+</mapper>
