@@ -55,6 +55,8 @@ public interface ProductMapper {
 
 	String selectRealFile(String product_cd);
 
+	int updateProduct(ProductVO product);
+
 	
 
 	

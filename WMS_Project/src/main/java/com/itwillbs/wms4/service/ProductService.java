@@ -85,6 +85,10 @@ public class ProductService {
 			return mapper.selectRealFile(product_cd);
 		}
 
+		public int modifyProduct(ProductVO product) {
+			return mapper.updateProduct(product);
+		}
+
 		
 
 

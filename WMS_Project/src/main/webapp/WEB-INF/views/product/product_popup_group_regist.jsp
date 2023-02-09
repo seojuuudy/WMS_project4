@@ -45,29 +45,15 @@ $(function() {
   <body>
   
     <div class="container-scroller">
-      <!-- 사이드바 -->
-      <jsp:include page="../partials/sidebar_pr.jsp"></jsp:include>
-      <!-- 사이드바 -->
-      
-      <div class="container-fluid page-body-wrapper">
-        <!-- 색상 커스텀 설정 -->
-        <jsp:include page="../partials/settings-panel.jsp"></jsp:include>
-        <!-- 색상 커스텀 설정 -->
-        <!-- 상단 메뉴바 -->
-      	<jsp:include page="../partials/navbar.jsp"></jsp:include>
-        <!-- 상단 메뉴바  -->
-        
         <!-- 본문 영역 -->
         <div class="main-panel">
-<!-- 			<h1>품목 그룹 등록</h1> -->	
-		
 		<!-- 품목 등록 table -->	
         <div class="col-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">품목 그룹 등록</h4>
               
-              <form action="GroupRegistPro.pr" class="form-sample" method="post" >
+              <form action="GrRegistPopUpPro.pr" class="form-sample" method="post" >
                 <p class="card-description">product group regist</p>
                 
                 <div class="row">
@@ -109,7 +95,7 @@ $(function() {
                   
                   <div class="template-demo" style="text-align: right;">
                   <button type="submit" class="btn btn-primary mr-2">등록</button>
-                  <button type="button" class="btn btn-light" onclick="history.back()">취소</button>
+                  <button class="btn btn-light" type="button" onclick="history.back()">취소</button>
                   </div>
                  </div>
                 </div>

@@ -16,7 +16,9 @@ public class ProductVO {
 	   PRODUCT_TYPE_CD VARCHAR(10) NOT NULL, 
 	   BUSINESS_NO VARCHAR(30) NOT NULL, 
 	   PRODUCT_IMAGE VARCHAR(100), 
-	   REMARKS VARCHAR(2000)
+	   REMARKS VARCHAR(2000), 
+	   SELL_PRICEELL_PRICE INT,
+	   PURCHASE_PRICE INT
 	);
 	*/
 	
@@ -32,6 +34,10 @@ public class ProductVO {
 	private String business_no;
 	private String product_image;
 	private String remarks;
+	//----------추가한 컬럼----------
+	private int sell_price;
+	private int purchase_price;
+	//------------------------------
 	
 	private MultipartFile file;
 
@@ -41,7 +47,7 @@ public class ProductVO {
 
 	public ProductVO(int product_cd, String product_name, int product_group_bottom_cd, String size_des, String unit,
 			String barcode, double in_unit_price, double out_unit_price, String product_type_cd, String business_no,
-			String product_image, String remarks, MultipartFile file) {
+			String product_image, String remarks, int sell_price, int purchase_price, MultipartFile file) {
 		super();
 		this.product_cd = product_cd;
 		this.product_name = product_name;
@@ -55,6 +61,8 @@ public class ProductVO {
 		this.business_no = business_no;
 		this.product_image = product_image;
 		this.remarks = remarks;
+		this.sell_price = sell_price;
+		this.purchase_price = purchase_price;
 		this.file = file;
 	}
 
@@ -154,6 +162,22 @@ public class ProductVO {
 		this.remarks = remarks;
 	}
 
+	public int getSell_price() {
+		return sell_price;
+	}
+
+	public void setSell_price(int sell_price) {
+		this.sell_price = sell_price;
+	}
+
+	public int getPurchase_price() {
+		return purchase_price;
+	}
+
+	public void setPurchase_price(int purchase_price) {
+		this.purchase_price = purchase_price;
+	}
+
 	public MultipartFile getFile() {
 		return file;
 	}
@@ -168,9 +192,9 @@ public class ProductVO {
 				+ product_group_bottom_cd + ", size_des=" + size_des + ", unit=" + unit + ", barcode=" + barcode
 				+ ", in_unit_price=" + in_unit_price + ", out_unit_price=" + out_unit_price + ", product_type_cd="
 				+ product_type_cd + ", business_no=" + business_no + ", product_image=" + product_image + ", remarks="
-				+ remarks + ", file=" + file + "]";
+				+ remarks + ", sell_price=" + sell_price + ", purchase_price=" + purchase_price + ", file=" + file
+				+ "]";
 	}
-
 
 
 }
