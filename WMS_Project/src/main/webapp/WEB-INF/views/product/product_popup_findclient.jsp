@@ -28,7 +28,7 @@
 	<!-- jquery -->
 	<script type="text/javascript">
 		function goRegistPage(business_no) {
-			alert("원래페이지로 데려갈 사업자번호 : " + business_no);
+// 			alert("원래페이지로 데려갈 사업자번호 : " + business_no);
 			opener.document.getElementById("selectedClient").value = business_no;
 			window.close();
 			
@@ -62,7 +62,6 @@
                         </div>
 							<input type="text" class="form-control" name="keyword" value="${param.keyword }">
 							<input type="submit" class="btn btn-light" value="검색"> &nbsp;&nbsp; 
-		   					<input type="button" class="btn btn-primary btn-rounded btn-fw" value="신규 거래처 등록" onclick="location.href='ClientRegist.cl'" />
                         </div>
                    		</div>
 					</form>

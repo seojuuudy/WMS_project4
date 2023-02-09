@@ -37,7 +37,7 @@ $(function() {
 		
 		$("#purchasePriceResult").val(price);
 		
-		alert("number : " + number + ", purchase price : " + price);
+// 		alert("number : " + number + ", purchase price : " + price);
 		
 	});
 	
@@ -50,7 +50,7 @@ $(function() {
 		
 		$("#sellingPriceResult").val(price);
 		
-		alert("number : " + number + ", selling price : " + price);
+// 		alert("number : " + number + ", selling price : " + price);
 		
 	});
 	
@@ -69,11 +69,14 @@ function findClient() {
 
 // 삭제 확인창
 function confirmDelete() {
+	alert("product code : " + ${productInfo.product_cd});
 	let result = confirm("품목을 삭제하시겠습니까?");
 	if(result) {
-		location.href = "Delete.pr?product_cd=${productInfo.product_cd}";
+		location.href = "ProductDelete.pr?product_cd=" + ${productInfo.product_cd};
 	}
 }
+// 이미지 삭제
+
 </script>  
   </head>
   <body>
@@ -96,17 +99,20 @@ function confirmDelete() {
 <!-- 			<h1>품목 등록</h1> -->	
 		
 		<!-- 품목 등록 table -->	
-        <div class="col-12 grid-margin">
+        <div class="col-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">품목 상세정보</h4>
-              <form action="ModifyPro.pr" class="form-sample" method="post" enctype="multipart/form-data">
+              <form action="ProductModifyPro.pr" class="form-sample" method="post" enctype="multipart/form-data">
                 <p class="card-description">product detail</p>
                 
                  <div class="col-sm-4 stretch-card grid-margin" style="margin:0 auto;">
 	                <div class="card_photo">
 	                  <div class="card-body p-0">
-	                  <img src="${pageContext.request.contextPath }/resources/upload/${productInfo.product_image}" alt="image" width="150" height="150"/>
+	                 	<c:if test="${not empty productInfo.product_image }">
+	                 	 <img src="${pageContext.request.contextPath }/resources/upload/${productInfo.product_image}" alt="image" width="150" height="150"/>
+	                 	</c:if>	
+	                  
 	                  </div>
 	                  <div class="card-body px-3 text-dark">
 	                    <h5 class="font-weight-semibold" style="margin-top: 10pt; margin-bottom: 0;">품목코드 : ${productInfo.product_cd }</h5>
@@ -120,7 +126,8 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">품목명</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="product_name" value="${productInfo.product_name }" required="required"/>
+                        <input type="text" class="form-control" name="product_name" value="${productInfo.product_name }" />
+                        <input type="hidden" name="product_cd" value="${productInfo.product_cd }" />
                       </div>
                     </div>
                   </div>
@@ -131,7 +138,7 @@ function confirmDelete() {
                       <div class="col-sm-9">
                          <span class="input-group-append">
                          
-                        <select class="form-control" name="product_group_bottom_cd" required="required" id="selectedGroup">
+                        <select class="form-control" name="product_group_bottom_cd" id="selectedGroup">
                         <option value="" selected="selected" disabled="disabled">선택하세요</option>
                          <c:forEach var="bottomName" items="${prGrBottomNameList }">
                           <option value="${bottomName.product_group_bottom_cd }"<c:if test="${productInfo.product_group_bottom_cd eq bottomName.product_group_bottom_cd}">selected</c:if>>${bottomName.product_group_bottom_name }</option>
@@ -150,8 +157,8 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">품목 구분</label>
                       <div class="col-sm-9">
-                        <select class="form-control" name="product_type_cd" required="required">
-                          <option value="" selected="selected" disabled="disabled">선택하세요</option>
+                        <select class="form-control" name="product_type_cd">
+<!--                           <option value="" selected="selected" disabled="disabled">선택하세요</option> -->
                           <option value="1" <c:if test="${productInfo.product_type_cd eq '1'}">selected</c:if>>원재료</option>
                           <option value="2" <c:if test="${productInfo.product_type_cd eq '2'}">selected</c:if>>부재료</option>
                           <option value="3" <c:if test="${productInfo.product_type_cd eq '3'}">selected</c:if>>반제품</option>
@@ -166,7 +173,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">단위</label>
                       <div class="col-sm-9">
-                        <input type="text" id="number" class="form-control" name="unit" value="${productInfo.unit }" required="required"/>
+                        <input type="text" id="number" class="form-control" name="unit" value="${productInfo.unit }"/>
                       </div>
                     </div>
                   </div>
@@ -177,7 +184,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">매입가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="purchasePrice" id="purchasePrice" required="required"/>
+                        <input type="text" class="form-control" name="purchasePrice" value="${productInfo.purchase_price }" id="purchasePrice" />
                       </div>
                     </div>
                   </div>
@@ -197,7 +204,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">판매가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="sellingPrice" id="sellingPrice" required="required"/>
+                        <input type="text" class="form-control" name="sellingPrice" value="${productInfo.sell_price }" id="sellingPrice" />
                       </div>
                     </div>
                   </div>
@@ -226,9 +233,8 @@ function confirmDelete() {
                     <div class="form-group row">
                      <label class="col-sm-3 col-form-label">대표이미지</label>
                       <div class="col-sm-9">
-                       <span class="input-group-append">
-                      <input type="file" name="file" class="file-upload-default" />
-                         <input type="file" name="file" id="file" class="form-control file-upload-info" placeholder="Upload Image" />
+							<span class="input-group-append">
+	                        <input type="file" name="file" id="file" value="${productInfo.product_image }" class="form-control file-upload-info" placeholder="Upload Image" />
 	                        <button onclick="jQuery('#file').click()" class="file-upload-browse btn btn-primary" type="button">Upload</button>
                         </span>
                       </div>
@@ -242,7 +248,7 @@ function confirmDelete() {
                       <label class="col-sm-3 col-form-label">거래처</label>
                       <div class="col-sm-9">
                          <span class="input-group-append">
-                        <select class="form-control" name="business_no" required="required" id="selectedClient">
+                        <select class="form-control" name="business_no" id="selectedClient">
                         <option value="" selected="selected" disabled="disabled">선택하세요</option>
                          <c:forEach var="clientName" items="${clientNameList }">
                           <option value="${clientName.business_no }" <c:if test="${productInfo.business_no eq clientName.business_no}">selected</c:if> >${clientName.cust_name }</option>
@@ -267,25 +273,27 @@ function confirmDelete() {
               
                   <div class="template-demo" style="text-align: right;">
                   <button type="submit" class="btn btn-primary mr-2">수정</button>
-                  <button class="btn btn-light" onclick="history.back()">취소</button>
-                  <button class="btn btn-light" onclick="confirmDelete()">삭제</button>
+                  <button type="button" class="btn btn-light" onclick="history.back()">취소</button>
+                  <button type="button" class="btn btn-light" onclick="confirmDelete()">삭제</button>
                   </div>
-              </form>
                </div>
              </div>
             </div>
+              </form>
+          </div>
+          </div>
           </div>
         
 		<!-- 품목 등록 table -->	
 			
+        </div>
 		<footer class="footer">
           	<jsp:include page="../partials/footer.jsp"></jsp:include>
           </footer>
-        </div>
         <!-- 본문 영역 --> 
       </div>
+      </div>
       <!-- page-body-wrapper ends -->
-    </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendors/js/vendor.bundle.base.js"></script>

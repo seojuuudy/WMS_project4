@@ -47,7 +47,7 @@ $(function() {
 		
 		$("#purchasePriceResult").val(price);
 		
-		alert("number : " + number + ", purchase price : " + price);
+// 		alert("number : " + number + ", purchase price : " + price);
 		
 	});
 	
@@ -60,7 +60,7 @@ $(function() {
 		
 		$("#sellingPriceResult").val(price);
 		
-		alert("number : " + number + ", selling price : " + price);
+// 		alert("number : " + number + ", selling price : " + price);
 		
 	});
 	
@@ -98,11 +98,11 @@ function findClient() {
 <!-- 			<h1>품목 등록</h1> -->	
 		
 		<!-- 품목 등록 table -->	
-        <div class="col-12 grid-margin">
+        <div class="col-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">품목 등록</h4>
-              <form action="RegistPro.pr" class="form-sample" method="post" enctype="multipart/form-data">
+              <form action="ProductRegistPro.pr" class="form-sample" method="post" enctype="multipart/form-data">
                 <p class="card-description">product regist</p>
                 
                 <div class="row">
@@ -256,24 +256,26 @@ function findClient() {
               
                   <div class="template-demo" style="text-align: right;">
                   <button type="submit" class="btn btn-primary mr-2">등록</button>
-                  <button class="btn btn-light" onclick="history.back()">취소</button>
+                  <button type="button" class="btn btn-light" onclick="history.back()">취소</button>
                   </div>
-              </form>
                </div>
              </div>
             </div>
+              </form>
           </div>
+        </div>
+        </div>
         
 		<!-- 품목 등록 table -->	
-			
+      </div>
 		<footer class="footer">
           	<jsp:include page="../partials/footer.jsp"></jsp:include>
           </footer>
-        </div>
-        <!-- 본문 영역 --> 
       </div>
+      </div>
+			
+        <!-- 본문 영역 --> 
       <!-- page-body-wrapper ends -->
-    </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendors/js/vendor.bundle.base.js"></script>

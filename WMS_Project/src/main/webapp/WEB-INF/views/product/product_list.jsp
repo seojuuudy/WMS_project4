@@ -46,9 +46,9 @@
        <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title"><a href="List.pr">품목 조회</a></h4>
+                    <h4 class="card-title"><a href="ProductList.pr">품목 조회</a></h4>
                     <p class="card-description"> Product List
-                    	<form action="List.pr">
+                    	<form action="ProductList.pr">
 						<!-- 검색 타입 추가 -->
 						<div class="form-group">
                       	<div class="input-group">
@@ -93,7 +93,7 @@
 					</td>
 					<td>${product.product_cd}</td>
 					<td>
-						<a href="Detail.pr?product_cd=${product.product_cd }">
+						<a href="ProductDetail.pr?product_cd=${product.product_cd }">
 							${product.product_name}
 						</a>
 					</td>
@@ -112,7 +112,7 @@
                       </table>
                     </div>
 			        <div class="template-demo" style="text-align: right;">
-	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='Regist.pr'">신규등록</button>
+	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='ProductRegist.pr'">신규등록</button>
            			</div>
                	
                	 <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->
@@ -129,7 +129,7 @@
 						
 						<c:choose>
 							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='List.pr?pageNum=${pageNum - 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='ProductList.pr?pageNum=${pageNum - 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
@@ -142,14 +142,14 @@
 									${i }
 								</c:when>
 								<c:otherwise>
-									<a href="List.pr?pageNum=${i }">${i }</a>
+									<a href="ProductList.pr?pageNum=${i }">${i }</a>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 				
 						<c:choose>
 							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='List.pr?pageNum=${pageNum + 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='ProductList.pr?pageNum=${pageNum + 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">

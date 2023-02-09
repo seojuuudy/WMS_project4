@@ -40,4 +40,9 @@ public class PageController {
 	public String basictable() {
 		return "pages/tables/basic-table";
 	}
+	
+	@GetMapping(value = "/InsertListPage")
+	public String listPage() {
+		return "insert_list_page";
+	}
 }

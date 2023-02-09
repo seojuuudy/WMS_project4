@@ -91,7 +91,7 @@
                       </table>
                     </div>
 			        <div class="template-demo" style="text-align: right;">
-	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='GroupRegist.pr'">신규등록</button>
+	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='GrRegistPopUp.pr'">신규등록</button>
            			</div>
          
 				         <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->

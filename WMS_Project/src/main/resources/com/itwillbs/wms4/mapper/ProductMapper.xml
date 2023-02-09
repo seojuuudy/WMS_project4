@@ -108,6 +108,8 @@
 				, business_no
 				, product_image
 				, remarks
+				, purchase_price
+				, sell_price
 				)
  			VALUES(
  				#{product_name}
@@ -121,6 +123,8 @@
  				, #{business_no}
  				, #{product_image}
  				, #{remarks}
+ 				, #{purchase_price}
+ 				, #{sell_price}
  			)
 	</insert>
 <!-- ========================== 품목 조회 관련 =========================== -->
@@ -176,7 +180,6 @@
 		DELETE FROM product
 			WHERE product_cd = #{product_cd}
 	</delete>
-	
 <!-- ==================== select product file name ====================== -->
 	<select id="selectRealFile" resultType="string">
 		SELECT product_image
@@ -184,7 +187,28 @@
 			WHERE
 				product_cd = #{product_cd}
 	</select>	
-	
+<!-- ==================== select product file name ====================== -->
+	<update id="updateProduct">
+		UPDATE product
+			SET
+				product_name = #{product_name}
+				, product_group_bottom_cd = #{product_group_bottom_cd}
+				, size_des = #{size_des}
+				, unit = #{unit}
+				, barcode = #{barcode}
+				, in_unit_price = #{in_unit_price}
+				, out_unit_price = #{out_unit_price}
+				, product_type_cd = #{product_type_cd}
+				, business_no = #{business_no}
+				<if test="!product_image.equals('')">
+					, product_image = #{product_image}
+				</if>
+				, remarks = #{remarks}
+				, purchase_price = #{purchase_price}
+				, sell_price = #{sell_price}
+			WHERE
+				product_cd = #{product_cd}
+	</update>
 	
 	
 	

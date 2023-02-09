@@ -88,7 +88,7 @@
         <div class="dropdown-menu dropdown-menu-left navbar-dropdown preview-list" aria-labelledby="messageDropdown">
           <h6 class="p-3 mb-0 font-weight-semibold">재고관리</h6>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item preview-item" href="#">
+          <a class="dropdown-item preview-item" href="InsertListPage">
             <div class="preview-thumbnail">
             </div>
             <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">

@@ -33,16 +33,16 @@
     <li class="pt-2 pb-1">
       <span class="nav-item-head">품목 관리</span>
     </li>
-    <!-- 사이드바 인사관리 B 부분 -->
+    <!-- 사이드바 품목관리 B 부분 -->
 	<li class="nav-item">
-		<a class="nav-link" href="Regist.pr">
+		<a class="nav-link" href="ProductRegist.pr">
 			<i class="mdi mdi-database menu-icon"></i>
 			<span class="menu-title">품목 등록</span>
 		</a>
 	</li>
       
 	<li class="nav-item">
-		<a class="nav-link" href="List.pr">
+		<a class="nav-link" href="ProductList.pr">
 			<i class="mdi mdi-crosshairs-gps menu-icon"></i>
 			<span class="menu-title">품목 조회</span>
 		</a>

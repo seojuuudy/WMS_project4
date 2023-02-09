@@ -60,7 +60,7 @@
       <div class="collapse" id="ui-basic2">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item">
-            <a class="nav-link" href="#">기본 등록</a>
+            <a class="nav-link" href="InsertListPage">기본 등록</a>
 	            <div class="collapse" id="ui-basic2">
 					<ul class="#">
 						<li class="nav-item"><a class="nav-link"
@@ -68,7 +68,7 @@
 						<li class="nav-item"><a class="nav-link"
 							href="Regist.wh">창고 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="#">품목 등록</a></li>
+							href="ProductList.pr">품목 관리</a></li>
 					</ul>
 				</div>
             <a class="nav-link" href="WMS">WMS</a>
