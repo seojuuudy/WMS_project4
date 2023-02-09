@@ -87,12 +87,62 @@
   				#{moving_stock_cd}
   				,2
   				,#{product_cd}
-  				,#{moving_stock_cd}
+  				,#{stock_cd}
   				,null
   				,#{moving_qty}
   				,#{emp_num}
   				,now()
   				,#{remarks}
+  			)
+  	</insert>
+  	
+  	<select id="selectStockHistory" resultType="com.itwillbs.wms4.vo.Stock_history_listVO">
+  		SELECT * 
+  			FROM stock_history_list 
+  			WHERE stock_cd = #{stock_cd};
+  	</select>
+  	
+  	<select id="selectAreaList" resultType="com.itwillbs.wms4.vo.Wh_detailVO">
+  		SELECT * FROM wh_detail
+  		 <if test='!keyword.equals("")'>
+			WHERE
+			<choose>
+				<when test="searchType.equals('wh_name')">
+					wh_name LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_area')">
+					wh_area LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_loc_in_area')">
+					wh_loc_in_area LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+			LIMIT 
+			#{startRow}
+			, #{listLimit}
+  	</select>
+  	
+  	<select id="selectAreaListCount" resultType="int">
+  		SELECT COUNT(*)
+  			FROM wh_detail
+  	</select>
+  	
+  	<select id="selectAreaCd" resultType="int">
+  		SELECT wh_loc_in_area_cd
+  			FROM wh_location
+  			WHERE wh_loc_in_area = #{loc_in_area}
+  	</select>
+  	
+  	<insert id="insertStock">
+  		INSERT INTO stock (
+  				product_cd
+  				, wh_loc_in_area_cd
+  				, stock_qty)
+  			VALUES (
+  				#{product_cd}
+  				, #{wh_loc_in_area_cd}
+  				, #{moving_qty}
   			)
   	</insert>
 </mapper>
