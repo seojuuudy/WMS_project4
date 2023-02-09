@@ -13,12 +13,16 @@ public interface WmsMapper {
 
 	List<WarehouseVO> selectWhList();
 
-	List<WhAreaVO> selectAreaList();
+	List<WhAreaVO> selectAreaList(String searchArea);
 
-	List<WhLocationVO> selectLocationList();
+	List<WhLocationVO> selectLocationList(
+			@Param("searchArea") String searchArea,
+			@Param("searchLocation") String searchLocation);
 
 	List<StockVO> selectStockList(
-			@Param("searchType") String searchType, 
+			@Param("searchArea") String searchArea, 
+			@Param("searchLocation") String searchLocation, 
+			@Param("searchGo") String searchGo, 
 			@Param("startRow") int startRow, 
 			@Param("listLimit") int listLimit);
 

@@ -26,7 +26,9 @@ public class WmsController {
 	private WmsService service;
 	// 전체 창고,구역,위치 목록 + 전체 재고목록 조회 (재직중인 사원만 조회)
 	@GetMapping(value = "/Wh.wms")
-	public String whWms(Model model, @RequestParam(defaultValue = "") String searchType,
+	public String whWms(Model model, @RequestParam(defaultValue = "") String searchArea,
+			@RequestParam(defaultValue = "") String searchLocation,
+			@RequestParam(defaultValue = "") String searchGo,
 			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
@@ -42,7 +44,7 @@ public class WmsController {
 				int listLimit = 10;
 				int startRow = (pageNum-1) * listLimit;
 
-				List<StockVO> stList = service.getStockList(searchType, startRow, listLimit);
+				List<StockVO> stList = service.getStockList(searchArea, searchLocation, searchGo, startRow, listLimit);
 				
 				int listCount = service.getStockListCount();
 				int pageListLimit = 8;
@@ -57,12 +59,12 @@ public class WmsController {
 				// PageInfo 객체 생성 후 페이징 처리 정보 저장
 				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
 				List<WarehouseVO> whList = service.getWhList();
-				List<WhAreaVO> arList = service.getAreaList();
-				List<WhLocationVO> loList = service.getLocationList();
+				List<WhAreaVO> arList = service.getAreaList(searchArea);
+				List<WhLocationVO> loList = service.getLocationList(searchArea, searchLocation);
+				model.addAttribute("loList",loList);
 				model.addAttribute("pageInfo", pageInfo);				
 				model.addAttribute("whList",whList);
 				model.addAttribute("arList",arList);
-				model.addAttribute("loList",loList);
 				model.addAttribute("stList",stList);
 				
 				return "wms/wh_wms";

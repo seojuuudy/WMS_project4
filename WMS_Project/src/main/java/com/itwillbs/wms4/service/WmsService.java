@@ -23,16 +23,16 @@ public class WmsService {
 		return mapper.selectWhList();	
 	}
 	// 전체 구역목록 조회
-	public List<WhAreaVO> getAreaList() {
-		return mapper.selectAreaList();	
+	public List<WhAreaVO> getAreaList(String searchArea) {
+		return mapper.selectAreaList(searchArea);	
 	}
 	//전체 위치목록 조회
-	public List<WhLocationVO> getLocationList() {
-		return mapper.selectLocationList();	
+	public List<WhLocationVO> getLocationList(String searchArea, String searchLocation) {
+		return mapper.selectLocationList(searchArea, searchLocation);	
 	}
 	//전체 재고 조회
-	public List<StockVO> getStockList(String searchType, int startRow, int listLimit) {
-		return mapper.selectStockList(searchType, listLimit, listLimit);	
+	public List<StockVO> getStockList(String searchArea, String searchLocation, String searchGo, int startRow, int listLimit) {
+		return mapper.selectStockList(searchArea, searchLocation, searchGo, startRow, listLimit);	
 	}
 	//재고 개수 조회
 	public int getStockListCount() {

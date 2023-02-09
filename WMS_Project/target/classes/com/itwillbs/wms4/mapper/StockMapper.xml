@@ -1,5 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.StockMapper">
-  
+	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.Stock_listVO">
+		SELECT s.stock_cd, s.product_cd, s.wh_loc_in_area_cd, s.stock_qty,
+			   p.product_name, p.size_des, w.wh_name, w.wh_area, w.wh_loc_in_area
+			FROM stock s
+			JOIN product p
+			ON s.product_cd = p.product_cd
+			JOIN wh_detail w
+			ON s.wh_loc_in_area_cd = w.wh_loc_in_area_cd
+		 <if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('stock_cd')">
+					AND stock_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					AND product_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_name')">
+					AND wh_name LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_area')">
+					AND wh_area LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('wh_loc_in_area')">
+					AND wh_loc_in_area LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+			LIMIT 
+			#{startRow}
+			, #{listLimit}
+	</select>
+	
+	<select id="selectStockListCount" resultType="int">
+  		SELECT COUNT(*)
+  			FROM stock
+  	</select>
+  	
+  	<update id="updateStock">
+  		UPDATE stock
+  			SET 
+  				stock_qty = #{stock_qty}
+  			WHERE 
+  				stock_cd = #{stock_cd}	
+  	</update>
+  	
+  	<update id="updateMovingStock">
+  		UPDATE stock
+  			SET 
+  				stock_qty = stock_qty + #{moving_qty}
+  			WHERE 
+  				stock_cd = #{moving_stock_cd}
+  	</update>
+  	
+  	<select id="selectProduct_cd" resultType="int">
+  		SELECT product_cd
+  			FROM product
+  			WHERE product_name = #{product_name}
+  	</select>
+  	
+  	<select id="selectEmpNum" resultType="string">
+  		SELECT emp_num
+  			FROM employees
+  			WHERE emp_email = #{sId}
+  	</select>
+  	
+  	<insert id="insertStockHistory">
+  		INSERT INTO stock_history
+  			VALUES (
+  					#{stock_cd}
+  					,2
+  					,#{product_cd}
+  					,null
+  					,#{moving_stock_cd}
+  					,#{moving_qty}
+  					,#{emp_num}
+  					,now()
+  					,#{remarks}
+  			)
+  	</insert>
+  	
+  	<insert id="insertMovingStockHistory">
+  		INSERT INTO stock_history
+  			VALUES (
+  				#{moving_stock_cd}
+  				,2
+  				,#{product_cd}
+  				,#{moving_stock_cd}
+  				,null
+  				,#{moving_qty}
+  				,#{emp_num}
+  				,now()
+  				,#{remarks}
+  			)
+  	</insert>
 </mapper>
