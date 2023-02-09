@@ -88,9 +88,14 @@
 						
 			});
 			
-			$(":button").on("click", function goRegistPage() {
-				$(".moving_stock_cd_arr", opener.document).val($(this).parents("tr").find(".stock_cd").text());
-				$(".wh_loc_in_area_arr", opener.document).val(
+			
+			$(":button").on("click", function goRegistPage(i) {
+				alert("선택한 위치: " + $(this).parents("tr").find(".wh_name").text() + " "
+						+ $(this).parents("tr").find(".wh_area").text() + " "
+						+ $(this).parents("tr").find(".wh_loc_in_area").text());
+			let index = ${index };
+				$("#moving_stock_cd_arr" + index, opener.document).val($(this).parents("tr").find(".stock_cd").text());
+				$("#wh_loc_in_area_arr" + index, opener.document).val(
 						$(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
 						+ $(this).parents("tr").find(".wh_loc_in_area").text());

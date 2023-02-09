@@ -88,13 +88,12 @@
 						
 			});
 			
+			
 			$(":button").on("click", function goRegistPage() {
-				alert("선택한 area: " 
-						+ $(this).parents("tr").find(".wh_name").text() + " "
-						+ $(this).parents("tr").find(".wh_area").text() + " "
-						+ $(this).parents("tr").find(".wh_loc_in_area").text());
-				$(".moving_stock_cd_arr", opener.document).val(0);
-				$(".wh_loc_in_area_arr", opener.document).val(
+				let index = ${index };
+				
+				$("#moving_stock_cd_arr" + index, opener.document).val(0);
+				$("#wh_loc_in_area_arr" + index, opener.document).val(
 						$(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
 						+ $(this).parents("tr").find(".wh_loc_in_area").text());

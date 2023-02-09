@@ -70,7 +70,9 @@ public class StockController {
 	@GetMapping(value = "StockPopup.st")
 	public String stockListPopup(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
-			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+			@RequestParam(defaultValue = "1") int pageNum, 
+			@RequestParam(defaultValue = "1") int index,
+			HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
 		
@@ -93,6 +95,7 @@ public class StockController {
 		
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("stock_list", stock_list);
+		model.addAttribute("index", index);
 		
 		
 		return "stock/stock_list_popup";
@@ -101,7 +104,9 @@ public class StockController {
 	@GetMapping(value = "Stock_area_popup.st")
 	public String stockAreaPopup(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
-			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+			@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "1") int index,
+			HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
 		
@@ -124,6 +129,7 @@ public class StockController {
 		
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("wh_detail", wh_detail);
+		model.addAttribute("index", index);
 		
 		
 		return "stock/stock_area_popup";

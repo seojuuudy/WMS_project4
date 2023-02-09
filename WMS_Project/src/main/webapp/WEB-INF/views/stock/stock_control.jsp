@@ -41,20 +41,38 @@
 					success : function(data) {
 							console.log(data)
 							
-							for(let stock of data) {
+// 							for(let stock of data) {
+// 								let result = "<tr>"
+// 											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' value='" + stock.stock_cd + "' readonly='readonly'></td>"
+// 											+ "<td name='product_name'><input type='text' name='product_name_arr' value='" + stock.product_name + "' readonly='readonly'></td>"
+// 											+ "<td name='size_des'><input type='text' name='size_des_arr' value='" + stock.size_des + "' readonly='readonly'></td>"
+// 											+ "<td name='wh_area'><input type='text' name='wh_area_arr' value='" + stock.wh_area + "(" + stock.wh_name + ")" + "' readonly='readonly'></td>"
+// 											+ "<td name='wh_loc_in_area'><input type='text' name='stock.wh_loc_in_area_arr' value='" + stock.wh_loc_in_area + "' readonly='readonly'></td>"
+// 											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' value='" + stock.stock_qty + "' readonly='readonly'></td>"
+// 											+ "<td><input type='text' name='control_qty_arr' onchange='qtyval(this)' value=0></td>"
+// 											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search()' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
+// 											+ "<td class='moving_area'><input type='text' name='wh_loc_in_area_arr' class='wh_loc_in_area_arr'>&nbsp;<input type='button' name='area_btn' onclick='area_search()' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
+// 											+ "<td><input type='text' name='moving_qty_arr' onchange='qtyval(this)' value=0></td>"
+// 											+ "<td name='stock_qty_sum_arr'></td>"
+// 											+ "<td class='remarks'><input type='text' name='remarks_arr' value='기타'></td>"
+// 											+ "</tr>";
+// 								$("tbody").append(result);			
+// 							}
+							
+							for(let i = 0; i < data.length; i++) {
 								let result = "<tr>"
-											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' value='" + stock.stock_cd + "' readonly='readonly'></td>"
-											+ "<td name='product_name'><input type='text' name='product_name_arr' value='" + stock.product_name + "' readonly='readonly'></td>"
-											+ "<td name='size_des'><input type='text' name='size_des_arr' value='" + stock.size_des + "' readonly='readonly'></td>"
-											+ "<td name='wh_area'><input type='text' name='wh_area_arr' value='" + stock.wh_area + "(" + stock.wh_name + ")" + "' readonly='readonly'></td>"
-											+ "<td name='wh_loc_in_area'><input type='text' name='stock.wh_loc_in_area_arr' value='" + stock.wh_loc_in_area + "' readonly='readonly'></td>"
-											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' value='" + stock.stock_qty + "' readonly='readonly'></td>"
-											+ "<td><input type='text' name='control_qty_arr' onchange='qtyval(this)' value=0></td>"
-											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search()' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
-											+ "<td class='moving_area'><input type='text' name='wh_loc_in_area_arr' class='wh_loc_in_area_arr'>&nbsp;<input type='button' name='area_btn' onclick='area_search()' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
-											+ "<td><input type='text' name='moving_qty_arr' onchange='qtyval(this)' value=0></td>"
-											+ "<td name='stock_qty_sum_arr'></td>"
-											+ "<td class='remarks'><input type='text' name='remarks_arr' value='기타'></td>"
+											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' id='stock_cd_arr" + i + "' value='" + data[i].stock_cd + "' readonly='readonly'></td>"
+											+ "<td name='product_name'><input type='text' name='product_name_arr' id='product_name_arr" + i + "' value='" + data[i].product_name + "' readonly='readonly'></td>"
+											+ "<td name='size_des'><input type='text' name='size_des_arr' id='size_des_arr" + i + "' value='" + data[i].size_des + "' readonly='readonly'></td>"
+											+ "<td name='wh_area'><input type='text' name='wh_area_arr' value='" + data[i].wh_area + "(" + data[i].wh_name + ")" + "' readonly='readonly'></td>"
+											+ "<td name='wh_loc_in_area'><input type='text' name='wh_loc_in_area_arr' value='" + data[i].wh_loc_in_area + "' readonly='readonly'></td>"
+											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' id='stock_qty_arr" + i + "' value='" + data[i].stock_qty + "' readonly='readonly'></td>"
+											+ "<td><input type='text' name='control_qty_arr' id='control_qty_arr" + i + "' onblur='stock_qty_sum(" + i + ")' value=0></td>"
+											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' id='moving_stock_cd_arr" + i + "' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search(" + i + ")' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
+											+ "<td class='moving_area'><input type='text' name='wh_loc_in_area_arr' id='wh_loc_in_area_arr" + i + "' class='wh_loc_in_area_arr'>&nbsp;<input type='button' name='area_btn' onclick='area_search(" + i + ")' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
+											+ "<td><input type='text' name='moving_qty_arr' id='moving_qty_arr" + i + "' onblur='stock_qty_sum(" + i + ")' value=0></td>"
+											+ "<td name='stock_qty_sum_arr'><input type='text' id='stock_qty_sum_arr" + i + "'></td>"
+											+ "<td class='remarks'><input type='text' name='remarks_arr' id='remarks_arr" + i + " value='기타'></td>"
 											+ "</tr>";
 								$("tbody").append(result);			
 							}
@@ -90,13 +108,20 @@
 // 					item.value = 0;
 // 				}
 // 			}
-			function stock_search() {
+			function stock_search(index) {
 				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
-				window.open("StockPopup.st","_blank", options);
+				window.open("StockPopup.st?index=" + index,"_blank", options);
 			}
-			function area_search() {
+			function area_search(index) {
 				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
-				window.open("Stock_area_popup.st","_blank", options);
+				window.open("Stock_area_popup.st?index=" + index,"_blank", options);
+			}
+			
+			function stock_qty_sum(index) {
+				let sum = 0;
+				sum = parseInt($("#control_qty_arr" + index).val()) + parseInt($("#moving_qty_arr" + index).val());
+				$("#stock_qty_sum_arr" + index).val(sum);
+				
 			}
 	
 	</script>
