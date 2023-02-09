@@ -10,14 +10,49 @@
   <select id="selectAreaList" resultType="com.itwillbs.wms4.vo.WhAreaVO">
   	SELECT * 
   		FROM wh_area
+		WHERE
+			wh_cd = 
+			#{searchArea}
   </select>
-  <select id="selectLocationList" resultType="com.itwillbs.wms4.vo.WhLocationVO">
-  	SELECT * 
-  		FROM wh_location
+  <select id="selectLocationList" resultType="map">
+	SELECT wh_cd, wh_area, l.wh_area_cd, wh_loc_in_area, wh_loc_in_area_cd
+		FROM wh_location l
+		JOIN wh_area a
+		ON l.wh_area_cd = a.wh_area_cd
+		WHERE
+			a.wh_cd = #{searchArea}
+		AND
+			l.wh_area_cd = 
+			#{searchLocation}
   </select>
-  <select id="selectStockList" resultType="com.itwillbs.wms4.vo.StockVO">
-	SELECT *
-		FROM stock
+  <select id="selectStockList" resultType="com.itwillbs.wms4.vo.Stock_listVO">
+	SELECT s.stock_cd, s.product_cd, s.wh_loc_in_area_cd, s.stock_qty,
+			p.product_name, p.size_des, w.wh_name, w.wh_area, w.wh_loc_in_area,
+			a.wh_cd, a.wh_area_cd
+			FROM stock s
+			JOIN product p
+			ON s.product_cd = p.product_cd
+			JOIN wh_detail w
+			ON s.wh_loc_in_area_cd = w.wh_loc_in_area_cd
+			JOIN wh_area a
+			ON w.wh_area = a.wh_area
+			<if test="!searchArea.equals('')">
+				WHERE wh_cd = #{searchArea}
+				<choose>
+					<when test="!searchLocation.equals('')">
+						AND wh_area_cd = #{searchLocation}
+					</when>
+					<when test="!searchGo.equals('')">
+						AND wh_loc_in_area_cd = #{searchGo}
+					</when>
+				</choose>
+			</if>
+<!-- 			<if test="searchArea.equals('')"> -->
+<!-- 						WHERE wh_cd = '없는값'		 -->
+<!-- 			</if> -->
+		LIMIT 
+			#{startRow}
+			, #{listLimit}
   </select>
   <select id="selectStockListCount" resultType="int">
 	SELECT COUNT(*)
