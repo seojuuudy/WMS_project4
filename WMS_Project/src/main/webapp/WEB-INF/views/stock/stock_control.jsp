@@ -50,10 +50,11 @@
 											+ "<td name='wh_loc_in_area'><input type='text' name='stock.wh_loc_in_area_arr' value='" + stock.wh_loc_in_area + "' readonly='readonly'></td>"
 											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' value='" + stock.stock_qty + "' readonly='readonly'></td>"
 											+ "<td><input type='text' name='control_qty_arr' onchange='qtyval(this)' value=0></td>"
-											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr'>&nbsp;<input type='button' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
+											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search()' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
+											+ "<td class='moving_area'><input type='text' name='wh_loc_in_area_arr' class='wh_loc_in_area_arr'>&nbsp;<input type='button' name='area_btn' onclick='area_search()' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
 											+ "<td><input type='text' name='moving_qty_arr' onchange='qtyval(this)' value=0></td>"
 											+ "<td name='stock_qty_sum_arr'></td>"
-											+ "<td class='remarks'><input type='text' name='remarks_arr'></td>"
+											+ "<td class='remarks'><input type='text' name='remarks_arr' value='기타'></td>"
 											+ "</tr>";
 								$("tbody").append(result);			
 							}
@@ -79,13 +80,24 @@
 // 			});
 // 				}
 
+
+
 		});
+			
 // 			function qtyval(item) {
 // // 				console.log(item.value);
 // 				if(item.value == "") {
 // 					item.value = 0;
 // 				}
 // 			}
+			function stock_search() {
+				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
+				window.open("StockPopup.st","_blank", options);
+			}
+			function area_search() {
+				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
+				window.open("Stock_area_popup.st","_blank", options);
+			}
 	
 	</script>
   </head>
@@ -125,6 +137,7 @@
                             <th>위치</th>
                             <th>재고수량</th>
                             <th>조정수량</th>
+                            <th>이동재고번호</th>
                             <th>이동위치</th>
                             <th>이동수량</th>
                             <th>합계수량</th>

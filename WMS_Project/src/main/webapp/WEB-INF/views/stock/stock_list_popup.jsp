@@ -40,7 +40,7 @@
 			var param = [];
 			var checkedStocks = [];
 				 if($('input[type="checkbox"]').is(':checked') == false){
-				      alert('조정할 재고를 선택해주세요.');
+				      alert('이동 위치를 선택해주세요.');
 				      return false;
 				    } else {
 // 						for(var i = 0; i < $('input[type="checkbox"]:checked').length; i++) {
@@ -88,12 +88,27 @@
 						
 			});
 			
+			$(":button").on("click", function goRegistPage() {
+				$(".moving_stock_cd_arr", opener.document).val($(this).parents("tr").find(".stock_cd").text());
+				$(".wh_loc_in_area_arr", opener.document).val(
+						$(this).parents("tr").find(".wh_name").text() + " "
+						+ $(this).parents("tr").find(".wh_area").text() + " "
+						+ $(this).parents("tr").find(".wh_loc_in_area").text());
+				window.close();
+			});
+			
+			
 		});
+// 		function goRegistPage(stock_cd, stock_area) {
+// 			alert("해연이가 바꾸라해서 바꾼 변수 : " + stock_cd);
+// 			alert("해연이가 바꾸라해서 바꾼 변수 : " + stock_area);
+// // 			opener.document.getElementsByName("moving_area_cd_arr").value = stock_area;
+			
+// 			window.close();
+			
+// 		}
 		
-		function history_popup(stock_cd) {
-			let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
-			window.open("Stock_history_popup.st?stock_cd=" + stock_cd ,"_blank", options);
-		}
+		
 		
 	</script>
   </head>
@@ -101,7 +116,6 @@
   
     <div class="container-scroller">
       <!-- 사이드바 -->
-      <jsp:include page="../partials/sidebar_WMS.jsp"></jsp:include>
       <!-- 사이드바 -->
       
       <div class="container-fluid page-body-wrapper">
@@ -109,7 +123,6 @@
         <jsp:include page="../partials/settings-panel.jsp"></jsp:include>
         <!-- 색상 커스텀 설정 -->
         <!-- 상단 메뉴바 -->
-      	<jsp:include page="../partials/navbar.jsp"></jsp:include>
         <!-- 상단 메뉴바  -->
         
         <!-- 본문 영역 -->
@@ -139,19 +152,19 @@
                         </div>
                     </div>
 						</form>
-					<form action="StockControl.st">
+					<form action="">
 					<input type="hidden" id="jsonData">
 	                    <div class="table-responsive">
 	                      <table class="table table-striped">
 	                        <thead>
 	                          <tr>
-	                          	<th>체크박스</th>
 	                            <th>재고번호</th>
 	                            <th>품목명 [규격]</th>
 	                            <th>창고명</th>
 	                            <th>구역명</th>
 	                            <th>위치명</th>
 	                            <th>재고수량</th>
+	                            <th></th>
 	                          </tr>
 	                        </thead>
 	                        <tbody>
@@ -159,13 +172,15 @@
 	                         <c:forEach var="stock" items="${stock_list }">
 	                         
 	                          <tr>
-	                          	<th><input type="checkbox" class="checkedStock"></th>
-	                          	<th class="stock_cd" onclick="history_popup(${stock.stock_cd })">${stock.stock_cd }</th>
+	                          	<th class="stock_cd">${stock.stock_cd }</th>
 	                            <td class="product_name">${stock.product_name } [${stock.size_des }]</td>
 	                            <td class="wh_name">${stock.wh_name }</td>
 	                            <td class="wh_area">${stock.wh_area }</td>
 	                            <td class="wh_loc_in_area">${stock.wh_loc_in_area }</td>
 	                            <td class="stock_qty">${stock.stock_qty }</td>
+	                            <td>
+                            	<button type="button" class="btn btn-primary btn-rounded i" >선택</button>
+                            	</td>
 	                          </tr>
 	                         </c:forEach>
 	                          <tr>
@@ -176,9 +191,7 @@
 	                        </tbody>
 	                      </table>
 	                    </div>
-				        <div class="template-demo" style="text-align: right;">
-		           			<button type="submit" class="btn btn-primary btn-rounded btn-fw" id="revise_btn">조정</button>
-	           			</div>
+				        
 					</form>	
            			
          

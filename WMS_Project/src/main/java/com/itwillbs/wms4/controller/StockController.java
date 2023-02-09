@@ -25,14 +25,17 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.itwillbs.wms4.service.StockService;
 import com.itwillbs.wms4.vo.PageInfo;
 import com.itwillbs.wms4.vo.Stock_controlVO;
+import com.itwillbs.wms4.vo.Stock_historyVO;
+import com.itwillbs.wms4.vo.Stock_history_listVO;
 import com.itwillbs.wms4.vo.Stock_listVO;
+import com.itwillbs.wms4.vo.Wh_detailVO;
 
 @Controller
 public class StockController {
 
 	@Autowired
 	private StockService service;
-	
+	// 전체 재고 조회 리스트
 	@GetMapping(value = "Stock.st")
 	public String stockList(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
@@ -62,6 +65,68 @@ public class StockController {
 		
 		
 		return "stock/stock_list";
+	}
+	// 재고 조정시 사용할 재고 리스트 팝업
+	@GetMapping(value = "StockPopup.st")
+	public String stockListPopup(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		int listLimit = 10;
+		int startRow = (pageNum-1) * listLimit;
+		
+		List<Stock_listVO> stock_list = service.getStockList(searchType, keyword, startRow, listLimit);
+		
+		int listCount = service.getStockListCount(keyword);
+		int pageListLimit = 10;
+		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage>maxPage) {
+			endPage = maxPage;
+		}
+		
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+		
+		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("stock_list", stock_list);
+		
+		
+		return "stock/stock_list_popup";
+	}
+	// 재고 조정시 사용할 위치 조회 팝업
+	@GetMapping(value = "Stock_area_popup.st")
+	public String stockAreaPopup(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		int listLimit = 10;
+		int startRow = (pageNum-1) * listLimit;
+		
+		List<Wh_detailVO> wh_detail = service.getAreaList(searchType, keyword, startRow, listLimit);
+		
+		int listCount = service.getAreaListCount(keyword);
+		int pageListLimit = 10;
+		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage>maxPage) {
+			endPage = maxPage;
+		}
+		
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+		
+		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("wh_detail", wh_detail);
+		
+		
+		return "stock/stock_area_popup";
 	}
 	
 	@ResponseBody
@@ -125,7 +190,21 @@ public class StockController {
 			stock_control.setMoving_stock_cd(control.getMoving_stock_cd_arr()[i]);
 			stock_control.setMoving_qty(control.getMoving_qty_arr()[i]);
 			stock_control.setProduct_name(control.getProduct_name_arr()[i]);
-			stock_control.setRemarks(control.getRemarks_arr()[i]);
+			
+			// 상세 위치 문자열을 찾기 위해 "창고 구역 위치" 전체를 갖고 와서 자름
+			System.out.println(control.getWh_loc_in_area_arr()[i]);
+			
+			String loc_in_area = control.getWh_loc_in_area_arr()[i];
+			loc_in_area.lastIndexOf(" ");
+			
+			loc_in_area = loc_in_area.substring(loc_in_area.lastIndexOf(" ") + 1);
+			
+			System.out.println("문자열 찾기: " + loc_in_area);
+//			System.out.println("적요값: " + control.getRemarks_arr()[i]);
+			
+//			if(control.getRemarks_arr()[i] != null) {
+				stock_control.setRemarks(control.getRemarks_arr()[i]);
+//			}
 			
 			System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
 					+ ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
@@ -142,24 +221,36 @@ public class StockController {
 				System.out.println("moving_qty: " + moving_qty);
 				// 이동할 재고 수량이 있는 경우
 				if(moving_qty != 0) {
-					// 이동 재고 번호를 조회하여 이동할 재고 수량 update
 					int moving_stock_cd = stock_control.getMoving_stock_cd();
-					int updateCount2 = service.modifyMovingStock(moving_stock_cd, moving_qty);
-					// 이동 재고 수량 update 성공시 -> 재고 이력 테이블 컬럼 추가
-					if(updateCount2 > 0) {
-						// 재고 이력 테이블 컬럼 추가를 위한 product_cd와 emp_num 조회 필요
+					// 이동할 재고 수량이 있지만 재고 번호가 없는 경우(이동 재고 번호가 0인 경우
+					// 위치만 가져가서 재고 번호를 제외한 나머지를 stock에 insert 하기
+					if(moving_stock_cd == 0) {
 						String product_name = stock_control.getProduct_name();
 						int product_cd = service.getProduct_cd(product_name);
-						System.out.println("product_cd: " + product_cd);
-						String emp_num = service.getEmpNum(sId);
-						String remarks = stock_control.getRemarks();
-						System.out.println("remarks: " + remarks);
-						int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
-						int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
+						int wh_loc_in_area_cd = service.getAreaCd(loc_in_area);
+						
+						int insertCount = service.registStock(product_cd, moving_qty, wh_loc_in_area_cd);
 						
 						
+					} else {
 						
+						// 이동 재고 번호를 조회하여 이동할 재고 수량 update
+						int updateCount2 = service.modifyMovingStock(moving_stock_cd, moving_qty);
+						// 이동 재고 수량 update 성공시 -> 재고 이력 테이블 컬럼 추가
+						if(updateCount2 > 0) {
+							// 재고 이력 테이블 컬럼 추가를 위한 product_cd와 emp_num 조회 필요
+							String product_name = stock_control.getProduct_name();
+							int product_cd = service.getProduct_cd(product_name);
+							System.out.println("product_cd: " + product_cd);
+							String emp_num = service.getEmpNum(sId);
+							String remarks = stock_control.getRemarks();
+							System.out.println("remarks: " + remarks);
+							int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
+							int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
+							
+						}
 					}
+					
 					
 				}
 				
@@ -177,4 +268,22 @@ public class StockController {
 		return "redirect:/Stock.st";
 		
 	}
+	
+	
+	@GetMapping(value = "Stock_history_popup.st")
+	public String stockPopupHistory(@RequestParam(defaultValue = "1") int stock_cd, Model model) {
+		System.out.println("stock_cd: " + stock_cd);
+		// 팝업창 클릭시 파라미터로 가져온 stock_cd의 재고이력을 조회
+		
+		List<Stock_history_listVO> stock_history = service.getStockHistory(stock_cd);
+		
+		System.out.println(stock_history);
+		
+		model.addAttribute("stock_history", stock_history);
+		
+		
+		return "stock/stock_history_popup";
+	}
+	
+	
 }
