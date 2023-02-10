@@ -35,8 +35,8 @@ public class WmsService {
 		return mapper.selectStockList(searchArea, searchLocation, searchGo, startRow, listLimit);	
 	}
 	//재고 개수 조회
-	public int getStockListCount() {
-		return mapper.selectStockListCount();
+	public int getStockListCount(String searchArea, String searchLocation, String searchGo) {
+		return mapper.selectStockListCount(searchArea, searchLocation, searchGo);
 	}
 	//구역명 등록작업
 	public int registArea(WhAreaVO area) {

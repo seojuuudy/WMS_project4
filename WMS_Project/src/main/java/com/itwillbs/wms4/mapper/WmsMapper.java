@@ -26,7 +26,7 @@ public interface WmsMapper {
 			@Param("startRow") int startRow, 
 			@Param("listLimit") int listLimit);
 
-	int selectStockListCount();
+	int selectStockListCount(@Param("searchArea")String searchArea, @Param("searchLocation")String searchLocation, @Param("searchGo")String searchGo);
 
 	int insertArea(WhAreaVO area);
 

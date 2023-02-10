@@ -93,51 +93,57 @@
                             <div class="container">
 	                            <div class="item">
 	                            창고 목록
-	                            <div id="list1">
-		                            <ol>
-										<c:forEach var="wh" items="${whList }">
-	<!-- 									구역추가 버튼 -->
-				                            <li id="${wh.wh_cd}"><a id="${wh.wh_cd}" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}'">${wh.wh_name}</a>
-<%-- 				                            <li><a id="${wh.wh_cd}">${wh.wh_name}</a> --%>
-				                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistArea.wms?wh_cd=${wh.wh_cd}&wh_name=${wh.wh_name }'">+</button></li>
-				                        </c:forEach>
-		                            </ol>
-	                            </div>
+		                            <div>
+			                            <div id="list1">
+				                            <ol>
+												<c:forEach var="wh" items="${whList }">
+			<!-- 									구역추가 버튼 -->
+						                            <li id="${wh.wh_cd}"><a id="${wh.wh_cd}" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}'">${wh.wh_name}</a>
+		<%-- 				                            <li><a id="${wh.wh_cd}">${wh.wh_name}</a> --%>
+						                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistArea.wms?wh_cd=${wh.wh_cd}&wh_name=${wh.wh_name }'">+</button></li>
+						                        </c:forEach>
+				                            </ol>
+			                            </div>
+		                            </div>
 			           			</div>
 	                            <div class="item">
 	                            구역 목록
-	                            <div id="list2">
-		                         	<ol>
-			                            <c:forEach var="ar" items="${arList }">
-	<!-- 		                            위치 추가버튼, 구역 삭제 버튼 -->
-				                            <li id="${ar.wh_cd}" class="${ar.wh_area_cd }"><a id="${ar.wh_cd}" class="${ar.wh_area_cd }" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd}&searchLocation=${ar.wh_area_cd}'">${ar.wh_area}</a>
-<%-- 				                            <li><a id="${ar.wh_cd}" class="${ar.wh_area_cd }">${ar.wh_area}</a> --%>
-				                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistLoc.wms?wh_area=${ar.wh_area }&wh_area_cd=${ar.wh_area_cd}'">+</button>
-				                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="areaD('${ar.wh_area_cd}','${ar.wh_area}')" >-</button>
-			    	                        	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateArea.wms?wh_area=${ar.wh_area}&wh_area_cd=${ar.wh_area_cd }'">
-			    	                        		<i class="mdi mdi-grease-pencil" style="font-size: 13px;"></i>
-		    	                        		</button>
-			        	                    </li>
-				                        </c:forEach>
-			                         </ol>
+		                            <div>
+			                            <div id="list2">
+				                         	<ol>
+					                            <c:forEach var="ar" items="${arList }">
+			<!-- 		                            위치 추가버튼, 구역 삭제 버튼 -->
+						                            <li id="${ar.wh_cd}" class="${ar.wh_area_cd }"><a id="${ar.wh_cd}" class="${ar.wh_area_cd }" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd}&searchLocation=${ar.wh_area_cd}'">${ar.wh_area}</a>
+		<%-- 				                            <li><a id="${ar.wh_cd}" class="${ar.wh_area_cd }">${ar.wh_area}</a> --%>
+						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistLoc.wms?wh_area=${ar.wh_area }&wh_area_cd=${ar.wh_area_cd}'">+</button>
+						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="areaD('${ar.wh_area_cd}','${ar.wh_area}')" >-</button>
+					    	                        	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateArea.wms?wh_area=${ar.wh_area}&wh_area_cd=${ar.wh_area_cd }'">
+					    	                        		<i class="mdi mdi-grease-pencil" style="font-size: 13px;"></i>
+				    	                        		</button>
+					        	                    </li>
+						                        </c:forEach>
+					                         </ol>
+		                            </div>
 	                            </div>
 			           			</div>
 	                            <div class="item">
 	                            위치 목록
-	                            <div id="list3">
-			                        <ol>
-			                            <c:forEach var="lo" items="${loList }">
-	<!-- 			                            위치 삭제버튼, 위치명 변경 버튼 -->
-				                            <li class="${lo.wh_area_cd}"><a class="${lo.wh_area_cd}" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd}&searchLocation=${lo.wh_area_cd}&searchGo=${lo.wh_loc_in_area_cd }'">${lo.wh_loc_in_area}</a>
-<%-- 				                            <li><a class="${lo.wh_area_cd}">${lo.wh_loc_in_area}</a> --%>
-				                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="locationD('${lo.wh_loc_in_area_cd}','${lo.wh_loc_in_area}')" >-</button>
-				                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateLoc.wms?wh_loc_in_area=${lo.wh_loc_in_area}&wh_loc_in_area_cd=${lo.wh_loc_in_area_cd }'">
-				                            		<i class="mdi mdi-grease-pencil" style="font-size: 13px;"></i>
-			                            		</button>
-				                            </li>
-				                        </c:forEach>
-			                        </ol>
-	                            </div>
+		                            <div>
+			                            <div id="list3">
+					                        <ol>
+					                            <c:forEach var="lo" items="${loList }">
+			<!-- 			                            위치 삭제버튼, 위치명 변경 버튼 -->
+						                            <li class="${lo.wh_area_cd}"><a class="${lo.wh_area_cd}" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd}&searchLocation=${lo.wh_area_cd}&searchGo=${lo.wh_loc_in_area_cd }'">${lo.wh_loc_in_area}</a>
+		<%-- 				                            <li><a class="${lo.wh_area_cd}">${lo.wh_loc_in_area}</a> --%>
+						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="locationD('${lo.wh_loc_in_area_cd}','${lo.wh_loc_in_area}')" >-</button>
+						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateLoc.wms?wh_loc_in_area=${lo.wh_loc_in_area}&wh_loc_in_area_cd=${lo.wh_loc_in_area_cd }'">
+						                            		<i class="mdi mdi-grease-pencil" style="font-size: 13px;"></i>
+					                            		</button>
+						                            </li>
+						                        </c:forEach>
+					                        </ol>
+			                            </div>
+		                            </div>
 			           			</div>
 		           			</div>
 		           		</section>
@@ -148,7 +154,7 @@
         </div>
 		<!-- 재고 table 영역 -->
 		<div class="card-body">
-		<h4 class="card-title">재고 조회</h4>
+		<h4 class="card-title">재고 조회하기</h4>
            <div class="table-responsive">
              <table class="table table-striped">
                <thead>
@@ -163,59 +169,95 @@
                </thead>
                <tbody>
                <!-- 관련 재고 목록 반복문 들어갈 자리 -->
-               <c:forEach var="st" items="${stList }">
-                 <tr id="stock">
-                   <td>${st.stock_cd}</td>
-                   <td>${st.product_name}</td>
-                   <td>${st.size_des}</td>
-                   <th>${st.stock_qty}</th>
-                   <th>${st.wh_name} _ ${st.wh_area}</th>
-                   <th>${st.wh_loc_in_area}</th>
-                 </tr>
-               </c:forEach>
+               <c:choose>
+	               <c:when test="${not empty stList }">
+		               <c:forEach var="st" items="${stList }">
+		                 <tr id="stock">
+		                   <td>${st.stock_cd}</td>
+		                   <td>${st.product_name}</td>
+		                   <td>${st.size_des}</td>
+		                   <th>${st.stock_qty}</th>
+		                   <th>${st.wh_name} _ ${st.wh_area}</th>
+		                   <th>${st.wh_loc_in_area}</th>
+		                 </tr>
+		               </c:forEach>
+	               </c:when>
+	               <c:otherwise>
+	               		<tr id="stock">
+		                   <th style="text-align: center;" colspan="6"><h4>재고가 없습니다.</h4></th>
+	                 	</tr>
+	               </c:otherwise>
+               </c:choose>
                </tbody>
              </table>
            </div>
 		</div>
-   			<section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->
-			     <!-- 만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
-				<c:choose>
-					<c:when test="${empty param.pageNum }">
-						<c:set var="pageNum" value="1" />
-					</c:when>
-					<c:otherwise>
-						<c:set var="pageNum" value="${param.pageNum }" />
-					</c:otherwise>
-				</c:choose>
+<!--    			<section id="pageList" style="text-align: center;"> -->
+<!-- <!-- 			     만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
+<%-- 				<c:choose> --%>
+<%-- 					<c:when test="${empty param.pageNum }"> --%>
+<%-- 						<c:set var="pageNum" value="1" /> --%>
+<%-- 					</c:when> --%>
+<%-- 					<c:otherwise> --%>
+<%-- 						<c:set var="pageNum" value="${param.pageNum }" /> --%>
+<%-- 					</c:otherwise> --%>
+<%-- 				</c:choose> --%>
 				
-				<c:choose>
-					<c:when test="${pageNum > 1}">
-						<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?pageNum=${pageNum - 1}'">
-					</c:when>
-					<c:otherwise>
-						<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
-					</c:otherwise>
-				</c:choose>
+<%-- 				<c:choose> --%>
+<%-- 					<c:when test="${pageNum > 1}"> --%>
+<%-- 						<c:choose> --%>
+<%-- 							<c:when test="${empty arList}"> --%>
+<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?pageNum=${pageNum - 1}'"> --%>
+<%-- 							</c:when> --%>
+<%-- 							<c:otherwise> --%>
+<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}&pageNum=${pageNum - 1}'"> --%>
+<%-- 										<c:when test="!${empty loList }"> --%>
+<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd }&seachLocation=${ar.wh_area_cd}&pageNum=${pageNum - 1}'"> --%>
+<%-- 										</c:when> --%>
+<%-- 										<c:otherwise> --%>
+<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd }&seachLocation=${lo.wh_area_cd }&seachGo=${lo.wh_loc_in_area_cd }&pageNum=${pageNum - 1}'"> --%>
+<%-- 										</c:otherwise> --%>
+<%-- 							</c:otherwise> --%>
+<%-- 						</c:choose> --%>
+<%-- 					</c:when> --%>
+<%-- 					<c:otherwise> --%>
+<!-- 						<input type="button" class="btn btn-sm btn-outline-primary" value="이전"> -->
+<%-- 					</c:otherwise> --%>
+<%-- 				</c:choose> --%>
 					
-				<c:forEach var="i" begin="${pageInfo.startPage }" end="${pageInfo.endPage }">
-					<c:choose>
-						<c:when test="${pageNum eq i}">
-							${i }
-						</c:when>
-						<c:otherwise>
-							<a href="Wh.wms?pageNum=${i }">${i }</a>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<c:choose>
-					<c:when test="${pageNum < pageInfo.maxPage}">
-						<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?pageNum=${pageNum + 1}'">
-					</c:when>
-					<c:otherwise>
-						<input type="button" class="btn btn-sm btn-outline-primary" value="다음">
-					</c:otherwise>
-				</c:choose>
-			</section>
+<%-- 				<c:forEach var="i" begin="${pageInfo.startPage }" end="${pageInfo.endPage }"> --%>
+<%-- 					<c:choose> --%>
+<%-- 						<c:when test="${pageNum eq i}"> --%>
+<%-- 							${i } --%>
+<%-- 						</c:when> --%>
+<%-- 						<c:otherwise> --%>
+<%-- 							<a href="Wh.wms?pageNum=${i }">${i }</a> --%>
+<%-- 						</c:otherwise> --%>
+<%-- 					</c:choose> --%>
+<%-- 				</c:forEach> --%>
+				
+<%-- 				<c:choose> --%>
+<%-- 					<c:when test="${pageNum < pageInfo.maxPage}"> --%>
+<%-- 						<c:choose> --%>
+<%-- 							<c:when test="${empty arList}"> --%>
+<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?pageNum=${pageNum + 1}'"> --%>
+<%-- 							</c:when> --%>
+<%-- 							<c:otherwise> --%>
+<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}&pageNum=${pageNum + 1}'"> --%>
+<%-- 										<c:when test="!${empty loList }"> --%>
+<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd }&seachLocation=${ar.wh_area_cd}&pageNum=${pageNum + 1}'"> --%>
+<%-- 										</c:when> --%>
+<%-- 										<c:otherwise> --%>
+<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd }&seachLocation=${lo.wh_area_cd }&seachGo=${lo.wh_loc_in_area_cd }&pageNum=${pageNum + 1}'"> --%>
+<%-- 										</c:otherwise> --%>
+<%-- 							</c:otherwise> --%>
+<%-- 						</c:choose> --%>
+<%-- 					</c:when> --%>
+<%-- 					<c:otherwise> --%>
+<!-- 						<input type="button" class="btn btn-sm btn-outline-primary" value="다음"> -->
+<%-- 					</c:otherwise> --%>
+<%-- 				</c:choose> --%>
+<!-- 			</section> -->
         <!-- table 영역 -->
         </div>
         
