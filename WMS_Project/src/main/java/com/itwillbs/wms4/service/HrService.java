@@ -32,8 +32,8 @@ public class HrService {
 	}
 	
 	// 재직중인 사원 수 조회
-	public int getEmpListCount(String keyword) {
-		return mapper.selectEmpListCount(keyword);
+	public int getEmpListCount(String searchType, String keyword) {
+		return mapper.selectEmpListCount(searchType, keyword);
 	}
 
 	// 사원 상세정보 조회

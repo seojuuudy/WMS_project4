@@ -1,13 +1,743 @@
 package com.itwillbs.wms4.controller;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwillbs.wms4.service.ClientService;
+import com.itwillbs.wms4.service.HrService;
 import com.itwillbs.wms4.service.IncomeService;
+import com.itwillbs.wms4.service.ProductService;
+import com.itwillbs.wms4.vo.ClientVO;
+import com.itwillbs.wms4.vo.EmpInfoVO;
+import com.itwillbs.wms4.vo.InScheduleInfoVO;
+import com.itwillbs.wms4.vo.In_scheduleVO;
+import com.itwillbs.wms4.vo.In_schedule_per_productVO;
+import com.itwillbs.wms4.vo.Inbound_ProductArrVO;
+import com.itwillbs.wms4.vo.PageInfo;
+import com.itwillbs.wms4.vo.ProductVO;
+import com.itwillbs.wms4.vo.V_Inbound_ProcessingVO;
+import com.itwillbs.wms4.vo.V_Inbound_ProductVO;
+import com.itwillbs.wms4.vo.V_StockinfoVO;
 
 @Controller
 public class IncomeController {
 	
 	@Autowired
 	private IncomeService service;
+	@Autowired
+	private ClientService service_cl;
+	@Autowired
+	private HrService service_hr;
+	@Autowired
+	private ProductService service_pr;
+	
+	// 입고 예정 등록 폼
+	@GetMapping(value = "/InboundScheduleRegist.in")
+	public String inboundScheRegist() {
+		return "inbound/inbound_schedule_regist";
+	}
+	
+	// 입고 예정 등록을 위한 비지니스 로직 처리
+	@PostMapping(value = "/InboundScheduleRegistPro.in")
+	public String inboundScheRegistPro(@ModelAttribute In_scheduleVO inSchedule,
+										@ModelAttribute In_schedule_per_productVO inSchedulePer, Model model, HttpSession session) {
+		
+//		System.out.println(inSchedule);
+//		System.out.println(inSchedulePer);
+		String sId = (String)session.getAttribute("sId");
+		
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시	
+		
+				int insertCount = service.registInSche(inSchedule);
+				int insertCount2 = service.registInSchePer(inSchedulePer.getInSchedulePerList());
+				
+				if(insertCount > 0 && insertCount2 > 0) { // 성공
+					return "redirect:/InboundScheduleList.in";
+				} else { // 실패
+					model.addAttribute("msg", "입고 예정 등록 실패!");
+					return "fail_back";
+				}
+			} else { // 권한 불일치
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}	
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}	
+		
+	}
+	
+	// 입고 예정 등록 폼 내에서 거래처 리스트 - 팝업
+	@GetMapping(value = "/InboundScheduleSearchClient.in")
+	public String clientList(
+			@RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword,
+			@RequestParam(defaultValue = "1") int pageNum,
+			Model model, HttpSession session) {
+		
+			String sId = (String)session.getAttribute("sId");
+		
+			if(sId != null) { // 로그인 O
+				String priv_cd = (String)session.getAttribute("priv_cd");
+				int num = Integer.parseInt(priv_cd, 2);
+				int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+					
+				if((num & cpriv_cd) == cpriv_cd) { // 권한 O
+					// ---------------------------------------------------------------------------
+					int listLimit = 8;
+					int startRow = (pageNum - 1) * listLimit;
+					// ---------------------------------------------------------------------------
+					// Service_cl 객체의 getBoardList() 메서드를 호출하여 게시물 목록 조회
+					// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
+					// => 리턴타입 : List<ClientVO> clientList
+					List<ClientVO> clientList = service_cl.getClientList(searchType, keyword, startRow, listLimit);
+					// ---------------------------------------------------------------------------
+					// 페이징
+					int listCount = service_cl.getBoardListCount(searchType, keyword);
+					int pageListLimit = 10;
+					int maxPage = listCount / listLimit 
+									+ (listCount % listLimit == 0 ? 0 : 1); 
+					int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
+					int endPage = startPage + pageListLimit - 1;
+					if(endPage > maxPage) {
+						endPage = maxPage;
+					}
+					// PageInfo 객체 생성 후 페이징 처리 정보 저장
+					PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+					// ---------------------------------------------------------------------------
+					// 조회 결과를 Model 객체에 "client" 속성명으로 저장
+					model.addAttribute("clientList", clientList);
+					model.addAttribute("pageInfo", pageInfo);
+					
+			//		System.out.println(clientList);
+					return "inbound/inbound_schedule_searchCl";
+		
+				} else { // 권한 X
+					model.addAttribute("msg", "접근 권한 없음!");
+					return "fail_back";
+				}
+			} else { // 로그인 X
+				model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+				return "fail_back";
+		}
+	}
+	
+	// 입고 예정 등록 폼 내에서 담당자 리스트 - 팝업
+	@GetMapping(value = "/InboundScheduleSearchEmployees.in")
+	public String hrList(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O
+			
+				int listLimit = 8;
+				int startRow = (pageNum-1) * listLimit;
+				
+				List<EmpInfoVO> empList = service_hr.getEmpList(searchType, keyword, startRow, listLimit);
+				
+				int listCount = service_hr.getEmpListCount(keyword, keyword);
+				int pageListLimit = 8;
+				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+				int endPage = startPage * pageListLimit - 1;
+				
+				if(endPage>maxPage) {
+					endPage = maxPage;
+				}
+				
+				// PageInfo 객체 생성 후 페이징 처리 정보 저장
+				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+				
+				model.addAttribute("empList", empList);
+				model.addAttribute("pageInfo", pageInfo);
+				
+				return "inbound/inbound_schedule_searchEmp";
+			} else { // 권한 X
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+	
+	// 입고 예정 등록 폼 내에서 품목 리스트 - 팝업
+	@GetMapping(value = "/InboundScheduleSearchProduct.in")
+	public String prList(@RequestParam(defaultValue = "") String searchType, 
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum,
+			HttpSession session, 
+			Model model) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { 
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+			
+				int listLimit = 10;
+				int startRow = (pageNum-1) * listLimit;
+				
+				List<ProductVO> productList = service_pr.getProductList(searchType, keyword, startRow, listLimit);
+				
+				int listCount = service_pr.getProductListCount(searchType, keyword);
+				int pageListLimit = 10;
+				int maxPage = listCount / listLimit + (listCount % listLimit != 0 ? 1 : 0);
+				int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
+				int endPage = startPage * pageListLimit - 1;
+				
+				if(endPage > maxPage) {
+					endPage = maxPage;
+				}
+				
+				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+				
+				model.addAttribute("productList", productList);
+				model.addAttribute("pageInfo", pageInfo);
+				
+				return "inbound/inbound_schedule_searchPr";
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+
+	// 등록된 입고예정 목록 조회 ( + 탭기능 ) 
+	@GetMapping(value = "/InboundScheduleList.in")
+	public String inboundScheList(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "") String in_complete,
+			HttpSession session) {
+		
+//		System.out.println("넘어왔나?" + in_complete);
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O
+			
+				int listLimit = 10;
+				int startRow = (pageNum-1) * listLimit;
+				
+				List<InScheduleInfoVO> InScheList = service.getInboundScheList(searchType, keyword, startRow, listLimit, in_complete);
+				List<InScheduleInfoVO> InScheSum = service.getInboundScheListSum();
+				List<InScheduleInfoVO> InScheCnt = service.getInboundScheListCnt();
+//				Collections.reverse(InScheCount);
+//				System.out.println(InScheCount);
+				
+				
+				int listCount = service.getInboundScheListCount(keyword);
+				int pageListLimit = 10;
+				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+				int endPage = startPage * pageListLimit - 1;
+				
+				if(endPage>maxPage) {
+					endPage = maxPage;
+				}
+				
+				// PageInfo 객체 생성 후 페이징 처리 정보 저장
+				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+				
+				model.addAttribute("InScheCnt", InScheCnt);
+				model.addAttribute("InScheSum", InScheSum);
+				model.addAttribute("InScheList", InScheList);
+				model.addAttribute("pageInfo", pageInfo);
+				
+				return "inbound/inbound_schedule_list";
+			} else { // 권한 X
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+	
+	// 등록된 입고 예정 목록 진행상태 조회 - 팝업
+	@GetMapping(value = "/InboundScheduleStatus.in")
+	public String hrDetail(String in_schedule_cd, HttpSession session, Model model) {
+		
+		// 해당 회원의 권한 조회
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+					
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				
+				List<InScheduleInfoVO> InScheList = service.getInboundScheList(in_schedule_cd);
+				System.out.println(InScheList);
+				
+				model.addAttribute("InScheList", InScheList);
+				return "inbound/inbound_schedule_status";
+			} else { // 권한 X
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+	
+	// 종결여부 변경
+	@ResponseBody
+	@GetMapping(value = "/InboundComplete.in")
+	public String complete(@ModelAttribute InScheduleInfoVO inSchedule,
+							@RequestParam(value = "in_schedule_cd") String in_schedule_cd,
+							@RequestParam(value = "in_complete") String in_complete,
+							HttpServletResponse response, Model model, HttpSession session) {
+		
+//			System.out.println("과연 ? - " + in_schedule_cd + in_complete);
+			
+			// 해당 회원의 권한 조회
+			String sId = (String)session.getAttribute("sId");
+			
+			if(sId != null) { // 로그인 O
+				String priv_cd = (String)session.getAttribute("priv_cd");
+				int num = Integer.parseInt(priv_cd, 2);
+				int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+				
+				if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시	
+					
+					int updateCount = service.modifyComplete(inSchedule, in_schedule_cd, in_complete);
+						if(updateCount > 0) { // 종결 여부 변경 성공
+							return "inbound/inbound_schedule_list";
+						} else { // 종결 여부 변경 실패
+							model.addAttribute("msg", "종결여부 변경 불가!");
+							return "fail_back";
+						}
+				} else { // 권한 불일치
+					model.addAttribute("msg", "접근 권한 없음!");
+					return "fail_back";
+				}	
+			} else { // 로그인 X 
+				model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+				return "fail_back";
+			}	
+	}
+
+	// -------------------------- 입고예정항목 ----------------------------- //
+	
+	// 입고 예정 항목 목록
+	@GetMapping(value = "/pdList.in")
+	public String productList(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+			
+				int listLimit = 10;
+				int startRow = (pageNum-1) * listLimit;
+		
+				// 입고 예정 항목 목록 조회
+				List<V_Inbound_ProductVO> inProductList = service.getinProductList(searchType, keyword, startRow, listLimit);
+				
+				// 입고 예정 항목 목록 갯수 조회
+				int listCount = service.getinProductListCount(searchType, keyword);
+				int pageListLimit = 8;
+				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+				int endPage = startPage * pageListLimit - 1;
+				
+				if(endPage>maxPage) {
+					endPage = maxPage;
+				}
+				
+				// PageInfo 객체 생성 후 페이징 처리 정보 저장
+				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+				
+				model.addAttribute("inProductList", inProductList);
+				model.addAttribute("pageInfo", pageInfo);
+				System.out.println(inProductList);
+				
+				return "inbound/inbound_productlist";
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+	
+	// 입고 예정 항목 수정 폼
+	@GetMapping(value = "/pdModify.in")
+	public String productModify(String in_schedule_cd, String product_name, String in_date,
+								Model model, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 1; // 재고관리 권한 00001과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				// 입고 예정 항목의 정보 가져오기
+				V_Inbound_ProductVO inProduct = service.getinProductInfo(in_schedule_cd, product_name, in_date);
+				System.out.println("inProduct : " + inProduct);
+				model.addAttribute("inProduct", inProduct);
+				return "inbound/inbound_product_modify";
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
+	}
+	
+	// 입고 예정 항목 수정 비즈니스 작업 
+	@ResponseBody
+	@PostMapping(value = "/pdModifyPro.in")
+	public int productModify(@ModelAttribute V_Inbound_ProductVO inProduct, @RequestParam String product_name, 
+			@RequestParam int product_cd, @RequestParam int in_schedule_qty, 
+			@RequestParam Date in_date, @RequestParam String remarks, @RequestParam String in_schedule_cd,
+			@RequestParam Date ex_in_date ) {
+		
+		int updateCount = service.modifyProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
+		
+		return updateCount;
+	}
+	
+	// -------------------------------------------------- 입고처리
+	// 입고 처리 목록 (체크박스로 넘긴 값들만)
+	@GetMapping(value = "/pdProcessList.in")
+	public String productProcessList(@RequestParam(defaultValue = "") String in_schedule_cd,
+				@RequestParam(defaultValue = "") String product_cd,
+				@RequestParam(defaultValue = "") String in_date , Model model) {
+		
+		String[] inSchedulecdArr = in_schedule_cd.split(",");
+		String[] ProductcdArr = product_cd.split(",");
+		String[] IndateArr = in_date.split(",");
+		
+		List<V_Inbound_ProcessingVO> inProductList = new ArrayList<V_Inbound_ProcessingVO>();
+		
+		for(int i=0;i<inSchedulecdArr.length;i++) {
+			V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
+			in_schedule_cd = inSchedulecdArr[i];
+			product_cd = ProductcdArr[i];
+			in_date = IndateArr[i];
+			
+			// 입고 예정 항목 목록 조회
+			inProduct = service.getinInboundList(in_schedule_cd, product_cd, in_date);
+			inProductList.add(inProduct);
+		}
+		
+		System.out.println("inProductList : " + inProductList);
+		model.addAttribute("inProductList", inProductList);
+		
+		return "inbound/inbound_processing";
+	}
+	
+	
+	// 입고처리작업
+//	@PostMapping(value = "/DoInbound")
+//	public String plzTT(@ModelAttribute Inbound_ProductArrVO inboundArr, Model model) {
+//		
+//		System.out.println("inboundArr : " + inboundArr);
+//		
+//	    for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
+//	    	V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
+//	    	inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
+//	    	inProduct.setProduct_cd(inboundArr.getProduct_cd()[i]); // 품목 코드
+//	    	inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
+//	    	inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
+//	    	inProduct.setOrder_qty(inboundArr.getOrder_qty()[i]);// 입고지시수량
+//	    	
+//	    	int order_qty = inboundArr.getOrder_qty()[i];
+//	    	int product_cd = inboundArr.getProduct_cd()[i];
+//	    	System.out.println("order_qty : " + order_qty);
+//	    	System.out.println("product_cd : " + product_cd);
+//	    	
+//	    	// inboundArr.getLocation_cd() - [재고번호, 구역명코드, 위치명코드] 꺼내기
+//	    	for(int j=0;j<inboundArr.getLocation_cd().length;j++) {
+//		    	String[] location = inboundArr.getLocation_cd(); 
+////		    	System.out.println("location[] : " + location);
+//		    	System.out.println("stock_cd : " + location[0]);
+//		    	System.out.println("area_cd : " + location[1]);
+//		    	System.out.println("loc_in_area_cd : " + location[2]);
+//		    
+//		    	// 항목이 가진 창고 구역 코드와 위치코드 저장
+//		    	inProduct.setWh_area_cd(Integer.parseInt(location[1])); // 구역명 코드 저장
+//		    	inProduct.setWh_loc_in_area_cd(Integer.parseInt(location[2])); // 위치명 코드저장
+//		    	
+//		    	// ----- 재고 번호 처리 
+//		    	inProduct.setStock_cd(Integer.parseInt(location[0])); // 재고번호 0 저장
+//	    	} // for문
+//	    	
+//	    	int wh_loc_in_area_cd = inProduct.getWh_loc_in_area_cd();
+//	    	int stock_cd = inProduct.getStock_cd();
+//		    	
+//		    	if(stock_cd==0) { // 불러온 재고코드가 비어있으면
+//		    		int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
+//		    		inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
+////				    		System.out.println("stock_cd : " + stockcd); 
+//	    		
+//		    		// 조회한 재고번호 생성
+//		    		// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, order_qty(입고지시수량)
+//		    		service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd, order_qty); // 16이라는 재고번호를 생성
+//		    	} else { // 불러온 재고코드가 비어있지 않으면
+//		    		inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
+//		    	} // if문
+//	    	
+//	    	// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
+//	    	System.out.println("입고 전 inProduct : " + inProduct);
+//	    	service.changeinInbound(inProduct);
+//	    	System.out.println("입고 후 inProduct : " + inProduct);
+//	    	// 2. 기존 재고번호 선택시 기존 재고에 입고수량 추가
+//	    	service.changeInqty(inProduct);
+//	    	System.out.println("입고수량 추가 후 inProduct : " + inProduct);
+//	    	// 4. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
+//	    	service.changeInComplete(inProduct);
+//	    	System.out.println("진행상태 완료 후 inProduct : " + inProduct);
+//	    	
+//	    	System.out.println("수정 후 inProduct : " + inProduct);
+//	    }
+//	    return "redirect:/pdList.in";
+//	}
+
+	// 입고처리작업
+	@PostMapping(value = "/DoInbound")
+	public String plzTT(@ModelAttribute Inbound_ProductArrVO inboundArr, Model model) {
+		
+		System.out.println("inboundArr : " + inboundArr);
+		
+		for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
+			V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
+			inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
+			inProduct.setProduct_cd(inboundArr.getProduct_cd()[i]); // 품목 코드
+			inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
+			inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
+			inProduct.setOrder_qty(inboundArr.getOrder_qty()[i]);// 입고지시수량
+			
+			// 입고지시수량 가져오기
+			int order_qty = inProduct.getOrder_qty();
+			
+			// 위치코드 구하는 for문
+			for(int j=0;j<inboundArr.getLocationcd().length;j++) {
+				String[] location = inboundArr.getLocationcd()[i].split("_");
+//				System.out.println("area : " + location[0]);
+//				System.out.println("location : " + location[1]);
+				
+				// 항목이 가진 창고 구역명과 위치명 저장
+				inProduct.setWh_area(location[0]); // 구역명 저장
+				inProduct.setWh_loc_in_area(location[1]); // 위치명 저장
+				String wh_area = location[0];
+				String wh_loc_in_area = location[1];
+				
+				// 구역명으로 구역코드 조회
+				int wh_area_cd = Integer.parseInt(service.getAreacd(wh_area));
+				// 위치명으로 위치코드 조회
+				int wh_loc_in_area_cd = Integer.parseInt(service.getlocationcd(wh_loc_in_area, wh_area));
+//				System.out.println("wh_area_cd : " + wh_area_cd);
+//				System.out.println("wh_loc_in_area_cd : " + wh_loc_in_area_cd);
+//				
+				// 구역명, 위치코드 저장
+				inProduct.setWh_area_cd(wh_area_cd);
+				inProduct.setWh_loc_in_area_cd(wh_loc_in_area_cd);
+				
+				// ----- 재고 번호 처리 
+				
+				int stock_cd = inboundArr.getStock_cd()[i];
+				System.out.println("stock_cd : " + stock_cd);
+				
+				if(stock_cd==0) { // 불러온 재고코드가 비어있으면
+					int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
+					inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
+				    System.out.println("stock_cd : " + stockcd); 
+					
+				// 조회한 재고번호 생성
+				// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, order_qty(입고지시수량)
+//				service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd, order_qty); // 16이라는 재고번호를 생성
+				} else { // 불러온 재고코드가 비어있지 않으면
+					inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
+				} // if문
+			} // for문
+			
+			// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
+			System.out.println("입고 전 inProduct : " + inProduct);
+			service.changeinInbound(inProduct);
+			System.out.println("입고 후 inProduct : " + inProduct);
+			// 2. 기존 재고번호 선택시 기존 재고에 입고수량 추가
+			service.changeInqty(inProduct);
+			System.out.println("입고수량 추가 후 inProduct : " + inProduct);
+			// 4. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
+			service.changeInComplete(inProduct);
+			System.out.println("진행상태 완료 후 inProduct : " + inProduct);
+			
+			System.out.println("수정 후 inProduct : " + inProduct);
+		}
+		return "redirect:/pdList.in";
+	}
+	
+		
+	// ---------------------------------------------- 팝업창
+	// 재고 목록 조회 - 키워드 처리
+	@GetMapping(value = "/SearchStockcd")
+	public String searcheStockcd(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "1") int index) {
+		
+		int listLimit = 10;
+		int startRow = (pageNum-1) * listLimit;
+		
+		// 재고 목록 조회
+		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
+		
+		// 재고 목록 갯수 조회
+		int listCount = service.getStockListCount(searchType, keyword);
+		int pageListLimit = 8;
+		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage>maxPage) {
+			endPage = maxPage;
+		}
+		
+		// PageInfo 객체 생성 후 페이징 처리 정보 저장
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+
+		model.addAttribute("stockList", stockList);
+		model.addAttribute("pageInfo", pageInfo);
+		// 부모인덱스를 자식창으로 넘겨줌
+		model.addAttribute("index", index);
+		
+		return "inbound/search_stockcd";
+	}
+	
+	// 품목명 목록 - 키워드 처리
+	@GetMapping(value = "/SearchProduct")
+	public String searcheLocation(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "1") int index) {
+		
+		int listLimit = 10;
+		int startRow = (pageNum-1) * listLimit;
+		
+		// 품목 목록 조회
+		List<V_Inbound_ProductVO> productList = service.getProductList(searchType, keyword, startRow, listLimit);
+		
+		// 목록 갯수 조회
+		int listCount = service.getProductListCount(searchType, keyword);
+		int pageListLimit = 8;
+		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage>maxPage) {
+			endPage = maxPage;
+		}
+		
+		// PageInfo 객체 생성 후 페이징 처리 정보 저장
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+
+		model.addAttribute("productList", productList);
+		model.addAttribute("pageInfo", pageInfo);
+		// 부모인덱스를 자식창으로 넘겨줌
+		
+		return "inbound/search_product";
+	}
+	
+	// 구역명_위치 목록 조회
+	@GetMapping(value = "/SearchArea")
+	public String searcheArea(Model model, @RequestParam(defaultValue = "") String searchType,
+			@RequestParam(defaultValue = "") String keyword, 
+			@RequestParam(defaultValue = "1") int pageNum,
+			@RequestParam(defaultValue = "1") int index) {
+		
+		int listLimit = 10;
+		int startRow = (pageNum-1) * listLimit;
+		
+		// 구역명_위치 목록 조회
+		List<V_StockinfoVO> areaList = service.getAreaList(searchType, keyword, startRow, listLimit);
+		
+		// 구역명_위치 목록 갯수 조회
+		int listCount = service.getAreaListCount(searchType, keyword);
+		int pageListLimit = 8;
+		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
+		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage>maxPage) {
+			endPage = maxPage;
+		}
+		
+		// PageInfo 객체 생성 후 페이징 처리 정보 저장
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+
+		model.addAttribute("areaList", areaList);
+		model.addAttribute("pageInfo", pageInfo);
+		// 부모인덱스를 자식창으로 넘겨줌
+		model.addAttribute("index", index);
+		
+		return "inbound/search_areacd";
+	}
+
+	
 }

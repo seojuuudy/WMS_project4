@@ -24,7 +24,9 @@ public interface HrMapper {
 			@Param("listLimit") int listLimit);
 
 	// 재직중인 사원 수 조회
-	public int selectEmpListCount(String keyword);
+	public int selectEmpListCount(
+			@Param("searchType") String searchType, 
+			@Param("keyword") String keyword);
 
 	// 사원 상세정보 조회
 	public EmployeesVO selectEmpInfo(String emp_email);

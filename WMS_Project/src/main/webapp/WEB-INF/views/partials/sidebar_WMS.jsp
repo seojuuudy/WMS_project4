@@ -49,10 +49,10 @@
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item">
-            <a class="nav-link" href="#">입고 예정</a>
+            <a class="nav-link" href="InboundScheduleList.in">입고 예정</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">입고 처리</a>
+            <a class="nav-link" href="pdList.in">입고 처리</a>
           </li>
         </ul>
       </div>
@@ -76,7 +76,7 @@
     </li>
     <!-- 추후 인사관리 B 추가 및 삭제하게되면 수정 -->
     <li class="nav-item">
-      <a class="nav-link" href="pages/forms/basic_elements.html">
+      <a class="nav-link" href="Stock.st">
         <i class="mdi mdi-format-list-bulleted menu-icon"></i>
         <span class="menu-title">재고 조정</span>
       </a>
