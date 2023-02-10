@@ -1,7 +1,11 @@
 package com.itwillbs.wms4.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 public class PageController {
@@ -41,8 +45,35 @@ public class PageController {
 		return "pages/tables/basic-table";
 	}
 	
-	@GetMapping(value = "/InsertListPage")
-	public String listPage() {
-		return "insert_list_page";
+	@GetMapping(value = "/MainInsertList")
+	public String mainlistPage(HttpSession session, Model model) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // login O
+				
+			return "insert_list_page";
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		} // ~~~~ if-else end~~~~
+		
 	}
+	@GetMapping(value = "/MainWMSList")
+	public String mainwmspage(HttpSession session, Model model) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // login O
+			
+			return "wms_list_page";
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		} // ~~~~ if-else end~~~~
+		
+	}
+
+
+
 }

@@ -173,7 +173,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">단위</label>
                       <div class="col-sm-9">
-                        <input type="text" id="number" class="form-control" name="unit" value="${productInfo.unit }"/>
+                        <input type="text" id="number" class="form-control" name="unit" value="${productInfo.unit }" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>
@@ -184,7 +184,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">매입가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="purchasePrice" value="${productInfo.purchase_price }" id="purchasePrice" />
+                        <input type="text" class="form-control" name="purchasePrice" value="${productInfo.purchase_price }" id="purchasePrice" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>
@@ -204,7 +204,7 @@ function confirmDelete() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">판매가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="sellingPrice" value="${productInfo.sell_price }" id="sellingPrice" />
+                        <input type="text" class="form-control" name="sellingPrice" value="${productInfo.sell_price }" id="sellingPrice" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>

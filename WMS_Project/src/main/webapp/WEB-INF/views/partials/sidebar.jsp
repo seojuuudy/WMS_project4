@@ -60,7 +60,7 @@
       <div class="collapse" id="ui-basic2">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item">
-            <a class="nav-link" href="InsertListPage">기본 등록</a>
+            <a class="nav-link" href="MainInsertList">기본 등록</a>
 	            <div class="collapse" id="ui-basic2">
 					<ul class="#">
 						<li class="nav-item"><a class="nav-link"
@@ -71,17 +71,17 @@
 							href="ProductList.pr">품목 관리</a></li>
 					</ul>
 				</div>
-            <a class="nav-link" href="WMS">WMS</a>
+            <a class="nav-link" href="MainWMSList">WMS</a>
 	            <div class="collapse" id="ui-basic2">
 					<ul class="#">
 						<li class="nav-item"><a class="nav-link"
 							href="Wh.wms">창고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="#">입고 관리</a></li>
+							href="InboundScheduleList.in">입고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="#">출고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="#">재고 조정</a></li>
+							href="Stock.st">재고 조정</a></li>
 					</ul>
 				</div>
 			</li>

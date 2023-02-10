@@ -183,110 +183,130 @@ public class StockController {
 	}
 	
 	@GetMapping(value = "/StockControlPro.st")
-	public String controlPro(@ModelAttribute Stock_controlVO control, HttpSession session, Model model) {
-		String sId = (String)session.getAttribute("sId");
-//		System.out.println("controlPro: " + control);
-		
-		for(int i = 0; i < control.getStock_cd_arr().length; i++) {
-			
-			Stock_controlVO stock_control = new Stock_controlVO();
-			
-			stock_control.setStock_cd(control.getStock_cd_arr()[i]);
-			stock_control.setControl_qty(control.getControl_qty_arr()[i]);
-			stock_control.setMoving_stock_cd(control.getMoving_stock_cd_arr()[i]);
-			stock_control.setMoving_qty(control.getMoving_qty_arr()[i]);
-			stock_control.setProduct_name(control.getProduct_name_arr()[i]);
-			
-			// 상세 위치 문자열을 찾기 위해 "창고 구역 위치" 전체를 갖고 와서 자름
-			System.out.println(control.getWh_loc_in_area_arr()[i]);
-			
-			String loc_in_area = control.getWh_loc_in_area_arr()[i];
-			loc_in_area.lastIndexOf(" ");
-			
-			loc_in_area = loc_in_area.substring(loc_in_area.lastIndexOf(" ") + 1);
-			
-			System.out.println("문자열 찾기: " + loc_in_area);
-//			System.out.println("적요값: " + control.getRemarks_arr()[i]);
-			
-//			if(control.getRemarks_arr()[i] != null) {
-				stock_control.setRemarks(control.getRemarks_arr()[i]);
-//			}
-			
-			System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
-					+ ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
-			
-			int stock_cd = stock_control.getStock_cd();
-//			System.out.println("stock_cd: " + stock_cd);
-			int stock_qty = stock_control.getControl_qty();
-			// 기존 재고 번호에 대한 수량 변경
-			int updateCount = service.modifyStock(stock_cd, stock_qty);
-			
-			if(updateCount > 0) {
-				
-				int moving_qty = stock_control.getMoving_qty();
-				System.out.println("moving_qty: " + moving_qty);
-				// 이동할 재고 수량이 있는 경우
-				if(moving_qty != 0) {
-					int moving_stock_cd = stock_control.getMoving_stock_cd();
-					// 이동할 재고 수량이 있지만 재고 번호가 없는 경우(이동 재고 번호가 0인 경우
-					// 위치만 가져가서 재고 번호를 제외한 나머지를 stock에 insert 하기
-					if(moving_stock_cd == 0) {
-						String product_name = stock_control.getProduct_name();
-						int product_cd = service.getProduct_cd(product_name);
-						int wh_loc_in_area_cd = service.getAreaCd(loc_in_area);
-						
-						int insertCount = service.registStock(product_cd, moving_qty, wh_loc_in_area_cd);
-						
-						
-					} else {
-						
-						// 이동 재고 번호를 조회하여 이동할 재고 수량 update
-						int updateCount2 = service.modifyMovingStock(moving_stock_cd, moving_qty);
-						// 이동 재고 수량 update 성공시 -> 재고 이력 테이블 컬럼 추가
-						if(updateCount2 > 0) {
-							// 재고 이력 테이블 컬럼 추가를 위한 product_cd와 emp_num 조회 필요
-							String product_name = stock_control.getProduct_name();
-							int product_cd = service.getProduct_cd(product_name);
-							System.out.println("product_cd: " + product_cd);
-							String emp_num = service.getEmpNum(sId);
-							String remarks = stock_control.getRemarks();
-							System.out.println("remarks: " + remarks);
-							int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
-							int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
-							
-						}
-					}
-					
-					
-				}
-				
-				
-				
-			} else {
-				model.addAttribute("msg", "재고 조정 작업 실패!");
-				return "fail_back";
-			}
-			
-			
-			
-		}
+	   public String controlPro(@ModelAttribute Stock_controlVO control, HttpSession session, Model model) {
+	      String sId = (String)session.getAttribute("sId");
+//	      System.out.println("controlPro: " + control);
+	      
+	      for(int i = 0; i < control.getStock_cd_arr().length; i++) {
+	         
+	         Stock_controlVO stock_control = new Stock_controlVO();
+	         
+	         stock_control.setStock_cd(control.getStock_cd_arr()[i]);
+	         stock_control.setControl_qty(control.getControl_qty_arr()[i]);
+	         stock_control.setMoving_stock_cd(control.getMoving_stock_cd_arr()[i]);
+	         stock_control.setMoving_qty(control.getMoving_qty_arr()[i]);
+	         stock_control.setProduct_name(control.getProduct_name_arr()[i]);
+	         
+	         // 상세 위치 문자열을 찾기 위해 "창고 구역 위치" 전체를 갖고 와서 자름
+	         System.out.println("loc_in_area을 찾기!: " + control.getWh_loc_in_area_arr()[i].isEmpty());
+	         
+	         String loc_in_area = "";
+	         if(control.getWh_loc_in_area_arr()[i].isEmpty() == false) {
+	            loc_in_area = control.getWh_loc_in_area_arr()[i];
+	            loc_in_area.lastIndexOf(" ");
+	            
+	            loc_in_area = loc_in_area.substring(loc_in_area.lastIndexOf(" ") + 1);
+	            
+	            System.out.println("문자열 찾기: " + loc_in_area);
+	         } 
+	         
+//	         System.out.println("적요값: " + control.getRemarks_arr()[i]);
+	         
+	         if(control.getRemarks_arr()[i].isEmpty()) {
+	            stock_control.setRemarks("");
+	         } else {
+	            stock_control.setRemarks(control.getRemarks_arr()[i]);
+	         }
+	         
+	         System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
+	               + ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
+	         
+	         int stock_cd = stock_control.getStock_cd();
+//	         System.out.println("stock_cd: " + stock_cd);
+	         int stock_qty = stock_control.getControl_qty();
+	         // 기존 재고 번호에 대한 수량 변경
+	         int updateCount = service.modifyStock(stock_cd, stock_qty);
+	         
+	         if(updateCount > 0) {
+	            
+	            int moving_qty = stock_control.getMoving_qty();
+	            System.out.println("moving_qty: " + moving_qty);
+	            // 이동할 재고 수량이 있는 경우
+	            if(moving_qty != 0) {
+	               int moving_stock_cd = stock_control.getMoving_stock_cd();
+	               // 이동할 재고 수량이 있지만 재고 번호가 없는 경우(이동 재고 번호가 0인 경우
+	               // 위치만 가져가서 재고 번호를 제외한 나머지를 stock에 insert 하기
+	               // 이동랑 수량이 
+	               if(moving_stock_cd == 0 && !loc_in_area.equals("")) {
+	                  
+	                  String product_name = stock_control.getProduct_name();
+	                  int product_cd = service.getProduct_cd(product_name);
+	                  int wh_loc_in_area_cd = service.getAreaCd(loc_in_area);
+	                  
+	                  int insertCount = service.registStock(product_cd, moving_qty, wh_loc_in_area_cd);
+	                  
+	                  
+	               } else {
+	                  
+	                  // 이동 재고 번호를 조회하여 이동할 재고 수량 update
+	                  int updateCount2 = service.modifyMovingStock(moving_stock_cd, moving_qty);
+	                  // 이동 재고 수량 update 성공시 -> 재고 이력 테이블 컬럼 추가
+	                  if(updateCount2 > 0) {
+	                     // 재고 이력 테이블 컬럼 추가를 위한 product_cd와 emp_num 조회 필요
+	                     String product_name = stock_control.getProduct_name();
+	                     int product_cd = service.getProduct_cd(product_name);
+	                     System.out.println("product_cd: " + product_cd);
+	                     String emp_num = service.getEmpNum(sId);
+	                     String remarks = stock_control.getRemarks();
+	                     System.out.println("remarks: " + remarks);
+	                     int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
+	                     int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
+	                     
+	                  }
+	               }
+	               
+	            }
+	            
+	         } else {
+	            model.addAttribute("msg", "재고 조정 작업 실패!");
+	            return "fail_back";
+	         }
+	         
+	      }
 
-		return "redirect:/Stock.st";
-		
-	}
-	
+	      return "redirect:/Stock.st";
+	   }
 	
 	@GetMapping(value = "Stock_history_popup.st")
-	public String stockPopupHistory(@RequestParam(defaultValue = "1") int stock_cd, Model model) {
+	public String stockPopupHistory(@RequestParam(defaultValue = "1") int stock_cd, 
+									@RequestParam(defaultValue = "1") int pageNum, 
+									Model model) {
 		System.out.println("stock_cd: " + stock_cd);
 		// 팝업창 클릭시 파라미터로 가져온 stock_cd의 재고이력을 조회
 		
-		List<Stock_history_listVO> stock_history = service.getStockHistory(stock_cd);
+		//페이징처리
+		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
+		int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
+		
+		List<Stock_history_listVO> stock_history = service.getStockHistory(stock_cd, startRow, listLimit);
+		
+		int listCount = service.getStockHistoryListCount(stock_cd);
+		int pageListLimit = 10;
+		int maxPage = listCount / listLimit + (listCount % listLimit != 0 ? 1 : 0);
+		int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
+		int endPage = startPage * pageListLimit - 1;
+		
+		if(endPage > maxPage) {
+			endPage = maxPage;
+		}
+		
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+		
 		
 		System.out.println(stock_history);
 		
 		model.addAttribute("stock_history", stock_history);
-		
+		model.addAttribute("pageInfo", pageInfo);
 		
 		return "stock/stock_history_popup";
 	}

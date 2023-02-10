@@ -182,47 +182,7 @@
 	           			<button type="reset" class="btn btn-primary btn-rounded btn-fw" onclick="">초기화</button>
            			</div>
           </form> 
-				         <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->
-				    
-					     <!-- 만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
-						<c:choose>
-							<c:when test="${empty param.pageNum }">
-								<c:set var="pageNum" value="1" />
-							</c:when>
-							<c:otherwise>
-								<c:set var="pageNum" value="${param.pageNum }" />
-							</c:otherwise>
-						</c:choose>
-						
-						<c:choose>
-							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='StockRevise.st?pageNum=${pageNum - 1}'">
-							</c:when>
-							<c:otherwise>
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
-							</c:otherwise>
-						</c:choose>
-							
-						<c:forEach var="i" begin="${pageInfo.startPage }" end="${pageInfo.endPage }">
-							<c:choose>
-								<c:when test="${pageNum eq i}">
-									${i }
-								</c:when>
-								<c:otherwise>
-									<a href="StockRevise.st?pageNum=${i }">${i }</a>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-				
-						<c:choose>
-							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='StockRevise.st?pageNum=${pageNum + 1}'">
-							</c:when>
-							<c:otherwise>
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">
-							</c:otherwise>
-						</c:choose>
-					</section>
+				        
                	</div>
              </div>
           </div>

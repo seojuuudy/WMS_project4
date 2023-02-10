@@ -95,12 +95,20 @@
   				,#{remarks}
   			)
   	</insert>
-  	
+
   	<select id="selectStockHistory" resultType="com.itwillbs.wms4.vo.Stock_history_listVO">
   		SELECT * 
   			FROM stock_history_list 
-  			WHERE stock_cd = #{stock_cd};
+  			WHERE stock_cd = #{stock_cd}
+  			LIMIT 
+			#{startRow}, #{listLimit}
   	</select>
+  	
+  	<select id="selectStockHistoryListCount" resultType="int">
+		SELECT COUNT(*) 
+			FROM stock_history 
+			WHERE stock_cd = #{stock_cd}
+	</select>
   	
   	<select id="selectAreaList" resultType="com.itwillbs.wms4.vo.Wh_detailVO">
   		SELECT * FROM wh_detail
