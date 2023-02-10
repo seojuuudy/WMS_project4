@@ -18,6 +18,7 @@ public class WarehouseVO {
 	private String wh_name;
 	private String wh_gubun;
 	private String wh_location;
+	private String wh_postCode;
 	private String wh_addr;
 	private String wh_tel;
 	private String wh_man_name;
@@ -28,13 +29,15 @@ public class WarehouseVO {
 		super();
 	}
 
-	public WarehouseVO(String wh_cd, String wh_name, String wh_gubun, String wh_location, String wh_addr, String wh_tel,
-			String wh_man_name, String wh_use, String remarks) {
+	public WarehouseVO(String wh_cd, String wh_name, String wh_gubun, String wh_location, String wh_postCode,
+			String wh_addr, String wh_tel, String wh_man_name, String wh_use,
+			String remarks) {
 		super();
 		this.wh_cd = wh_cd;
 		this.wh_name = wh_name;
 		this.wh_gubun = wh_gubun;
 		this.wh_location = wh_location;
+		this.wh_postCode = wh_postCode;
 		this.wh_addr = wh_addr;
 		this.wh_tel = wh_tel;
 		this.wh_man_name = wh_man_name;
@@ -74,12 +77,24 @@ public class WarehouseVO {
 		this.wh_location = wh_location;
 	}
 
+	public String getWh_postCode() {
+		return wh_postCode;
+	}
+
+	public void setWh_postCode(String wh_postCode) {
+		this.wh_postCode = wh_postCode;
+	}
+
 	public String getWh_addr() {
 		return wh_addr;
+		
 	}
 
 	public void setWh_addr(String wh_addr) {
 		this.wh_addr = wh_addr;
+		
+//		wh_addr1 = wh_addr.split(",")[0];
+//		wh_addr2 = wh_addr.split(",")[1];
 	}
 
 	public String getWh_tel() {
@@ -117,9 +132,13 @@ public class WarehouseVO {
 	@Override
 	public String toString() {
 		return "WarehouseVO [wh_cd=" + wh_cd + ", wh_name=" + wh_name + ", wh_gubun=" + wh_gubun + ", wh_location="
-				+ wh_location + ", wh_addr=" + wh_addr + ", wh_tel=" + wh_tel + ", wh_man_name=" + wh_man_name
-				+ ", wh_use=" + wh_use + ", remarks=" + remarks + "]";
+				+ wh_location + ", wh_postCode=" + wh_postCode + ", wh_addr=" + wh_addr + ", wh_tel=" + wh_tel + ", "
+				+ "wh_man_name=" + wh_man_name + ", wh_use="
+				+ wh_use + ", remarks=" + remarks + "]";
 	}
+	
+	
+	
 	
 	
 }

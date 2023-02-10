@@ -27,25 +27,31 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 $(function() {
-	//창고코드 DB 조회
-	$("#wh_cd").on("change", function() {
-	   
-		var code  = $("#wh_cd").val();
-	   
-		$.ajax({
-		   url:"CheckCode.wh",
-		   data: {
-		      code
-	   	},
-		   success: function(result){
-		         if(result == "true"){
-		             $("#checkCodeResult").html("이미 존재하는 코드").css("color","red");
-		         } else {
-		        	 $("#checkCodeResult").html("사용 가능한 코드").css("color", "blue");
-		         }
-	       }
-		}); // ajax
-	});
+	//창고코드 유효성 검사
+    $("#wh_cd").on("change", function() {
+      
+	      var code = $("#wh_cd").val();
+	      var regex = /^[0-9]{10}$/;
+	      var result2 = regex.exec(code);
+	      
+	      if(!result2) {
+	         $("#checkCodeResult").html("코드 자리수를 확인하여주시기 바랍니다(10자)").css("color", "red");
+	      } else { // 정규표현식 성립 한다면 디비 조회
+	         $.ajax({
+	            url:"CheckCode.wh",
+	            data: {
+	            	code
+	            },
+	            success: function(result){
+	                  if(result == "true"){
+	                      $("#checkCodeResult").html("이미 존재하는 코드").css("color","red");
+	                  } else {
+	                 	 $("#checkCodeResult").html("사용 가능한 코드").css("color", "blue");
+	                 }
+	                }
+	         }); // ajax
+	      } // if
+	  });
 	
 	// 외부 선택시 주소창 표출
 	$(document).ready(function() {
@@ -112,14 +118,25 @@ function sample6_execDaumPostcode() {
         }
     }).open();
 }
-function submit() {
-//     if (confirm("창고 정보를 수정하시겠습니까?")) {
-//         alert("수정이 완료되었습니다.");
-        location.href='WhUpdatePro.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }';
-//     } else {
-//         alert("수정이 취소되었습니다.");
-//     }
+
+//창고코드번호 최대길이 제한
+function maxLengthCheck(object){
+    if (object.value.length > object.maxLength){
+      object.value = object.value.slice(0, object.maxLength);
+    }    
 }
+
+// 창고코드 10자 이하일 시 return
+function subCheck() {
+	var wh_cd = modifyForm.wh_cd.value.length;
+	if(wh_cd != 10){
+		alert("창고코드번호를 다시 확인하여주시기 바랍니다.(최소 10자)")
+		event.preventDefault();
+		return;
+	} else {
+		return true;
+	}
+}  
 </script>
   <body>
   
@@ -145,14 +162,15 @@ function submit() {
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">창고 수정</h4>
-         	  <form action="WhUpdatePro.wh" method="post" class="form-sample">
+         	  <form action="WhUpdatePro.wh" method="post" class="form-sample" name="modifyForm" id="modifyForm" onsubmit="return subCheck()">
                 <p class="card-description">${wh.wh_name } warehouse Modify<br></p>
                 
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">창고 코드</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="${wh.wh_cd }" name="wh_cd" id="wh_cd"/>
+                        <input type="text" class="form-control" value="${wh.wh_cd }" name="wh_cd" id="wh_cd" maxlength="10"/>
+                        <span id="checkCodeResult" style="font-size: 0.4em;"></span>
                       </div>
                     </div>
                   </div>
@@ -241,11 +259,11 @@ function submit() {
                     </div>
                   
                   <div class="template-demo" style="text-align: right;">
-	                  <input type="submit" class="btn btn-primary mr-2" value="수정하기" onclick="submit()"/>
+	                  <input type="submit" class="btn btn-primary mr-2" value="수정하기"/>
 	                  <button class="btn btn-light" onclick="history.back()">취소</button>
                   </div>
-                  </form>
                   </div>
+                  </form>
                  </div>
                 </div>
                </div>

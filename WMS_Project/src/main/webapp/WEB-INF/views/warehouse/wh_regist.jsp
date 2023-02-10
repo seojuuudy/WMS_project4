@@ -22,6 +22,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/demo_1/style.css" />
     <!-- End layout styles -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.png" />
+	<!-- input type "NUMBUR"일 시 화살표 안보이게 -->
+    <style type="text/css">
+    	input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+    	-webkit-appearance: none;
+   		 margin: 0;
+		}
+    </style>
 </head>
 <script src="http://code.jquery.com/jquery-3.6.3.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -31,11 +39,13 @@ $(function() {
     $("#wh_cd").on("change", function() {
       
 	      var code = $("#wh_cd").val();
+	      var codeLength = $("#wh_cd").val().length;
 	      var regex = /^[0-9]{10}$/;
 	      var result2 = regex.exec(code);
 	      
 	      if(!result2) {
 	         $("#checkCodeResult").html("코드 자리수를 확인하여주시기 바랍니다(10자)").css("color", "red");
+	         $("#wh_cd").focus();
 	      } else { // 정규표현식 성립 한다면 디비 조회
 	         $.ajax({
 	            url:"CheckCode.wh",
@@ -45,13 +55,20 @@ $(function() {
 	            success: function(result){
 	                  if(result == "true"){
 	                      $("#checkCodeResult").html("이미 존재하는 코드").css("color","red");
+	                      $("#wh_cd").focus();
+	                      code = true;
 	                  } else {
 	                 	 $("#checkCodeResult").html("사용 가능한 코드").css("color", "blue");
+	                 	 code = false;
 	                 }
 	                }
 	         }); // ajax
 	      } // if
 	  });
+	
+    $("#wh_cd").on("change", function() {
+    		
+    });
 	
 	// 외부 선택시 주소창 표출
 	$(document).ready(function() {
@@ -64,6 +81,8 @@ $(function() {
 	    }
 	  }); 
 	}); 
+	
+
 	
 });
 
@@ -111,14 +130,33 @@ function sample6_execDaumPostcode() {
 //             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-//             document.getElementById('sample6_postcode').value = data.zonecode;
+            document.getElementById('sample6_postcode').value = data.zonecode;
             document.getElementById("sample6_address").value = addr;
             
             // 커서를 상세주소 필드로 이동한다.
-//             document.getElementById("sample6_detailAddress").focus();
+            document.getElementById("sample6_detailAddress").focus();
         }
     }).open();
 }
+
+// 창고코드번호 최대길이 제한
+function maxLengthCheck(object){
+    if (object.value.length > object.maxLength){
+      object.value = object.value.slice(0, object.maxLength);
+    }    
+}
+
+// 창고코드 10자 이하일 시 return
+function subCheck() {
+	var wh_cd = registForm.wh_cd.value.length;
+	if(wh_cd != 10){
+		alert("창고코드번호를 다시 확인하여주시기 바랍니다.(최소 10자)")
+		event.preventDefault();
+		return;
+	} else {
+		return false;
+	}
+}  
 </script>
 
 <body>
@@ -138,19 +176,19 @@ function sample6_execDaumPostcode() {
 <!-- 본문 영역 -->
 <div class="main-panel">
 		
+      <form action="RegistPro.wh" class="form-sample"  method="post" id="registForm" name="registForm" onsubmit="subCheck()">
 		<!-- 창고 등록 table -->	
         <div class="col-12 grid-margin">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">창고 등록</h4>
-              <form action="RegistPro.wh" class="form-sample"  method="post" onsubmit="return submitCheck();" id="registForm">
                 <p class="card-description">warehouse regist</p>
                 
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">창고코드</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_cd" id="wh_cd" required="required"/>
+                        <input type="number" class="form-control" name="wh_cd" id="wh_cd" required="required" maxlength="10" oninput="maxLengthCheck(this)"/>
                         <span id="checkCodeResult" style="font-size: 0.4em;"></span>
                       </div>
                     </div>
@@ -160,7 +198,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">창고명</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_name" id="wh_name" required="required"/>
+                        <input type="text" class="form-control" name="wh_name" id="wh_name" required="required" maxlength="100"/>
                       </div>
                     </div>
                   </div>
@@ -193,10 +231,26 @@ function sample6_execDaumPostcode() {
                 <div class="addr">
                   <div class="col-md-6">
                     <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">우편번호</label>
+                      <div class="col-sm-9">
+                      	<input type="text" name="wh_postCode" class="form-control" id="sample6_postcode" placeholder="우편번호" readonly="readonly" >
+ 						<input type="button" class="file-upload-browse btn btn-primary" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
                       <label class="col-sm-3 col-form-label">주소</label>
                       <div class="col-sm-9">
-                      	<input type="text" name="wh_addr" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly" required="required">
- 						<input type="button" class="file-upload-browse btn btn-primary" onclick="sample6_execDaumPostcode()" value="주소 찾기"><br>
+                      	<input type="text" name="wh_addr" class="form-control" id="sample6_address" placeholder="주소" readonly="readonly"  >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">상세주소</label>
+                      <div class="col-sm-9">
+                      	<input type="text" name="wh_addr" class="form-control" id="sample6_detailAddress" placeholder="상세 주소" >
                       </div>
                     </div>
                   </div>
@@ -207,7 +261,7 @@ function sample6_execDaumPostcode() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">전화번호</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="wh_tel" id="wh_tel" required="required"/>
+                        <input type="number" class="form-control" name="wh_tel" id="wh_tel" required="required"/>
                       </div>
                     </div>
                   </div>
@@ -232,29 +286,27 @@ function sample6_execDaumPostcode() {
                       </div>
                     </div>
                   </div>
-                
                 <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">적요</label>
                       <div class="col-sm-9">
                       	<textarea rows="1" cols="20" class="form-control" name="remarks" id="remarks" placeholder="비고사항"></textarea>
-                      </div>
                     </div>
                   </div>
                  </div>
                  
                 <div class="template-demo" style="text-align: right;">
-                 <input type="submit" id="sub-btn" class="btn btn-primary mr-2" value="등록" location.href='RegistPro.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }'">
+                 <input type="submit" id="sub-btn" class="btn btn-primary mr-2" value="등록">
                  <input type="button" class="btn btn-light" onclick="location.href='List.wh'" value="취소">
                 </div>
                </div>
               </div>
-        	 </form>
              </div>
-           </div>
+        	</form>
+       	   </div>
           </div>
 <!-- 창고 등록 table -->	
-			
+</div>			
 <footer class="footer">
 	<jsp:include page="../partials/footer.jsp"></jsp:include>
 </footer>

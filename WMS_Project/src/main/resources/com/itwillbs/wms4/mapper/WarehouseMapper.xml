@@ -14,15 +14,16 @@
 		INSERT 
 			INTO warehouse
 			VALUES (
-				#{wh_cd}, 
-				#{wh_name},
-				#{wh_gubun},
-				#{wh_location},
-				#{wh_addr},
-				#{wh_tel},
-				#{wh_man_name},
-				#{wh_use},
-				#{remarks}
+				#{wh_cd}
+				,#{wh_name}
+				,#{wh_gubun}
+				,#{wh_location}
+				,#{wh_addr}
+				,#{wh_tel}
+				,#{wh_man_name}
+				,#{wh_use}
+				,#{remarks}
+				,#{wh_postCode}
 			)
 	</insert>
 	
@@ -55,6 +56,36 @@
 		LIMIT 
 			#{startRow}
 			, #{listLimit}
+	</select>
+	
+	<!-- 사용버튼 전용 창고리스트 출력 -->
+	<select id="selectUseWhList" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+		SELECT *
+			FROM warehouse
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<where>
+			<if test="wh_use != null and wh_use == 1">
+				wh_use = #{wh_use}
+			</if>
+		</where>
+			LIMIT 
+				#{startRow}, #{listLimit}
+	</select>
+	
+	<!-- 미사용버튼 전용 창고리스트 출력 -->
+	<select id="selectNotUseWhList" resultType="com.itwillbs.wms4.vo.WarehouseVO">
+		SELECT *
+			FROM warehouse
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<where>
+			<if test="wh_use != null and wh_use == 2">
+				wh_use = #{wh_use}
+			</if>
+		</where>
+			LIMIT 
+				#{startRow}, #{listLimit}
 	</select>
 	
 	<!-- 창고 목록 페이징 처리 작업 -->

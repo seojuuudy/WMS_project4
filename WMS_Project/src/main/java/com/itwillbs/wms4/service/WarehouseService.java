@@ -54,6 +54,18 @@ public class WarehouseService {
 		return mapper.UpdateWarehouse(warehouse);
 	}
 
+	// 사용버튼 클릭 시 사용여부 : 사용 만 출력 작업 
+	public List<WarehouseVO> getUseWhList(String searchType, String keyword, int startRow, int listLimit, String wh_use) {
+		return mapper.selectUseWhList(searchType, keyword, startRow, listLimit, wh_use);
+	}
+
+	// 사용버튼 클릭 시 사용여부 : 미사용 만 출력 작업 
+	public List<WarehouseVO> getNotUseWhList(String searchType, String keyword, int startRow, int listLimit,
+			String wh_use) {
+		return mapper.selectNotUseWhList(searchType, keyword, startRow, listLimit, wh_use);
+	}
+
+
 
 
 
