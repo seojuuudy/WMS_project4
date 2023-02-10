@@ -46,7 +46,8 @@ public class WmsController {
 
 				List<StockVO> stList = service.getStockList(searchArea, searchLocation, searchGo, startRow, listLimit);
 				
-				int listCount = service.getStockListCount();
+				int listCount = service.getStockListCount(searchArea, searchLocation, searchGo);
+				System.out.println("listCount : "+listCount);
 				int pageListLimit = 8;
 				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
@@ -78,7 +79,6 @@ public class WmsController {
 		}
 		
 	}
-	//재고조회***********************************************
 	
 	
 	//삭제**************************************************

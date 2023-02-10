@@ -25,7 +25,7 @@
 			l.wh_area_cd = 
 			#{searchLocation}
   </select>
-  <select id="selectStockList" resultType="com.itwillbs.wms4.vo.Stock_listVO">
+  <select id="selectStockList" resultType="map">
 	SELECT s.stock_cd, s.product_cd, s.wh_loc_in_area_cd, s.stock_qty,
 			p.product_name, p.size_des, w.wh_name, w.wh_area, w.wh_loc_in_area,
 			a.wh_cd, a.wh_area_cd
@@ -41,9 +41,9 @@
 				<choose>
 					<when test="!searchLocation.equals('')">
 						AND wh_area_cd = #{searchLocation}
-					</when>
-					<when test="!searchGo.equals('')">
-						AND wh_loc_in_area_cd = #{searchGo}
+						<if test="!searchGo.equals('')">
+							AND w.wh_loc_in_area_cd = #{searchGo}
+						</if>
 					</when>
 				</choose>
 			</if>
@@ -56,7 +56,24 @@
   </select>
   <select id="selectStockListCount" resultType="int">
 	SELECT COUNT(*)
-		FROM stock
+		FROM stock s
+		JOIN product p
+		ON s.product_cd = p.product_cd
+		JOIN wh_detail w
+		ON s.wh_loc_in_area_cd = w.wh_loc_in_area_cd
+		JOIN wh_area a
+		ON w.wh_area = a.wh_area
+		<if test="!searchArea.equals('')">
+				WHERE wh_cd = #{searchArea}
+				<choose>
+					<when test="!searchLocation.equals('')">
+						AND wh_area_cd = #{searchLocation}
+						<if test="!searchGo.equals('')">
+							AND w.wh_loc_in_area_cd = #{searchGo}
+						</if>
+					</when>
+				</choose>
+		</if>
   </select>
 <!-- 	구역명 등록 -->
   <insert id="insertArea">
