@@ -28,7 +28,7 @@
 	<!-- jquery -->
 	<script type="text/javascript">
 		function deleteGroup(product_group_bottom_cd) {
-			alert("group code : "+product_group_bottom_cd);
+// 			alert("group code : "+product_group_bottom_cd);
 			let result = confirm("품목 그룹을 삭제하시겠습니까?");
 			if(result) {
 				location.href = "DeleteGroup.pr?product_group_bottom_cd="+product_group_bottom_cd;

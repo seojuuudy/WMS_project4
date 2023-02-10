@@ -82,6 +82,16 @@
 <!-- 	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='#'">#</button> -->
         <!-- table 영역 -->
 		<section id="pageList">
+		
+  <!-- 만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
+		<c:choose>
+			<c:when test="${empty param.pageNum }">
+				<c:set var="pageNum" value="1" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="pageNum" value="${param.pageNum }" />
+			</c:otherwise>
+		</c:choose>
 		<!-- 
 		현재 페이지 번호(pageNum)가 1보다 클 경우에만 [이전] 링크 동작
 		=> 클릭 시 BoardList.bo 서블릿 주소 요청하면서 
@@ -89,7 +99,7 @@
 		-->
 		<c:choose>
 			<c:when test="${pageNum > 1}">
-				<input type="button"  class="btn btn-light" value="이전" onclick="location.href='#'">
+				<input type="button"  class="btn btn-light" value="이전" onclick="location.href='Stock_history_popup.st?pageNum=${pageNum - 1}'">
 			</c:when>
 			<c:otherwise>
 				<input type="button" class="btn btn-light" value="이전">
@@ -106,7 +116,7 @@
 					${i }
 				</c:when>
 				<c:otherwise>
-					<a href="#?pageNum=${i }">${i }</a>
+					<a href="Stock_history_popup.st?pageNum=${i }">${i }</a>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
@@ -114,7 +124,7 @@
 		<!-- 현재 페이지 번호(pageNum)가 총 페이지 수보다 작을 때만 [다음] 링크 동작 -->
 		<c:choose>
 			<c:when test="${pageNum < pageInfo.maxPage}">
-				<input type="button" class="btn btn-light" value="다음" onclick="location.href='#?pageNum=${pageNum + 1}'">
+				<input type="button" class="btn btn-light" value="다음" onclick="location.href='Stock_history_popup.st?pageNum=${pageNum + 1}'">
 			</c:when>
 			<c:otherwise>
 				<input type="button" class="btn btn-light" value="다음">

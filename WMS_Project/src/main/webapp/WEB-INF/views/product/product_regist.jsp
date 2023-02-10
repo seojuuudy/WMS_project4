@@ -117,17 +117,19 @@ function findClient() {
                  
                  <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">품목그룹(소)</label>
+                      <label class="col-sm-3 col-form-label">품목그룹</label>
                       <div class="col-sm-9">
                          <span class="input-group-append">
+<!--                          만약 그룹코드 3이라면 그룹코드 3의 그룹이름 표시 -->
+                         <input type="text" name="product_group_bottom_name" id="selectedGroupName" value="" disabled="disabled" class="form-control">
+                         <input type="hidden" name="product_group_bottom_cd" id="selectedGroup" value="" >
                          
-                        <select class="form-control" name="product_group_bottom_cd" required="required" id="selectedGroup">
-                        <option value="" selected="selected" disabled="disabled">선택하세요</option>
-                         <c:forEach var="bottomName" items="${prGrBottomNameList }">
-                          <option value="${bottomName.product_group_bottom_cd }">${bottomName.product_group_bottom_name }</option>
-                         </c:forEach>
-                       
-                        </select>
+<!--                         <select class="form-control" name="product_group_bottom_cd" required="required" id="selectedGroup"> -->
+<!--                         <option value="" selected="selected" disabled="disabled">선택하세요</option> -->
+<%--                          <c:forEach var="bottomName" items="${prGrBottomNameList }"> --%>
+<%--                           <option value="${bottomName.product_group_bottom_cd }">${bottomName.product_group_bottom_name }</option> --%>
+<%--                          </c:forEach> --%>
+<!--                         </select> -->
                           <button class="file-upload-browse btn btn-primary" type="button" onclick="findGroup()">검색</button>
                         </span>
                       </div>
@@ -156,7 +158,7 @@ function findClient() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">단위</label>
                       <div class="col-sm-9">
-                        <input type="text" id="number" class="form-control" name="unit" required="required"/>
+                        <input type="text" id="number" class="form-control" name="unit" required="required"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>
@@ -167,7 +169,7 @@ function findClient() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">매입가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="purchasePrice" id="purchasePrice" required="required"/>
+                        <input type="text" class="form-control" name="purchasePrice" id="purchasePrice" required="required"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>
@@ -187,7 +189,7 @@ function findClient() {
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">판매가</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" name="sellingPrice" id="sellingPrice" required="required"/>
+                        <input type="text" class="form-control" name="sellingPrice" id="sellingPrice" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
                       </div>
                     </div>
                   </div>

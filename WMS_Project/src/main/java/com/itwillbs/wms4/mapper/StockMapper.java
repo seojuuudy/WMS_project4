@@ -36,7 +36,9 @@ public interface StockMapper {
 			@Param("moving_stock_cd") int moving_stock_cd, @Param("moving_qty") int moving_qty, 
 			@Param("emp_num") String emp_num, @Param("remarks") String remarks);
 
-	List<Stock_history_listVO> selectStockHistory(int stock_cd);
+	List<Stock_history_listVO> selectStockHistory(@Param("stock_cd") int stock_cd, 
+												@Param("startRow") int startRow, 
+												@Param("listLimit") int listLimit);
 
 	List<Wh_detailVO> selectAreaList(
 			@Param("searchType") String searchType, 
@@ -50,6 +52,8 @@ public interface StockMapper {
 
 	int insertStock(@Param("product_cd") int product_cd, @Param("moving_qty") int moving_qty, 
 			@Param("wh_loc_in_area_cd") int wh_loc_in_area_cd);
+
+	int selectStockHistoryListCount(int stock_cd);
 
 
 }

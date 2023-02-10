@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,9 +25,17 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Locale locale, Model model, HttpSession session) {
 		
-		return "main";
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // login O
+				
+			return "main";
+		} else { // 로그인X
+			return "login_form";
+		} // ~~~~ if-else end~~~~
+	
 	}
 	
 }

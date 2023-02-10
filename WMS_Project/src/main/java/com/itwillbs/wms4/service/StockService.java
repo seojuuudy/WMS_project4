@@ -51,8 +51,8 @@ public class StockService {
 		return mapper.insertMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
 	}
 
-	public List<Stock_history_listVO> getStockHistory(int stock_cd) {
-		return mapper.selectStockHistory(stock_cd);
+	public List<Stock_history_listVO> getStockHistory(int stock_cd, int startRow, int listLimit) {
+		return mapper.selectStockHistory(stock_cd,  startRow, listLimit);
 	}
 
 	public List<Wh_detailVO> getAreaList(String searchType, String keyword, int startRow, int listLimit) {
@@ -69,6 +69,10 @@ public class StockService {
 
 	public int registStock(int product_cd, int moving_qty, int wh_loc_in_area_cd) {
 		return mapper.insertStock(product_cd, moving_qty, wh_loc_in_area_cd);
+	}
+
+	public int getStockHistoryListCount( int stock_cd) {
+		return mapper.selectStockHistoryListCount(stock_cd);
 	}
 
 

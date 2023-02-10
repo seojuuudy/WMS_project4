@@ -90,7 +90,7 @@
 			
 			
 			$(":button").on("click", function goRegistPage(i) {
-				alert("선택한 위치: " + $(this).parents("tr").find(".wh_name").text() + " "
+// 				alert("선택한 위치: " + $(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
 						+ $(this).parents("tr").find(".wh_loc_in_area").text());
 			let index = ${index };
@@ -214,7 +214,7 @@
 						
 						<c:choose>
 							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Stock.st?pageNum=${pageNum - 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='StockPopup.st?pageNum=${pageNum - 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
@@ -227,14 +227,14 @@
 									${i }
 								</c:when>
 								<c:otherwise>
-									<a href="Stock.st?pageNum=${i }">${i }</a>
+									<a href="StockPopup.st?pageNum=${i }">${i }</a>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 				
 						<c:choose>
 							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Stock.st?pageNum=${pageNum + 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='StockPopup.st?pageNum=${pageNum + 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">

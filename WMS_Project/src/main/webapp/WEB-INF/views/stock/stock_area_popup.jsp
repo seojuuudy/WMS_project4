@@ -89,7 +89,7 @@
 			});
 			
 			
-			$(":button").on("click", function goRegistPage() {
+			$("button[name=selectBtn]").on("click", function goRegistPage() {
 				let index = ${index };
 				
 				$("#moving_stock_cd_arr" + index, opener.document).val(0);
@@ -164,7 +164,7 @@
 	                            <td class="wh_area">${wh.wh_area }</td>
 	                            <td class="wh_loc_in_area">${wh.wh_loc_in_area }</td>
 	                            <td>
-                            	<button type="button" class="btn btn-primary btn-rounded i" >선택</button>
+                            	<button type="button" name="selectBtn" class="btn btn-primary btn-rounded i" >선택</button>
                             	</td>
 	                          </tr>
 	                         </c:forEach>
@@ -190,7 +190,7 @@
 						
 						<c:choose>
 							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Stock.st?pageNum=${pageNum - 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Stock_area_popup.st?pageNum=${pageNum - 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
@@ -203,14 +203,14 @@
 									${i }
 								</c:when>
 								<c:otherwise>
-									<a href="Stock.st?pageNum=${i }">${i }</a>
+									<a href="Stock_area_popup.st?pageNum=${i }">${i }</a>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 				
 						<c:choose>
 							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Stock.st?pageNum=${pageNum + 1}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Stock_area_popup.st?pageNum=${pageNum + 1}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">

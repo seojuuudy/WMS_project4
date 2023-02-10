@@ -27,9 +27,11 @@
 	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery-3.6.3.js"></script>
 	<!-- jquery -->
 	<script type="text/javascript">
-		function goRegistPage(product_group_bottom_cd) {
+		function goRegistPage(product_group_bottom_cd, product_group_bottom_name) {
 // 			alert("원래페이지로 데려갈 소분류코드 : " + product_group_bottom_cd);
+// 			alert("원래페이지로 데려갈 소분류코드 : " + product_group_bottom_name);
 			opener.document.getElementById("selectedGroup").value = product_group_bottom_cd;
+			opener.document.getElementById("selectedGroupName").value = product_group_bottom_name;
 			window.close();
 			
 		}
@@ -82,7 +84,7 @@
                             <td>${prgrlist.product_group_bottom_cd}</td>
                             <td>${prgrlist.product_group_bottom_name}</td>
                             <td>
-                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="goRegistPage('${prgrlist.product_group_bottom_cd}')">선택</button>
+                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="goRegistPage('${prgrlist.product_group_bottom_cd}', '${prgrlist.product_group_bottom_name}')">선택</button>
                             </td>
                           </tr>
                         </c:forEach>
