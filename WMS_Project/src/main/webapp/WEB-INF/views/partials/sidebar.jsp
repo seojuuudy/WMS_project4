@@ -66,7 +66,7 @@
 						<li class="nav-item"><a class="nav-link"
 							href="ClientRegist.cl">거래처 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="Regist.wh">창고 등록</a></li>
+							href="List.wh">창고 등록</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="ProductList.pr">품목 관리</a></li>
 					</ul>

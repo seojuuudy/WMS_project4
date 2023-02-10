@@ -41,5 +41,21 @@ public interface WarehouseMapper {
 	// 창고 수정 작업 요청
 	int UpdateWarehouse(WarehouseVO warehouse);
 
+	// 사용버튼 전용 리스트 출력 작업 요청
+	List<WarehouseVO> selectUseWhList(
+			@Param("searchType") String searchType, 
+			@Param("keyword") String keyword, 
+			@Param("startRow") int startRow, 
+			@Param("listLimit") int listLimit,
+			@Param("wh_use") String wh_use);
+
+	// 미사용버튼 전용 리스트 출력 작업 요청
+	List<WarehouseVO> selectNotUseWhList(
+			@Param("searchType") String searchType, 
+			@Param("keyword") String keyword, 
+			@Param("startRow") int startRow, 
+			@Param("listLimit") int listLimit,
+			@Param("wh_use") String wh_use);
+
 
 }

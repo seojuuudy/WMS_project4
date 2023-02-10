@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html lang="kr">
   <head>
@@ -23,6 +24,16 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.png" />
   </head>
+<script src="http://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script type="text/javascript">
+function deleteCheck() {
+	 if (confirm("창고를 삭제하시겠습니까??") == true){// 확인
+		 location.href='WhDelete.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }';
+	 }else{// 취소
+	     return false;
+	 }
+}
+</script>
   <body>
   
     <div class="container-scroller">
@@ -41,7 +52,6 @@
         <!-- 본문 영역 -->
         <div class="main-panel">
 <!-- 			<h1>사원 등록</h1> -->
-		
 		<!-- 사원 등록 table -->	
         <div class="col-12 grid-margin">
           <div class="card">
@@ -71,7 +81,14 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">구분</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="${wh.wh_gubun }" readonly="readonly"/>
+                      	<c:choose>
+                      		<c:when test="${wh.wh_gubun eq '1' }">
+                       			<input type="text" class="form-control" value="창고" readonly="readonly"/>
+                      		</c:when>
+                      		<c:otherwise>
+                        		<input type="text" class="form-control" value="공장" readonly="readonly"/>
+                      		</c:otherwise>
+                      	</c:choose>
                       </div>
                     </div>
                   </div>
@@ -79,7 +96,14 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">위치</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="${wh.wh_location }" readonly="readonly"/>
+                      	<c:choose>
+                      		<c:when test="${wh.wh_location eq '1' }">
+                       			<input type="text" class="form-control" value="외부" readonly="readonly"/>
+                      		</c:when>
+                      		<c:otherwise>
+                        		<input type="text" class="form-control" value="내부" readonly="readonly"/>
+                      		</c:otherwise>
+                      	</c:choose>
                       </div>
                     </div>
                   </div>
@@ -89,7 +113,14 @@
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">주소</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" value="${wh.wh_addr }" readonly="readonly"/>
+                      <c:choose>
+                      		<c:when test="${wh.wh_location eq '2'}">
+                       			<input type="text" class="form-control" value="없음" readonly="readonly"/>
+                      		</c:when>
+                      		<c:otherwise>
+		                        <input type="text" class="form-control" value="(${wh.wh_postCode }) ${wh.wh_addr }" readonly="readonly"/>
+                      		</c:otherwise>
+                      	</c:choose>
                       </div>
                     </div>
                   </div>
@@ -111,14 +142,21 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">사용여부</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="${wh.wh_use }" readonly="readonly"/>
-                      </div>
-                    </div>
-                  </div>
+	                  <div class="col-md-6">
+	                    <div class="form-group row">
+	                      <label class="col-sm-3 col-form-label">사용여부</label>
+	                      	<div class="col-sm-9">
+		                      <c:choose>
+		                      	<c:when test="${wh.wh_use eq '1' }">
+		                       	 <input type="text" class="form-control" value="사용" readonly="readonly"/>
+		                      	</c:when>
+		                      	<c:otherwise>
+		                      	  <input type="text" class="form-control" value="미사용" readonly="readonly"/>
+		                     	</c:otherwise>
+		                      </c:choose>
+	                      	</div>
+	                   	 </div>
+	                  </div>
 <!--                 </div> -->
 <!--                 <div class="row"> -->
                   <div class="col-md-6">
@@ -132,7 +170,7 @@
                   
                   <div class="template-demo" style="text-align: right;">
 	                  <input type="button" class="btn btn-primary mr-2" value="창고 수정" onclick="location.href='WhModify.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }'" />
-                  	  <input type="button" class="btn btn-primary mr-2" value="창고 삭제" onclick="location.href='WhDelete.wh?wh_cd=${wh.wh_cd }&pageNum=${pageNum }&wh_name=${wh.wh_name }'"  />
+                  	  <input type="button" id="wh_delete" class="btn btn-primary mr-2" value="창고 삭제" onclick="deleteCheck()"  />
                   </div>
                  </div>
                 </div>
