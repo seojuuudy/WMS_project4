@@ -69,8 +69,23 @@
   	<!-- 재직중인 사원 수 조회 -->
   	<select id="selectEmpListCount" resultType="int">
   		SELECT COUNT(*)
-  			FROM employees
-  			WHERE work_cd = 1 
+  			FROM employees e
+            JOIN departments d USING(dept_cd) 
+            JOIN grade g USING(grade_cd)
+  			WHERE work_cd = '01'
+	 	<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('emp_name')">
+					AND emp_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('dept_name')">
+					AND dept_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('grade_name')">
+					AND grade_name LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if> 
   	</select>
   	
   	<!-- 사원 상세정보 조회 -->

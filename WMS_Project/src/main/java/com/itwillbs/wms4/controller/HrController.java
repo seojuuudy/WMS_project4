@@ -190,7 +190,7 @@ public class HrController {
 				
 				List<EmpInfoVO> empList = service.getEmpList(searchType, keyword, startRow, listLimit);
 				
-				int listCount = service.getEmpListCount(keyword);
+				int listCount = service.getEmpListCount(searchType, keyword);
 				int pageListLimit = 8;
 				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;

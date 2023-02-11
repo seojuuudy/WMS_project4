@@ -2,4 +2,375 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.IncomeMapper">
  
+	<!-- 입고예정 등록(상단) -->
+	<insert id="insertInSche">
+		<selectKey keyProperty="in_schedule_cd" resultType="String" order="BEFORE">
+			SELECT LPAD(MAX(SUBSTR(in_schedule_cd,-3, 3)) + 1, 3,'0') FROM in_schedule;
+		</selectKey>
+		INSERT 
+			INTO in_schedule
+			VALUES (
+				CONCAT(DATE_FORMAT(now(),'%Y%m%d'), '-', #{in_schedule_cd})
+				,#{in_type_cd}
+				,#{business_no}
+				,#{emp_num}
+				,#{in_date}
+				,#{remarks}
+				,0
+			)
+	</insert>		
+	
+	<!-- 입고예정 등록(하단) -->
+	<insert id="insertInSchePer" parameterType="java.util.List">
+		<selectKey keyProperty="in_schedule_cd" resultType="String" order="BEFORE">
+			SELECT LPAD(MAX(SUBSTR(in_schedule_cd,-3, 3)) + 1, 3,'0') FROM in_schedule_per_product;
+		</selectKey>
+		INSERT 
+			INTO in_schedule_per_product
+			VALUES
+				<foreach item="ins" index="index" collection="list" separator=",">
+				(
+				CONCAT(DATE_FORMAT(now(),'%Y%m%d'), '-', #{in_schedule_cd})
+				, #{ins.product_cd}
+				, #{ins.in_schedule_qty}
+				, #{ins.in_qty}
+				, #{ins.in_date}
+				, #{ins.remarks}
+				, #{ins.stock_cd}
+				, 0
+				)
+				</foreach>
+	</insert>
+	
+<!-- 	등록된 입고 예정 목록 조회 -->
+	<select id="selectInboundScheList" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
+    	SELECT *
+        	FROM InScheduleInfo
+        	GROUP BY in_schedule_cd
+        		<if test='!in_complete.equals("")'>
+        	HAVING
+        			in_complete = #{in_complete}
+        		</if>
+			    <if test='!keyword.equals("")'>
+					<choose>
+						<when test="searchType.equals('emp_num')">
+							AND emp_num LIKE '%${keyword}%'
+						</when>
+						<when test="searchType.equals('business_no')">
+							AND business_no LIKE '%${keyword}%'
+						</when>
+					</choose>		
+				</if>
+<!--         	ORDER BY in_schedule_cd DESC -->
+			LIMIT 
+				#{startRow}
+				, #{listLimit}
+	</select>
+	
+<!-- 	입고예정수량 합계 계산 -->
+	<select id="selectInboundScheListSum" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
+		SELECT SUM(in_schedule_qty) AS in_schedule_qty
+			FROM InScheduleInfo
+			GROUP BY in_schedule_cd
+	</select>
+	
+<!-- 	한 발주서에 대한 품목 갯수 확인 작업 -->
+	<select id="selectInboundScheListCnt" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
+		SELECT COUNT(*) AS in_schedule_cd_cnt , in_schedule_cd
+			FROM InScheduleInfo
+			GROUP BY in_schedule_cd
+			ORDER BY in_schedule_cd DESC
+	</select>
+	
+	<select id="selectInboundScheListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM InScheduleInfo
+			
+	</select>
+	
+	<select id="selectInboundScheList2" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
+		SELECT *
+        	FROM InScheduleInfo
+			WHERE in_schedule_cd = #{in_schedule_cd}
+	</select>
+	
+	<update id="updateComplete">
+		UPDATE InScheduleInfo
+			SET
+				<choose>
+					<when test="in_complete eq 0">
+						in_complete = '1'
+					</when>
+					<otherwise>
+						in_complete = '0'
+					</otherwise>
+				</choose>
+			WHERE 
+				in_schedule_cd = #{in_schedule_cd}
+	</update>
+	
+	<!-- 입고 예정 항목 -->
+
+	<!-- 입고 예정 항목 목록 조회 -->
+	<select id="selectinProductList" resultType="com.itwillbs.wms4.vo.V_Inbound_ProductVO">
+		SELECT *
+			FROM V_inbound_product
+    	<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('in_schedule_cd')">
+					WHERE in_schedule_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('cust_name')">
+					WHERE cust_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE product_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('in_date')">
+					WHERE in_date LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+			LIMIT #{startRow}, #{listLimit}
+	</select>
+	
+	<!-- 입고 예정 항목 목록 갯수 조회 -->
+	<select id="selectinProductListCount" resultType="int">
+		SELECT COUNT(*) 
+			FROM V_inbound_product
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('in_schedule_cd')">
+					WHERE in_schedule_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('cust_name')">
+					WHERE cust_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE product_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('in_date')">
+					WHERE in_date LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+	</select>
+	
+	<!-- 입고 예정 항목 수정폼 -->
+	<select id="selectinProductInfo" resultType="com.itwillbs.wms4.vo.V_Inbound_ProductVO">
+		SELECT in_schedule_cd, in_schedule_qty, in_qty, in_date, remarks, product_cd,
+			   stock_cd, product_name, size_des, cust_name
+			FROM V_inbound_product
+	 		WHERE 
+	 			in_schedule_cd = #{in_schedule_cd}
+	 			AND product_name = #{product_name}
+	 			AND in_date = #{in_date}
+	</select>
+	
+	<!-- 입고 예정 항목 수정 -->
+	<update id="updateProductInfo">
+		UPDATE in_schedule_per_product ip
+ 			 JOIN product p USING(product_cd)
+ 			 SET ip.product_cd = #{product_cd}
+ 			 	 , ip.in_schedule_qty = #{in_schedule_qty}
+ 			 	 , ip.in_date = #{in_date}
+ 			 	 , ip.remarks = #{remarks}
+ 			 WHERE 
+ 			 	ip.in_schedule_cd = #{in_schedule_cd}
+	 			AND p.product_name = #{product_name}
+	 			AND ip.in_date = #{ex_in_date}
+	</update>
+	
+	<!-- 입고 처리 -->
+	<!-- 입고 처리 목록 -->
+	<select id="selectinInboundList" resultType="com.itwillbs.wms4.vo.V_Inbound_ProcessingVO">
+		SELECT *, p.product_name
+			FROM in_schedule_per_product ip
+			JOIN product p USING(product_cd)
+	 		WHERE 
+		 		in_schedule_cd = #{in_schedule_cd}
+		 		AND product_cd = #{product_cd}
+		 		AND in_date = #{in_date}
+	</select>
+	
+	<!-- 입고 수행 : 멀티뷰라서 업데이트가 안됨 다중 업데이트문 사용 -->
+	<update id="updateinInbound">
+		UPDATE in_schedule_per_product ip, wh_area wa, wh_location wl, product p, stock s
+			SET ip.in_qty = in_qty + #{order_qty}
+		    	, ip.stock_cd = #{stock_cd}
+			    , wl.wh_area_cd = #{wh_area_cd}
+			    , s.wh_loc_in_area_cd = #{wh_loc_in_area_cd}
+			WHERE 
+				ip.product_cd = p.product_cd
+	 			AND p.product_cd = s.product_cd
+	  			AND s.wh_loc_in_area_cd = wl.wh_loc_in_area_cd
+			    
+	  			AND ip.in_schedule_cd = #{in_schedule_cd}
+	 			AND p.product_cd = #{product_cd}
+	  			AND ip.in_date = #{in_date}
+	</update>
+	
+	<!-- 기존번호에 입고지시수량만큼 추가 -->
+	<update id="updateInqty"> 
+		UPDATE stock s 
+		JOIN wh_location wl ON s.wh_loc_in_area_cd = wl.wh_loc_in_area_cd 
+			SET s.stock_qty = s.stock_qty + #{order_qty}
+		WHERE 
+			stock_cd = #{stock_cd} 
+			AND s.wh_loc_in_area_cd = #{wh_loc_in_area_cd} 
+	</update> 
+	
+	<!-- 진행 상태 변경(완료) -->
+ 	<update id="updateComplete1">
+ 		UPDATE stock s
+			JOIN product p USING(product_cd) 
+			JOIN in_schedule_per_product ip USING(stock_cd)
+			SET in_complete = "1"
+			WHERE  
+ 				ip.in_schedule_cd = #{in_schedule_cd}
+	 			AND p.product_cd = #{product_cd}
+ 	 			AND ip.in_schedule_qty - #{in_qty} = 0
+ 	</update> 
+ 	
+ 	<!-- 구역명 문자열로 cd 조회 -->
+	<select id="selectAreacd" resultType="string">
+		SELECT wh_area_cd
+			FROM wh_area
+			WHERE wh_area = #{wh_area}
+	</select>
+	
+	<!-- 위치명 문자열로 cd 조회 -->
+	<select id="selectlocationcd" resultType="string">
+		SELECT wl.wh_loc_in_area_cd
+			FROM wh_location wl
+			JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+			WHERE wl.wh_loc_in_area = #{wh_loc_in_area}
+			AND wa.wh_area = #{wh_area}
+	</select>
+	
+	<!-- 새 재고번호 조회 -->
+	<select id="selectnewStockcd" resultType="int">
+		SELECT MAX(stock_cd) + 1 
+			FROM stock
+	</select>
+	
+	<!-- 조회한 새재고번호 실제로 생성 --> 
+	<!-- 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, order_qty(입고지시수량) -->
+	<insert id="insertStock_cd"> 
+		INSERT INTO stock  
+			VALUES(
+				 #{stock_cd}
+				 , #{product_cd} 
+				 , #{wh_loc_in_area_cd} 
+				 , #{order_qty}) 
+  	</insert>
+	
+	<!-- 팝업창(검색) -->
+	
+	<!-- 재고 목록 조회 -->
+	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.V_StockinfoVO">
+		SELECT s.stock_cd, p.product_name, wh_area, wh_loc_in_area
+			FROM stock s
+			JOIN product p USING(product_cd)
+			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
+	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('stock_cd')">
+					WHERE s.stock_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE p.product_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+			LIMIT #{startRow}, #{listLimit}
+	</select>
+	
+	<!-- 재고 목록 개수 조회 -->
+	<select id="selectStockListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM stock s
+			JOIN product p USING(product_cd)
+			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
+	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('stock_cd')">
+					WHERE s.stock_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE p.product_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+	</select>
+ 
+	<!-- 품목 목록 조회 --> 
+	<select id="selectProductList" resultType="com.itwillbs.wms4.vo.V_Inbound_ProductVO">
+		SELECT product_cd, product_name
+			From product
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('product_cd')">
+					WHERE product_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE product_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+			LIMIT #{startRow}, #{listLimit}
+	</select>
+	
+	<!-- 품목 목록 개수 조회 -->
+	<select id="selectProductListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM product
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('product_cd')">
+					WHERE product_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('product_name')">
+					WHERE product_name LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+	</select>
+	
+	<!-- 구역명_위치 목록 조회 -->
+	<select id="selectAreaList" resultType="com.itwillbs.wms4.vo.V_StockinfoVO">
+			SELECT *
+			FROM wh_area wa
+			JOIN wh_location wl USING(wh_area_cd)
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('wh_area')">
+					WHERE wa.wh_area LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_loc_in_area')">
+					WHERE wl.wh_loc_in_area LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+			LIMIT #{startRow}, #{listLimit}
+	</select>
+	
+	<!-- 구역명_위치 목록 개수 -->
+	<select id="selectAreaListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM wh_area wa
+			JOIN wh_location wl USING(wh_area_cd)
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('wh_area')">
+					WHERE wa.wh_area LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_loc_in_area')">
+					WHERE wl.wh_loc_in_area LIKE '%${keyword}%'
+				</when>
+			</choose>		
+		</if>
+	</select>
 </mapper>

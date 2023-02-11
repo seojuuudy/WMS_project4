@@ -1,6 +1,8 @@
 package com.itwillbs.wms4.vo;
 
 import java.sql.Date;
+import java.util.Arrays;
+import java.util.List;
 
 public class In_schedule_per_productVO {
 
@@ -12,6 +14,7 @@ public class In_schedule_per_productVO {
 	private String remarks;
 	private String stock_cd;
 	private String in_complete;
+	private List<In_schedule_per_productVO> inSchedulePerList;
 	
 	public In_schedule_per_productVO() {
 		super();
@@ -94,13 +97,24 @@ public class In_schedule_per_productVO {
 		this.in_complete = in_complete;
 	}
 
+	public List<In_schedule_per_productVO> getInSchedulePerList() {
+		return inSchedulePerList;
+	}
+
+	public void setInSchedulePerList(List<In_schedule_per_productVO> inSchedulePerList) {
+		this.inSchedulePerList = inSchedulePerList;
+	}
+
 	@Override
 	public String toString() {
-		return "In_schedule_per_product [in_schedule_cd=" + in_schedule_cd + ", product_cd=" + product_cd
+		return "In_schedule_per_productVO [in_schedule_cd=" + in_schedule_cd + ", product_cd=" + product_cd
 				+ ", in_schedule_qty=" + in_schedule_qty + ", in_qty=" + in_qty + ", in_date=" + in_date + ", remarks="
-				+ remarks + ", stock_cd=" + stock_cd + ", in_complete=" + in_complete + "]";
+				+ remarks + ", stock_cd=" + stock_cd + ", in_complete=" + in_complete + ", inSchedulePerList="
+				+ inSchedulePerList + "]";
 	}
 	
+	
+
 	
 	
 	
