@@ -41,21 +41,14 @@
 	    });
 	    $("input[name=sum2]").val(sum2);
 	    
-	    let sum3 = 0;
-	    $('input[id*="order_qty"]').each(function(){
-            sum3 += parseInt($(this).val());
-	    });
-	    $("input[name=sum3]").val(sum3);
-	    
 	  }) // document
 	 // ---입고 처리 화면 들어왔을때 합계 출력
 	  
 	// 입고지시수량 변경 이벤트
-	function onchage_orderinqty(i){
-      
+	function onchage_inqty(i){
    	     // 입고지시수량 계산
        	 let sum3 = 0;
-   	     $('input[id*="order_qty"]').each(function(){
+   	     $('input[id^="in_qty"]').each(function(){
                sum3 += parseInt($(this).val());
    	     });
    	     $("input[name=sum3]").val(sum3);
@@ -141,9 +134,10 @@
 							 <input type="hidden" name="wh_loc_in_area" value="${inproduct.wh_loc_in_area}"> <!-- 위치명 -->
 							 <input type="hidden" name="product_cd" value="${inproduct.product_cd}"> <!-- 품목코드 -->
 							 <input type="hidden" name="in_date" value="${inproduct.in_date}"> <!-- 납기일자 -->
+							 <input type="hidden" name="emp_num" value="${inproduct.emp_num}"> <!-- 담당자 사원코드 -->
+							 <input type="hidden" name="remarks" value=" "> <!-- 적요 -->
 							 
 							 <input type="hidden" name="wh_area" value="${inproduct.wh_area}"> <!-- 내부구역명 -->							 
-							 <input type="hidden" name="in_qty" value="${inproduct.in_qty}"> <!-- 입고수량 -->
 							 <input type="hidden" name="wh_loc_in_area_cd" value="${inproduct.wh_loc_in_area_cd}"> <!-- 위치코드 -->
 							 <input type="hidden" name="wh_area_cd" value="${inproduct.wh_area_cd}"> <!-- 내부구역코드 -->
                          <tr>
@@ -155,9 +149,9 @@
                              class="form-control" value="${inproduct.in_schedule_qty}" readonly="readonly"></td>
                             <td><input type="number" id="not_in_qty${status.index }" name="not_in_qty" class="form-control" 
                             	value="${inproduct.in_schedule_qty - inproduct.in_qty}" readonly="readonly"></td>
-                            <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="order_qty" 
-                           		 id="order_qty${status.index }" class="form-control" value="${inproduct.order_qty}" 
-                           		 onclick="onchage_orderinqty(${status.index })"></td>
+                            <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="in_qty" 
+                           		 id="in_qty${status.index }" class="form-control" value="0" 
+                           		 onclick="onchage_inqty(${status.index })"></td>
                             <td><div class="col-sm-12">
                       			<div class="input-group">
                         			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" onclick="new_Stockcd(${status.index })">
@@ -181,7 +175,7 @@
                          	<td colspan="2" style="text-align: center;">합계</td>
                          	<td><input type="text" name="sum1" class="form-control" readonly="readonly"></td>
                          	<td><input type="text" name="sum2" class="form-control" readonly="readonly"></td>
-                         	<td><input type="text" name="sum3" class="form-control" readonly="readonly"></td>
+                         	<td><input type="text" name="sum3" value="0" class="form-control" readonly="readonly"></td>
                          	<td></td>
                          	<td></td>
                       </table>

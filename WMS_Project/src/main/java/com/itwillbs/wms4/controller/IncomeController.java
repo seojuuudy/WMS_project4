@@ -27,6 +27,7 @@ import com.itwillbs.wms4.service.ClientService;
 import com.itwillbs.wms4.service.HrService;
 import com.itwillbs.wms4.service.IncomeService;
 import com.itwillbs.wms4.service.ProductService;
+import com.itwillbs.wms4.service.StockService;
 import com.itwillbs.wms4.vo.ClientVO;
 import com.itwillbs.wms4.vo.EmpInfoVO;
 import com.itwillbs.wms4.vo.InScheduleInfoVO;
@@ -50,6 +51,8 @@ public class IncomeController {
 	private HrService service_hr;
 	@Autowired
 	private ProductService service_pr;
+	@Autowired
+	private StockService service_st;
 	
 	// 입고 예정 등록 폼
 	@GetMapping(value = "/InboundScheduleRegist.in")
@@ -380,7 +383,7 @@ public class IncomeController {
 	}
 
 	// -------------------------- 입고예정항목 ----------------------------- //
-	
+
 	// 입고 예정 항목 목록
 	@GetMapping(value = "/pdList.in")
 	public String productList(Model model, @RequestParam(defaultValue = "") String searchType,
@@ -481,170 +484,150 @@ public class IncomeController {
 	@GetMapping(value = "/pdProcessList.in")
 	public String productProcessList(@RequestParam(defaultValue = "") String in_schedule_cd,
 				@RequestParam(defaultValue = "") String product_cd,
-				@RequestParam(defaultValue = "") String in_date , Model model) {
+				@RequestParam(defaultValue = "") String in_date , Model model
+				, HttpSession session) {
 		
-		String[] inSchedulecdArr = in_schedule_cd.split(",");
-		String[] ProductcdArr = product_cd.split(",");
-		String[] IndateArr = in_date.split(",");
+		String sId = (String)session.getAttribute("sId");
 		
-		List<V_Inbound_ProcessingVO> inProductList = new ArrayList<V_Inbound_ProcessingVO>();
-		
-		for(int i=0;i<inSchedulecdArr.length;i++) {
-			V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
-			in_schedule_cd = inSchedulecdArr[i];
-			product_cd = ProductcdArr[i];
-			in_date = IndateArr[i];
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 1; // 재고관리 권한 00001과 비교
 			
-			// 입고 예정 항목 목록 조회
-			inProduct = service.getinInboundList(in_schedule_cd, product_cd, in_date);
-			inProductList.add(inProduct);
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				String[] inSchedulecdArr = in_schedule_cd.split(",");
+				String[] ProductcdArr = product_cd.split(",");
+				String[] IndateArr = in_date.split(",");
+				
+				List<V_Inbound_ProcessingVO> inProductList = new ArrayList<V_Inbound_ProcessingVO>();
+				
+				for(int i=0;i<inSchedulecdArr.length;i++) {
+					V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
+					in_schedule_cd = inSchedulecdArr[i];
+					product_cd = ProductcdArr[i];
+					in_date = IndateArr[i];
+					
+					// 입고 예정 항목 목록 조회
+					inProduct = service.getinInboundList(in_schedule_cd, product_cd, in_date);
+					inProductList.add(inProduct);
+				}
+				
+//					System.out.println("inProductList : " + inProductList);
+				model.addAttribute("inProductList", inProductList);
+				
+				return "inbound/inbound_processing";
+				
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
 		}
-		
-		System.out.println("inProductList : " + inProductList);
-		model.addAttribute("inProductList", inProductList);
-		
-		return "inbound/inbound_processing";
 	}
-	
-	
-	// 입고처리작업
-//	@PostMapping(value = "/DoInbound")
-//	public String plzTT(@ModelAttribute Inbound_ProductArrVO inboundArr, Model model) {
-//		
-//		System.out.println("inboundArr : " + inboundArr);
-//		
-//	    for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
-//	    	V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
-//	    	inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
-//	    	inProduct.setProduct_cd(inboundArr.getProduct_cd()[i]); // 품목 코드
-//	    	inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
-//	    	inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
-//	    	inProduct.setOrder_qty(inboundArr.getOrder_qty()[i]);// 입고지시수량
-//	    	
-//	    	int order_qty = inboundArr.getOrder_qty()[i];
-//	    	int product_cd = inboundArr.getProduct_cd()[i];
-//	    	System.out.println("order_qty : " + order_qty);
-//	    	System.out.println("product_cd : " + product_cd);
-//	    	
-//	    	// inboundArr.getLocation_cd() - [재고번호, 구역명코드, 위치명코드] 꺼내기
-//	    	for(int j=0;j<inboundArr.getLocation_cd().length;j++) {
-//		    	String[] location = inboundArr.getLocation_cd(); 
-////		    	System.out.println("location[] : " + location);
-//		    	System.out.println("stock_cd : " + location[0]);
-//		    	System.out.println("area_cd : " + location[1]);
-//		    	System.out.println("loc_in_area_cd : " + location[2]);
-//		    
-//		    	// 항목이 가진 창고 구역 코드와 위치코드 저장
-//		    	inProduct.setWh_area_cd(Integer.parseInt(location[1])); // 구역명 코드 저장
-//		    	inProduct.setWh_loc_in_area_cd(Integer.parseInt(location[2])); // 위치명 코드저장
-//		    	
-//		    	// ----- 재고 번호 처리 
-//		    	inProduct.setStock_cd(Integer.parseInt(location[0])); // 재고번호 0 저장
-//	    	} // for문
-//	    	
-//	    	int wh_loc_in_area_cd = inProduct.getWh_loc_in_area_cd();
-//	    	int stock_cd = inProduct.getStock_cd();
-//		    	
-//		    	if(stock_cd==0) { // 불러온 재고코드가 비어있으면
-//		    		int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
-//		    		inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
-////				    		System.out.println("stock_cd : " + stockcd); 
-//	    		
-//		    		// 조회한 재고번호 생성
-//		    		// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, order_qty(입고지시수량)
-//		    		service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd, order_qty); // 16이라는 재고번호를 생성
-//		    	} else { // 불러온 재고코드가 비어있지 않으면
-//		    		inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
-//		    	} // if문
-//	    	
-//	    	// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
-//	    	System.out.println("입고 전 inProduct : " + inProduct);
-//	    	service.changeinInbound(inProduct);
-//	    	System.out.println("입고 후 inProduct : " + inProduct);
-//	    	// 2. 기존 재고번호 선택시 기존 재고에 입고수량 추가
-//	    	service.changeInqty(inProduct);
-//	    	System.out.println("입고수량 추가 후 inProduct : " + inProduct);
-//	    	// 4. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
-//	    	service.changeInComplete(inProduct);
-//	    	System.out.println("진행상태 완료 후 inProduct : " + inProduct);
-//	    	
-//	    	System.out.println("수정 후 inProduct : " + inProduct);
-//	    }
-//	    return "redirect:/pdList.in";
-//	}
 
 	// 입고처리작업
 	@PostMapping(value = "/DoInbound")
-	public String plzTT(@ModelAttribute Inbound_ProductArrVO inboundArr, Model model) {
+	public String plzTT(@ModelAttribute Inbound_ProductArrVO inboundArr, Model model, HttpSession session) {
+		String sId = (String)session.getAttribute("sId");
 		
-		System.out.println("inboundArr : " + inboundArr);
-		
-		for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
-			V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
-			inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
-			inProduct.setProduct_cd(inboundArr.getProduct_cd()[i]); // 품목 코드
-			inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
-			inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
-			inProduct.setOrder_qty(inboundArr.getOrder_qty()[i]);// 입고지시수량
-			
-			// 입고지시수량 가져오기
-			int order_qty = inProduct.getOrder_qty();
-			
-			// 위치코드 구하는 for문
-			for(int j=0;j<inboundArr.getLocationcd().length;j++) {
-				String[] location = inboundArr.getLocationcd()[i].split("_");
-//				System.out.println("area : " + location[0]);
-//				System.out.println("location : " + location[1]);
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 1; // 재고 관리 권한 00001과 비교
 				
-				// 항목이 가진 창고 구역명과 위치명 저장
-				inProduct.setWh_area(location[0]); // 구역명 저장
-				inProduct.setWh_loc_in_area(location[1]); // 위치명 저장
-				String wh_area = location[0];
-				String wh_loc_in_area = location[1];
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O {
 				
-				// 구역명으로 구역코드 조회
-				int wh_area_cd = Integer.parseInt(service.getAreacd(wh_area));
-				// 위치명으로 위치코드 조회
-				int wh_loc_in_area_cd = Integer.parseInt(service.getlocationcd(wh_loc_in_area, wh_area));
-//				System.out.println("wh_area_cd : " + wh_area_cd);
-//				System.out.println("wh_loc_in_area_cd : " + wh_loc_in_area_cd);
-//				
-				// 구역명, 위치코드 저장
-				inProduct.setWh_area_cd(wh_area_cd);
-				inProduct.setWh_loc_in_area_cd(wh_loc_in_area_cd);
-				
-				// ----- 재고 번호 처리 
-				
-				int stock_cd = inboundArr.getStock_cd()[i];
-				System.out.println("stock_cd : " + stock_cd);
-				
-				if(stock_cd==0) { // 불러온 재고코드가 비어있으면
-					int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
-					inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
-				    System.out.println("stock_cd : " + stockcd); 
+				for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
+					V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
+					inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
+					inProduct.setProduct_cd(inboundArr.getProduct_cd()[i]); // 품목 코드
+					inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
+					inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
+					inProduct.setEmp_num(inboundArr.getEmp_num()[i]); // 담당자 사원번호
 					
-				// 조회한 재고번호 생성
-				// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, order_qty(입고지시수량)
-//				service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd, order_qty); // 16이라는 재고번호를 생성
-				} else { // 불러온 재고코드가 비어있지 않으면
-					inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
-				} // if문
-			} // for문
-			
-			// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
-			System.out.println("입고 전 inProduct : " + inProduct);
-			service.changeinInbound(inProduct);
-			System.out.println("입고 후 inProduct : " + inProduct);
-			// 2. 기존 재고번호 선택시 기존 재고에 입고수량 추가
-			service.changeInqty(inProduct);
-			System.out.println("입고수량 추가 후 inProduct : " + inProduct);
-			// 4. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
-			service.changeInComplete(inProduct);
-			System.out.println("진행상태 완료 후 inProduct : " + inProduct);
-			
-			System.out.println("수정 후 inProduct : " + inProduct);
+					// 품목코드 가져오기
+					int product_cd = inProduct.getProduct_cd();
+					
+					// 위치코드 구하는 for문
+					for(int j=0;j<inboundArr.getLocationcd().length;j++) {
+						String[] location = inboundArr.getLocationcd()[i].split("_");
+		//				System.out.println("area : " + location[0]);
+		//				System.out.println("location : " + location[1]);
+						
+						// 항목이 가진 창고 구역명과 위치명 저장
+						inProduct.setWh_area(location[0]); // 구역명 저장
+						inProduct.setWh_loc_in_area(location[1]); // 위치명 저장
+					} // for문
+					
+					String wh_area = inProduct.getWh_area();
+					String wh_loc_in_area = inProduct.getWh_loc_in_area();
+						
+					// 구역명으로 구역코드 조회
+					int wh_area_cd = Integer.parseInt(service.getAreacd(wh_area));
+					// 위치명으로 위치코드 조회
+					int wh_loc_in_area_cd = Integer.parseInt(service.getlocationcd(wh_loc_in_area, wh_area));
+					
+					// 구역명, 위치코드 저장
+					inProduct.setWh_area_cd(wh_area_cd);
+					inProduct.setWh_loc_in_area_cd(wh_loc_in_area_cd);
+					
+					// ----- 재고 번호 처리 
+		//			int stock_cd = inboundArr.getStock_cd()[i];
+		//			System.out.println("stock_cd : " + stock_cd);
+					
+					if(inboundArr.getStock_cd()[i]==0) { // 불러온 재고코드가 비어있으면
+						int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
+						inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
+						
+					// 조회한 재고번호 생성
+					// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, in_qty(입고지시수량)
+					service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd); // 16이라는 재고번호를 생성
+					} else { // 불러온 재고코드가 비어있지 않으면
+						inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
+					} // if문
+					
+					int stock_cd = inProduct.getStock_cd();
+					
+					// ----- 적요 처리
+					if(inboundArr.getRemarks()[i] == " ") {
+						String emptyremarks = " ";
+						inProduct.setRemarks(emptyremarks);
+					} else {
+						inProduct.setRemarks(inboundArr.getRemarks()[i]);
+					}
+					
+					// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
+		//			System.out.println("입고 전 inProduct : " + inProduct);
+					service.changeinInbound(inProduct);
+					// 2. 재고에 입고수량 추가
+					int updateCount = service.changeInqty(inProduct);
+					// 3. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
+					service.changeInComplete(inProduct);
+		//			System.out.println("진행상태 완료 후 inProduct : " + inProduct);
+					
+					if(updateCount > 0) {
+						// 재고 이력 테이블 컬럼 추가를 위한 변수
+						int in_qty = inProduct.getIn_qty();
+						String emp_num = service_st.getEmpNum(sId);
+						String remarks = inProduct.getRemarks();
+						
+		                service.registStockHistory(stock_cd, product_cd, in_qty, emp_num, remarks);
+		             } // 재고 히스토리 if문 
+				} // 입고처리 전체 for문 
+				return "redirect:/pdList.in";
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
 		}
-		return "redirect:/pdList.in";
+		
 	}
 	
 		
@@ -753,5 +736,4 @@ public class IncomeController {
 		return "inbound/search_areacd";
 	}
 
-	
 }
