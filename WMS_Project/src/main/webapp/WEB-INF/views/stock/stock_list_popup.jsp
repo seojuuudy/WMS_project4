@@ -35,64 +35,10 @@
 			}
 			$("#sum_stock_qty").text(sum);
 			
-			// 체크 박스에서 checked된 데이터만 submit하기
-			$("#revise_btn").on("click", function() {
-			var param = [];
-			var checkedStocks = [];
-				 if($('input[type="checkbox"]').is(':checked') == false){
-				      alert('이동 위치를 선택해주세요.');
-				      return false;
-				    } else {
-// 						for(var i = 0; i < $('input[type="checkbox"]:checked').length; i++) {
-					    	$("input[type='checkbox']:checked").each(function(i) {		                				
-// 					    		checkedStocks.push($(this).parents("tr").eq(i).text());
-					    		var str = $(this).parents("tr").find(".product_name").text();
-					    		var str2 = str.substring(str.indexOf(' [') + 1);
-					    		var str3 = str2.substring(str2.lastIndexOf('[') + 1);
-					    		checkedStocks = {
-					    				stock_cd : $(this).parents("tr").find(".stock_cd").text(),
-					    				product_name : str.substring(0, str.indexOf(' [')),
-					    				size_des : str3.substring(0, str3.indexOf(']')),
-					    				wh_name : $(this).parents("tr").find(".wh_name").text(),
-					    				wh_area : $(this).parents("tr").find(".wh_area").text(),
-					    				wh_loc_in_area : $(this).parents("tr").find(".wh_loc_in_area").text(),
-					    				stock_qty : $(this).parents("tr").find(".stock_qty").text()
-					    		};
-					    	
-					    		param.push(checkedStocks);
-					    		
-					    		localStorage.setItem("param", JSON.stringify(param));
-// 					    		var jsondata = JSON.stringify(param);
-// 					    		$("#jsonData").val(jsondata);
-					    	});
-							
-// 						}
-// 					    	$.ajax({
-// 								type : "POST",
-// 								url : "StockListAjax.st",
-// 								dataType : "text", // 컨트롤러에서 응답받을 데이터 타입
-// 								contentType : "application/json", // 컨트롤러로 전달할 요청 데이터 타입
-// 								// 전송할 JSON 데이터를 하나의 문자열로 직접 결합하여 전송
-// 								data : JSON.stringify(param),
-// 								success : function(data) {
-// // 				 					alert(data);
-									
-// 								}
-// 							});
-						
-						
-						
-						
-						}
-// 							 	alert($("#jsonData").val());
-						
-			});
-			
-			
 			$(":button").on("click", function goRegistPage(i) {
 // 				alert("선택한 위치: " + $(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
-						+ $(this).parents("tr").find(".wh_loc_in_area").text());
+						+ $(this).parents("tr").find(".wh_loc_in_area").text();
 			let index = ${index };
 				$("#moving_stock_cd_arr" + index, opener.document).val($(this).parents("tr").find(".stock_cd").text());
 				$("#wh_loc_in_area_arr" + index, opener.document).val(
