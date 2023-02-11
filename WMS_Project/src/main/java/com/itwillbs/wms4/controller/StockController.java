@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.ArrayUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,7 +186,7 @@ public class StockController {
 	@GetMapping(value = "/StockControlPro.st")
 	   public String controlPro(@ModelAttribute Stock_controlVO control, HttpSession session, Model model) {
 	      String sId = (String)session.getAttribute("sId");
-//	      System.out.println("controlPro: " + control);
+	      System.out.println("controlPro: " + control);
 	      
 	      for(int i = 0; i < control.getStock_cd_arr().length; i++) {
 	         
@@ -210,13 +211,15 @@ public class StockController {
 	            System.out.println("문자열 찾기: " + loc_in_area);
 	         } 
 	         
-//	         System.out.println("적요값: " + control.getRemarks_arr()[i]);
-	         
-	         if(control.getRemarks_arr()[i].isEmpty()) {
-	            stock_control.setRemarks("");
-	         } else {
-	            stock_control.setRemarks(control.getRemarks_arr()[i]);
-	         }
+//	         System.out.println("remarks 찾기!: " + control.getRemarks_arr()[i]);
+//	         System.out.println("remarks 찾기!: " + control.getRemarks_arr().length );
+	         String remarks = "";
+	         if(control.getRemarks_arr().length != 0) {
+	        	 System.out.println("적요 길이가 0이 아니다");
+//	             stock_control.setRemarks("");
+	        	 remarks = control.getRemarks_arr()[i];
+	          }
+
 	         
 	         System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
 	               + ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
@@ -257,7 +260,7 @@ public class StockController {
 	                     int product_cd = service.getProduct_cd(product_name);
 	                     System.out.println("product_cd: " + product_cd);
 	                     String emp_num = service.getEmpNum(sId);
-	                     String remarks = stock_control.getRemarks();
+//	                     String remarks = stock_control.getRemarks();
 	                     System.out.println("remarks: " + remarks);
 	                     int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
 	                     int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);

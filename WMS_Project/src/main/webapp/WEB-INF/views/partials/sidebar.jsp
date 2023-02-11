@@ -89,35 +89,35 @@
        </div>
 	 </li>
 	 
-     <li class="nav-item">
-      <a class="nav-link" href="typography">
-        <i class="mdi mdi-alphabetical menu-icon"></i>
-        <span class="menu-title">Typography</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="mdi">
-        <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Icons</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="basic_elements">
-        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-        <span class="menu-title">Forms</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="charts">
-        <i class="mdi mdi-chart-bar menu-icon"></i>
-        <span class="menu-title">Charts</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="basic-table">
-        <i class="mdi mdi-table-large menu-icon"></i>
-        <span class="menu-title">Tables</span>
-      </a>
-    </li>
+<!--      <li class="nav-item"> -->
+<!--       <a class="nav-link" href="typography"> -->
+<!--         <i class="mdi mdi-alphabetical menu-icon"></i> -->
+<!--         <span class="menu-title">Typography</span> -->
+<!--       </a> -->
+<!--     </li> -->
+<!--     <li class="nav-item"> -->
+<!--       <a class="nav-link" href="mdi"> -->
+<!--         <i class="mdi mdi-contacts menu-icon"></i> -->
+<!--         <span class="menu-title">Icons</span> -->
+<!--       </a> -->
+<!--     </li> -->
+<!--     <li class="nav-item"> -->
+<!--       <a class="nav-link" href="basic_elements"> -->
+<!--         <i class="mdi mdi-format-list-bulleted menu-icon"></i> -->
+<!--         <span class="menu-title">Forms</span> -->
+<!--       </a> -->
+<!--     </li> -->
+<!--     <li class="nav-item"> -->
+<!--       <a class="nav-link" href="charts"> -->
+<!--         <i class="mdi mdi-chart-bar menu-icon"></i> -->
+<!--         <span class="menu-title">Charts</span> -->
+<!--       </a> -->
+<!--     </li> -->
+<!--     <li class="nav-item"> -->
+<!--       <a class="nav-link" href="basic-table"> -->
+<!--         <i class="mdi mdi-table-large menu-icon"></i> -->
+<!--         <span class="menu-title">Tables</span> -->
+<!--       </a> -->
+<!--     </li> -->
   </ul>
 </nav>
