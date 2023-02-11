@@ -44,16 +44,45 @@
         	} else {
      		}
      	}
+		//검색한 창고내부명 필터링 표시하기
+		window.onload = function colorAndStockInfo() {
+							const url = new URL(window.location.href);
+							let urlParams = url.searchParams;
+							if(urlParams.has('searchArea')) {
+								let paramSA = urlParams.get('searchArea');
+								document.getElementById(paramSA).style.color = "#ff0000";
+								document.getElementById(paramSA).style.bold;
+								
+								let element = document.getElementById('now');
+							  	element.innerHTML = '<div id="now" class="card-title">창고 : <a style="color: #0033c4;">'+document.getElementById(paramSA).innerText+'</a></div>';
+								
+							  	if(urlParams.has('searchLocation')) {
+									let paramSL = urlParams.get('searchLocation');
+									document.getElementsByClassName(paramSL)[0].style.color = "#ff0000";
+									element.innerHTML = '<div id="now" class="card-title">창고 : <a style="color: #0033c4;">'+document.getElementById(paramSA).innerText+
+									'</a> / 구역 : <a style="color: #0033c4;">'+document.getElementsByClassName(paramSL)[0].innerText+'</a></div>';
+									
+									if(urlParams.has('searchGo')) {
+										let paramSG = urlParams.get('searchGo');
+										document.getElementById(paramSG).style.color = "#ff0000";
+										element.innerHTML = '<div id="now" class="card-title">창고 : <a style="color: #0033c4;">'+document.getElementById(paramSA).innerText+
+										'</a> / 구역 : <a style="color: #0033c4;">'+document.getElementsByClassName(paramSL)[0].innerText+
+										'</a> / 위치 : <a style="color: #0033c4;">'+document.getElementById(paramSG).innerText+'</a></div>';				
+									}								
+								}
+							}
+							
+		}
 	// 창고관리 제이쿼리
-		$(function() {
-			$("#list1 li a").click(function(){
-			    var code1 = $(this).attr("id");
-			    $(this).css("color","red");
-			});
-			$("#list2 li a").click(function(){
-			    var code2 = $(this).attr("id");
-			    $(this).css("color","red");
-			});
+// 		$(function() {
+// 			$("#list1 li a").click(function(){
+// 			    var code1 = $(this).attr("id");
+// 			    $(this).css("color","red");
+// 			});
+// 			$("#list2 li a").click(function(){
+// 			    var code2 = $(this).attr("id");
+// 			    $(this).css("color","red");
+// 			});
 			//=====================================================================
 // 			$("#list1 li a").click(function(){
 // 			    var code1 = $(this).attr("id");
@@ -61,7 +90,7 @@
 // // 			    var code2 = $("#list2 li[id="+code1+"]").attr("id");
 // 			    $(".stock[id="+code1+"]").hide();
 // 			});
-		});
+// 		});
 	</script>
   </head>
   <body>
@@ -92,31 +121,34 @@
                       <section class="table table-striped">
                             <div class="container">
 	                            <div class="item">
-	                            창고 목록
+	                            <h1>창고 목록</h1>
+	                            <p></p>
 		                            <div>
 			                            <div id="list1">
 				                            <ol>
 												<c:forEach var="wh" items="${whList }">
 			<!-- 									구역추가 버튼 -->
-						                            <li id="${wh.wh_cd}"><a id="${wh.wh_cd}" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}'">${wh.wh_name}</a>
+						                            <li id="${wh.wh_name}"><a id="${wh.wh_cd}" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}'">${wh.wh_name}</a>
 		<%-- 				                            <li><a id="${wh.wh_cd}">${wh.wh_name}</a> --%>
-						                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistArea.wms?wh_cd=${wh.wh_cd}&wh_name=${wh.wh_name }'">+</button></li>
+							                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistArea.wms?wh_cd=${wh.wh_cd}&wh_name=${wh.wh_name }'">+</button>
+						                            </li>
 						                        </c:forEach>
 				                            </ol>
 			                            </div>
 		                            </div>
 			           			</div>
 	                            <div class="item">
-	                            구역 목록
+	                            <h1>구역 목록</h1>
+	                            <p></p>
 		                            <div>
 			                            <div id="list2">
 				                         	<ol>
 					                            <c:forEach var="ar" items="${arList }">
 			<!-- 		                            위치 추가버튼, 구역 삭제 버튼 -->
-						                            <li id="${ar.wh_cd}" class="${ar.wh_area_cd }"><a id="${ar.wh_cd}" class="${ar.wh_area_cd }" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd}&searchLocation=${ar.wh_area_cd}'">${ar.wh_area}</a>
+						                            <li id="${ar.wh_area}"><a id="${ar.wh_cd}" class="${ar.wh_area_cd }" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd}&searchLocation=${ar.wh_area_cd}'">${ar.wh_area}</a>
 		<%-- 				                            <li><a id="${ar.wh_cd}" class="${ar.wh_area_cd }">${ar.wh_area}</a> --%>
-						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistLoc.wms?wh_area=${ar.wh_area }&wh_area_cd=${ar.wh_area_cd}'">+</button>
 						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="areaD('${ar.wh_area_cd}','${ar.wh_area}')" >-</button>
+						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='RegistLoc.wms?wh_area=${ar.wh_area }&wh_area_cd=${ar.wh_area_cd}'">+</button>
 					    	                        	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateArea.wms?wh_area=${ar.wh_area}&wh_area_cd=${ar.wh_area_cd }'">
 					    	                        		<i class="mdi mdi-grease-pencil" style="font-size: 13px;"></i>
 				    	                        		</button>
@@ -127,13 +159,14 @@
 	                            </div>
 			           			</div>
 	                            <div class="item">
-	                            위치 목록
+	                            <h1>위치 목록</h1>
+	                            <p></p>
 		                            <div>
 			                            <div id="list3">
 					                        <ol>
 					                            <c:forEach var="lo" items="${loList }">
 			<!-- 			                            위치 삭제버튼, 위치명 변경 버튼 -->
-						                            <li class="${lo.wh_area_cd}"><a class="${lo.wh_area_cd}" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd}&searchLocation=${lo.wh_area_cd}&searchGo=${lo.wh_loc_in_area_cd }'">${lo.wh_loc_in_area}</a>
+						                            <li id="${lo.wh_loc_in_area}"><a class="${lo.wh_area_cd}" id="${lo.wh_loc_in_area_cd }" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd}&searchLocation=${lo.wh_area_cd}&searchGo=${lo.wh_loc_in_area_cd }'">${lo.wh_loc_in_area}</a>
 		<%-- 				                            <li><a class="${lo.wh_area_cd}">${lo.wh_loc_in_area}</a> --%>
 						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="locationD('${lo.wh_loc_in_area_cd}','${lo.wh_loc_in_area}')" >-</button>
 						                            	<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='UpdateLoc.wms?wh_loc_in_area=${lo.wh_loc_in_area}&wh_loc_in_area_cd=${lo.wh_loc_in_area_cd }'">
@@ -155,6 +188,7 @@
 		<!-- 재고 table 영역 -->
 		<div class="card-body">
 		<h4 class="card-title">재고 조회하기</h4>
+		<div id="now" class="card-title">전체 재고</div>
            <div class="table-responsive">
              <table class="table table-striped">
                <thead>
@@ -184,7 +218,7 @@
 	               </c:when>
 	               <c:otherwise>
 	               		<tr id="stock">
-		                   <th style="text-align: center;" colspan="6"><h4>재고가 없습니다.</h4></th>
+		                   <th style="text-align: center;" colspan="6"><h3>재고가 없습니다.</h3></th>
 	                 	</tr>
 	               </c:otherwise>
                </c:choose>
