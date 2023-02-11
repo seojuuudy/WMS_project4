@@ -56,12 +56,12 @@
 						<when test="searchType.equals('emp_num')">
 							AND emp_num LIKE '%${keyword}%'
 						</when>
-						<when test="searchType.equals('business_no')">
-							AND business_no LIKE '%${keyword}%'
+						<when test="searchType.equals('cust_name')">
+							AND cust_name LIKE '%${keyword}%'
 						</when>
 					</choose>		
 				</if>
-<!--         	ORDER BY in_schedule_cd DESC -->
+        	ORDER BY in_schedule_cd DESC
 			LIMIT 
 				#{startRow}
 				, #{listLimit}
@@ -69,14 +69,15 @@
 	
 <!-- 	입고예정수량 합계 계산 -->
 	<select id="selectInboundScheListSum" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
-		SELECT SUM(in_schedule_qty) AS in_schedule_qty
+		SELECT SUM(in_schedule_qty) AS in_schedule_qty, in_schedule_cd AS in_schedule_cd
 			FROM InScheduleInfo
 			GROUP BY in_schedule_cd
+			ORDER BY in_schedule_cd DESC
 	</select>
 	
 <!-- 	한 발주서에 대한 품목 갯수 확인 작업 -->
 	<select id="selectInboundScheListCnt" resultType="com.itwillbs.wms4.vo.InScheduleInfoVO">
-		SELECT COUNT(*) AS in_schedule_cd_cnt , in_schedule_cd
+		SELECT COUNT(*) AS InSchePerCnt , in_schedule_cd AS in_schedule_cd
 			FROM InScheduleInfo
 			GROUP BY in_schedule_cd
 			ORDER BY in_schedule_cd DESC

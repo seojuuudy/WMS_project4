@@ -43,18 +43,17 @@
 					type: "GET",
 					url: "InboundComplete.in?in_schedule_cd=" + in_schedule_cd + "&in_complete=" + in_complete,
 					success: function(data) {
-						alert("변경이 완료되었습니다.");
-						location.reload();
+						if(data == "success") {
+							alert("변경이 완료되었습니다.");
+							location.reload();
+						} else if(data == "fail") {
+							alert("모든 품목이 입고처리 되지 않았으므로 종결이 불가합니다.");
+							location.reload();
+						}
 					}
 				}) // ajax end
 			}
 		}
-		
-// 		$(document).ready(function() {
-// 			var in_schedule_cd_cnt = $("#in_schedule_cd_cnt").text();
-// 			alert(in_schedule_cd_cnt);
-			
-// 		});
 		
 		// POST로는 왜 안될까 michin	
 // 		$(document).ready(function() {
@@ -105,7 +104,7 @@
                       	<div class="input-group">
                         <div class="input-group-prepend">
                           <select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <option class="dropdown-item" value="business_no" <c:if test="${param.searchType eq 'business_no'}">selected</c:if>>거래처</option>
+                            <option class="dropdown-item" value="cust_name" <c:if test="${param.searchType eq 'cust_name'}">selected</c:if>>거래처</option>
                             <option class="dropdown-item" value="emp_num" <c:if test="${param.searchType eq 'emp_num'}">selected</c:if>>담당자</option>
                           </select>
                         </div>
@@ -154,8 +153,7 @@
                             	</c:choose>
                             <td>${ins.cust_name} </td>
                             <td>${ins.emp_name}</td>
-                            <td>${ins.product_name}[${ins.size_des }]</td>
-<%--                             <td>${ins.product_name}[${ins.size_des }] 외 '${InScheCnt[status.index].in_schedule_qty}'건</td> --%>
+                            <td>${ins.product_name}[${ins.size_des }] 외 ${InScheCnt[status.index].inSchePerCnt - 1}건</td>
                             <td>${ins.in_date}</td>
 <%--                             <td>${cnt.in_schedule_qty}</td> --%>
 <%--                             <td>${InScheCount[status.index].in_schedule_qty}</td> --%>

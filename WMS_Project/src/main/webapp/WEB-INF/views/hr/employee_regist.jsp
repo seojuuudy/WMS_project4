@@ -216,7 +216,8 @@
                       <div class="col-sm-9">
                       	<span class="input-group-append">
 <!-- 	                        <input type="text" name="emp_email" id="emp_email" class="form-control" /> -->
-	                        <input type="text" name="emp_email1" id="emp_email1" class="form-control" />@
+	                        <input type="text" name="emp_email1" id="emp_email1" class="form-control" />
+	                        <span class="input-group-text">@</span>
 	                        	<select required="required" name="emp_email2" id="emp_email2" class="form-control">
 		                          	<option value="wms4.com">wms4.com</option>
 		                        	<option value="naver.com">naver.com</option>

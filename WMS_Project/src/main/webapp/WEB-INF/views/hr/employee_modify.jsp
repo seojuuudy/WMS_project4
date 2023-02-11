@@ -185,7 +185,8 @@
                       <label class="col-sm-3 col-form-label">이메일</label>
                       <div class="col-sm-9">
                       	<span class="input-group-append">
-	                        <input type="text" name="emp_email1" value="${emp.emp_email1}" class="form-control" />@
+	                        <input type="text" name="emp_email1" value="${emp.emp_email1}" class="form-control" />
+	                        <span class="input-group-text">@</span>
 	                        <select required="required" name="emp_email2" class="form-control">
 		                          	<option value="wms4.com" <c:if test="${emp.emp_email2 eq 'wms4.com'}">selected</c:if>>wms4.com</option>
 		                        	<option value="naver.com" <c:if test="${emp.emp_email2 eq 'naver.com'}">selected</c:if>>naver.com</option>
