@@ -30,7 +30,6 @@
 	</script>
   </head>
   <body>
-  <button type="button" class="btn btn-light" onclick="history.back()">뒤로가기</button>
     <div class="container-scroller">
         <!-- 본문 영역 -->
         <div class="main-panel">
@@ -40,7 +39,7 @@
        <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">재고이력</h4>
+                    <h4 class="card-title">재고이력 (재고번호: ${stock_cd })</h4>
 <!-- 						<section id="buttonArea"> -->
 					<p class="card-description">Stock Detail</p>
 <!-- 						</section> -->
@@ -48,7 +47,6 @@
                       <table class="table table-striped">
                         <thead>
                           <tr>
-                            <th>재고번호</th>
                             <th>작업일자</th>
                             <th>작업구분</th>
                             <th>품목명[규격]</th>
@@ -63,7 +61,6 @@
                        <c:forEach var="stock" items="${stock_history }">
 	                         
 	                          <tr>
-	                          	<th class="stock_cd">${stock.stock_cd }</th>
 	                          	<th class="stock_date">${stock.stock_date }</th>
 	                          	<th class="work_type_name">${stock.work_type_name }</th>
 	                            <td class="product_name">${stock.product_name } [${stock.size_des }]</td>

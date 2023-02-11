@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.wms4.mapper.EmployeesMapper;
+import com.itwillbs.wms4.vo.Employee_detailVO;
 import com.itwillbs.wms4.vo.EmployeesVO;
 
 @Service
@@ -20,7 +21,7 @@ public class EmployeesService {
 		return mapper.selectIdx(emp_email);
 	}
 
-	public EmployeesVO getEmployee(String sId) {
+	public Employee_detailVO getEmployee(String sId) {
 		return mapper.selectEmployee(sId);
 	}
 

@@ -28,6 +28,7 @@
 				</when>
 			</choose>		
 		</if>
+			ORDER BY stock_cd
 			LIMIT 
 			#{startRow}
 			, #{listLimit}

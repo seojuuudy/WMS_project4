@@ -44,6 +44,15 @@ public class StockController {
 		
 		String sId = (String)session.getAttribute("sId");
 		
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 사원조회 권한 01000과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+		
 		int listLimit = 10;
 		int startRow = (pageNum-1) * listLimit;
 		
@@ -63,6 +72,15 @@ public class StockController {
 		
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("stock_list", stock_list);
+		
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
 		
 		
 		return "stock/stock_list";
@@ -309,6 +327,7 @@ public class StockController {
 		System.out.println(stock_history);
 		
 		model.addAttribute("stock_history", stock_history);
+		model.addAttribute("stock_cd", stock_cd);
 		model.addAttribute("pageInfo", pageInfo);
 		
 		return "stock/stock_history_popup";
