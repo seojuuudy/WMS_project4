@@ -3,9 +3,24 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: stretch;
 }
-
-
-/* 버튼 ! */
+.item {
+	flex-basis: content;
+	flex-grow: 0;
+	
+}
+li {
+	margin-top: 5px;
+	float: center;
+    font-size: 15px;
+}
+li > button {
+	float: right;
+	margin-left: 5px;
+}
+h1 {
+	text-align: center;
+	margin: 0% auto;
+}
