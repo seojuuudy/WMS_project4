@@ -17,13 +17,13 @@
 				success: function(employees) { // 요청에 대한 처리 성공 시(= 정답 응답) 처리할 함수 정의
 					// 익명 함수 파라미터로 응답 데이터가 전달됨(처리 페이지의 응답 결과)
 					// id 선택자 resultArea 영역에 응답 데이터(response) 출력하기
-					let result = "사진: " + employees.photo + "<br>"
-								+ "사원 이름: " + employees.emp_name + "<br>"
-								+ "이메일: " + employees.emp_email + "<br>"
-								+ "부서코드: " + employees.dept_cd + "<br>"
-								+ "직급코드: " + employees.grade_cd + "<br>"
+					let result = 
+								employees.emp_name + "<br>"
+								+ employees.emp_email + "<br>"
+								+ "부서: " + employees.dept_name + "<br>"
+								+ "직급: " + employees.grade_name + "<br>"
 								+ "사무실 연락처: " + employees.emp_dtel + "<br>" 
-								+ "권한: " + employees.priv_cd + "<br>";
+// 								+ "권한: " + employees.priv_cd + "<br>";
 					
 					$("#employee_detail_mini").html(result);
 				}, 
@@ -117,9 +117,6 @@
 		<%-- EL 을 사용하여 세션 객체 접근 시 sessionScope.속성명 으로 접근 --%>
 		<c:when test="${empty sessionScope.sId }">
 			 <a class="nav-link" href="LoginForm.em">login</a>
-		      </li>
-		      <li class="nav-item nav-logout d-none d-md-block mr-3"> 
-		        <a class="nav-link" href="#">join</a>
 		      </li>
 		</c:when>
 		<%-- 로그인 상태일 경우 아이디 표시, Logout 링크 표시 --%>

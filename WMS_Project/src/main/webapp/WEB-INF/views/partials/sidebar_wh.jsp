@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
   	<!-- 프로필 -->
@@ -9,7 +10,16 @@
          <!--change to offline or busy as needed-->
        </div>
        <div class="nav-profile-text d-flex ml-0 mb-3 flex-column">
-         <span class="font-weight-semibold mb-1 mt-2 text-center">Session</span>
+          <span class="font-weight-semibold mb-1 mt-2 text-center">
+          <c:choose>
+		<c:when test="${empty sessionScope.sId }">
+			 Guest
+		</c:when>
+		<c:otherwise>
+	          ${sessionScope.sId }
+        </c:otherwise>
+        </c:choose>
+         </span>
        </div>
       </a>
     </li>

@@ -42,24 +42,6 @@
 					success : function(data) {
 							console.log(data)
 							
-// 							for(let stock of data) {
-// 								let result = "<tr>"
-// 											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' value='" + stock.stock_cd + "' readonly='readonly'></td>"
-// 											+ "<td name='product_name'><input type='text' name='product_name_arr' value='" + stock.product_name + "' readonly='readonly'></td>"
-// 											+ "<td name='size_des'><input type='text' name='size_des_arr' value='" + stock.size_des + "' readonly='readonly'></td>"
-// 											+ "<td name='wh_area'><input type='text' name='wh_area_arr' value='" + stock.wh_area + "(" + stock.wh_name + ")" + "' readonly='readonly'></td>"
-// 											+ "<td name='wh_loc_in_area'><input type='text' name='stock.wh_loc_in_area_arr' value='" + stock.wh_loc_in_area + "' readonly='readonly'></td>"
-// 											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' value='" + stock.stock_qty + "' readonly='readonly'></td>"
-// 											+ "<td><input type='text' name='control_qty_arr' onchange='qtyval(this)' value=0></td>"
-// 											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search()' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
-// 											+ "<td class='moving_area'><input type='text' name='wh_loc_in_area_arr' class='wh_loc_in_area_arr'>&nbsp;<input type='button' name='area_btn' onclick='area_search()' class='btn btn-sm btn-outline-primary' value='위치선택'></td>"
-// 											+ "<td><input type='text' name='moving_qty_arr' onchange='qtyval(this)' value=0></td>"
-// 											+ "<td name='stock_qty_sum_arr'></td>"
-// 											+ "<td class='remarks'><input type='text' name='remarks_arr' value='기타'></td>"
-// 											+ "</tr>";
-// 								$("tbody").append(result);			
-// 							}
-							
 							for(let i = 0; i < data.length; i++) {
 								let result = "<tr>"
 											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' class='form-control' id='stock_cd_arr" + i + "' value='" + data[i].stock_cd + "' readonly='readonly'></td>"
@@ -80,35 +62,9 @@
 					}
 				});
 			
-// 			var jsonData = JSON.parse(jsonStrData);
-// 			console.log(jsonData);
-			
-// 				for(let i = 0; i < $("input[name=control_qty_arr]").length; i++) {
-// 					$("input[name=control_qty_arr]").eq(i).on("change", function() {
-// 					if($("input[name=control_qty_arr]").eq(i).val() == null || $("input[name=control_qty_arr]").eq(i).val() == "") {
-// 						$("input[name=control_qty_arr]").eq(i).val(0);
-// // 						return false;
-// 					} else if($("input[name=moving_stock_cd_arr]").eq(i).val() == null || $("input[name=moving_stock_cd_arr]").eq(i).val() == "") {
-// 						$("input[name=moving_stock_cd_arr]").eq(i).val(0);
-// // 						return false;
-// 					} else if($("input[name=moving_qty_arr]").eq(i).val() == null || $("input[name=moving_qty_arr]").eq(i).val() == "") {
-// 						$("input[name=moving_qty_arr]").eq(i).val(0);
-// // 						return false;
-// 					}
-					
-// 			});
-// 				}
-
-
 
 		});
 			
-// 			function qtyval(item) {
-// // 				console.log(item.value);
-// 				if(item.value == "") {
-// 					item.value = 0;
-// 				}
-// 			}
 			function stock_search(index) {
 				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
 				window.open("StockPopup.st?index=" + index,"_blank", options);
@@ -123,6 +79,10 @@
 				sum = parseInt($("#control_qty_arr" + index).val()) + parseInt($("#moving_qty_arr" + index).val());
 				$("#stock_qty_sum_arr" + index).val(sum);
 				
+			}
+			
+			function onlyNumber(obj) {
+				  obj.value = obj.value.replace(/[^0-9]/g, "");
 			}
 	
 	</script>

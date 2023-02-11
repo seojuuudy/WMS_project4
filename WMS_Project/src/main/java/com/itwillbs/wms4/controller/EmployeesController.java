@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.wms4.service.EmployeesService;
+import com.itwillbs.wms4.vo.Employee_detailVO;
 import com.itwillbs.wms4.vo.EmployeesVO;
 
 @Controller
@@ -89,7 +90,7 @@ public class EmployeesController {
 	public void detail_mini(@RequestParam String sId, Model model,
 				HttpServletResponse response) {
 		System.out.println(sId);
-		EmployeesVO employees = service.getEmployee(sId);
+		Employee_detailVO employees = service.getEmployee(sId);
 		
 		JSONObject jsonObject = new JSONObject(employees);
 		System.out.println(jsonObject);
