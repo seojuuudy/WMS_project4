@@ -62,100 +62,102 @@ public class IncomeService {
 	}
 
 	// --------------------- 입고예정항목 --------------------
-			// 입고 예정 항목 목록 조회
-			public List<V_Inbound_ProductVO> getinProductList(String searchType, String keyword, int startRow,
-					int listLimit) {
-				return mapper.selectinProductList(searchType, keyword, startRow, listLimit);
-			}
+	// 입고 예정 항목 목록 조회
+	public List<V_Inbound_ProductVO> getinProductList(String searchType, String keyword, int startRow,
+			int listLimit) {
+		return mapper.selectinProductList(searchType, keyword, startRow, listLimit);
+	}
 
-			// 입고 예정 항목 목록 갯수
-			public int getinProductListCount(String searchType, String keyword) {
-				return mapper.selectinProductListCount(searchType, keyword);
-			}
+	// 입고 예정 항목 목록 갯수
+	public int getinProductListCount(String searchType, String keyword) {
+		return mapper.selectinProductListCount(searchType, keyword);
+	}
 
-			// 입고 예정 항목의 정보 가져오기
-			public V_Inbound_ProductVO getinProductInfo(String in_schedule_cd, String product_name, String in_date) {
-				return mapper.selectinProductInfo(in_schedule_cd, product_name, in_date);
-			}
-			
-			// 입고 예정 항목 수정
-			public int modifyProductInfo(V_Inbound_ProductVO inProduct, String product_name, int product_cd, int in_schedule_qty, Date in_date, String remarks, String in_schedule_cd, Date ex_in_date) {
-				return mapper.updateProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
-			}
-			
-			// ------------------ 입고처리 --------------------
-			// 입고 처리 목록 조회
-			public V_Inbound_ProcessingVO getinInboundList(String in_schedule_cd, String product_cd, String in_date) {
-				return mapper.selectinInboundList(in_schedule_cd, product_cd, in_date);
-			}
-			
-			// 입고 처리 수행
-			public int changeinInbound(V_Inbound_ProcessingVO inProduct) {
-				return mapper.updateinInbound(inProduct);
-			}
-			
-			// 기존 재고번호 선택시 기존 재고에 입고수량 추가
-			public int changeInqty(V_Inbound_ProcessingVO inProduct) {
-				return mapper.updateInqty(inProduct);
-			}
-			
-			// 진행상태 완료로 변경 
-			public int changeInComplete(V_Inbound_ProcessingVO inProduct) {
-				return mapper.updateComplete1(inProduct);
-			} 
-			
-			// 구역명 문자열로 구역명cd조회
-			public String getAreacd(String wh_area) {
-				return mapper.selectAreacd(wh_area);
-			}
-			
-			// 위치 문자열로 위치cd조회
-			public String getlocationcd(String wh_loc_in_area, String wh_area) {
-				return mapper.selectlocationcd(wh_loc_in_area, wh_area);
-			}
-			
-			// 새재고번호 조회
-			public int getnewStockcd() {
-				return mapper.selectnewStockcd();
-			}
-			
-			// 조회한 재고번호 실제 생성
-			public int createStock_cd(int stockcd, int product_cd, int wh_loc_in_area_cd, int order_qty) {
-				return mapper.insertStock_cd(stockcd, product_cd, wh_loc_in_area_cd, order_qty);
-			}
-			
-			// -------------------- 팝업창 검색 ---------------
-			// 재고 목록 조회
-			public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
-				return mapper.selectStockList(searchType, keyword, startRow, listLimit);
-			}
-
-			// 재고 목록 갯수 조회
-			public int getStockListCount(String searchType, String keyword) {
-				return mapper.selectStockListCount(searchType, keyword);
-			}
-
-			// 품목 목록 조회
-			public List<V_Inbound_ProductVO> getProductList(String searchType, String keyword, int startRow, int listLimit) {
-				return mapper.selectProductList(searchType, keyword, startRow, listLimit);
-			}
-
-			// 품목 목록 갯수 조회
-			public int getProductListCount(String searchType, String keyword) {
-				return mapper.selectProductListCount(searchType, keyword);
-			}
-
-			// 구역명_위치 조회
-			public List<V_StockinfoVO> getAreaList(String searchType, String keyword, int startRow, int listLimit) {
-				return mapper.selectAreaList(searchType, keyword, startRow, listLimit);
-			}
-
-			// 구역명_위치 목록 갯수 조회
-			public int getAreaListCount(String searchType, String keyword) {
-				return mapper.selectAreaListCount(searchType, keyword);
-			}
-
+	// 입고 예정 항목의 정보 가져오기
+	public V_Inbound_ProductVO getinProductInfo(String in_schedule_cd, String product_name, String in_date) {
+		return mapper.selectinProductInfo(in_schedule_cd, product_name, in_date);
+	}
 	
+	// 입고 예정 항목 수정
+	public int modifyProductInfo(V_Inbound_ProductVO inProduct, String product_name, int product_cd, int in_schedule_qty, Date in_date, String remarks, String in_schedule_cd, Date ex_in_date) {
+		return mapper.updateProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
+	}
 	
+	// ------------------ 입고처리 --------------------
+	// 입고 처리 목록 조회
+	public V_Inbound_ProcessingVO getinInboundList(String in_schedule_cd, String product_cd, String in_date) {
+		return mapper.selectinInboundList(in_schedule_cd, product_cd, in_date);
+	}
 	
+	// 입고 처리 수행
+	public int changeinInbound(V_Inbound_ProcessingVO inProduct) {
+		return mapper.updateinInbound(inProduct);
+	}
+	
+	// 기존 재고번호 선택시 기존 재고에 입고수량 추가
+	public int changeInqty(V_Inbound_ProcessingVO inProduct) {
+		return mapper.updateInqty(inProduct);
+	}
+	
+	// 진행상태 완료로 변경 
+	public int changeInComplete(V_Inbound_ProcessingVO inProduct) {
+		return mapper.updateComplete1(inProduct);
+	} 
+	
+	// 구역명 문자열로 구역명cd조회
+	public String getAreacd(String wh_area) {
+		return mapper.selectAreacd(wh_area);
+	}
+	
+	// 위치 문자열로 위치cd조회
+	public String getlocationcd(String wh_loc_in_area, String wh_area) {
+		return mapper.selectlocationcd(wh_loc_in_area, wh_area);
+	}
+	
+	// 새재고번호 조회
+	public int getnewStockcd() {
+		return mapper.selectnewStockcd();
+	}
+	
+	// 조회한 재고번호 실제 생성
+	public int createStock_cd(int stockcd, int product_cd, int wh_loc_in_area_cd) {
+		return mapper.insertStock_cd(stockcd, product_cd, wh_loc_in_area_cd);
+	}
+	
+	// -------------------- 팝업창 검색 ---------------
+	// 재고 목록 조회
+	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
+	}
+
+	// 재고 목록 갯수 조회
+	public int getStockListCount(String searchType, String keyword) {
+		return mapper.selectStockListCount(searchType, keyword);
+	}
+
+	// 품목 목록 조회
+	public List<V_Inbound_ProductVO> getProductList(String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.selectProductList(searchType, keyword, startRow, listLimit);
+	}
+
+	// 품목 목록 갯수 조회
+	public int getProductListCount(String searchType, String keyword) {
+		return mapper.selectProductListCount(searchType, keyword);
+	}
+
+	// 구역명_위치 조회
+	public List<V_StockinfoVO> getAreaList(String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.selectAreaList(searchType, keyword, startRow, listLimit);
+	}
+
+	// 구역명_위치 목록 갯수 조회
+	public int getAreaListCount(String searchType, String keyword) {
+		return mapper.selectAreaListCount(searchType, keyword);
+	}
+	
+	// 입고이력 등록
+	public int registStockHistory(int stock_cd, int product_cd, int in_qty, String emp_num, String remarks) {
+		return mapper.insertStockHistory(stock_cd, product_cd, in_qty, emp_num, remarks);
+	}
+
 }
