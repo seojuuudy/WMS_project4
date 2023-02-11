@@ -33,7 +33,8 @@
 		}
   		function set_cl(cust_name, business_no) {
 //   			alert(cust_name + "," + business_no);
-			$("#business_no").val(business_no);
+			$("#cust_name").val(cust_name);
+			$("#business_no_hidden").val(business_no);
 		}
   		
   		// 담당자 검색
@@ -43,7 +44,8 @@
 		}
   		function set_emp(emp_name, emp_num) {
 //   			alert(emp_num);
-			$("#emp_num").val(emp_num); 
+			$("#emp_name").val(emp_name); 
+			$("#emp_num_hidden").val(emp_num);
 		}
 		
   		// 전역 변수 선언
@@ -145,9 +147,10 @@
                    	 <label class="col-sm-3 col-form-label">거래처</label>
                    	 <div class="col-sm-9">
                       <div class="input-group">
-                        <input type="text" class="form-control" name="business_no" id="business_no" placeholder="거래처 검색" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                        <input type="text" class="form-control" name="cust_name" id="cust_name" placeholder="거래처 검색" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                         <div class="input-group-append">
-                          <button class="btn btn-sm btn-primary" name="business_no" id="business_no" type="button" onclick="open_cl()">검색</button>
+                          <button class="btn btn-sm btn-primary" name="cust_name" id="cust_name" type="button" onclick="open_cl()">검색</button>
+                          <input type="hidden" id="business_no_hidden" name="business_no">
                         </div>
                       </div>
                       </div>
@@ -158,9 +161,10 @@
                    	 <label class="col-sm-3 col-form-label">담당자</label>
                    	 <div class="col-sm-9">
                       <div class="input-group">
-                        <input type="text" class="form-control" name="emp_num" id="emp_num" placeholder="담당자 검색" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                        <input type="text" class="form-control" name="emp_name" id="emp_name" placeholder="담당자 검색" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                         <div class="input-group-append">
-                          <button class="btn btn-sm btn-primary" name="emp_num" id="emp_num" type="button" onclick="open_emp()">검색</button>
+                          <button class="btn btn-sm btn-primary" name="emp_name" id="emp_name" type="button" onclick="open_emp()">검색</button>
+                        	 <input type="hidden" id="emp_num_hidden" name="emp_num">
                         </div>
                       </div>
                       </div>

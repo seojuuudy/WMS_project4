@@ -1,11 +1,17 @@
 package com.itwillbs.wms4.controller;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.event.ListSelectionEvent;
+import javax.xml.crypto.dsig.Transform;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,10 +60,9 @@ public class IncomeController {
 	// 입고 예정 등록을 위한 비지니스 로직 처리
 	@PostMapping(value = "/InboundScheduleRegistPro.in")
 	public String inboundScheRegistPro(@ModelAttribute In_scheduleVO inSchedule,
-										@ModelAttribute In_schedule_per_productVO inSchedulePer, Model model, HttpSession session) {
+										@ModelAttribute In_schedule_per_productVO inSchedulePer, 
+										Model model, HttpSession session) {
 		
-//		System.out.println(inSchedule);
-//		System.out.println(inSchedulePer);
 		String sId = (String)session.getAttribute("sId");
 		
 		// 해당 회원의 권한 조회
@@ -269,7 +274,6 @@ public class IncomeController {
 //				Collections.reverse(InScheCount);
 //				System.out.println(InScheCount);
 				
-				
 				int listCount = service.getInboundScheListCount(keyword);
 				int pageListLimit = 10;
 				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
@@ -314,7 +318,6 @@ public class IncomeController {
 			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
 				
 				List<InScheduleInfoVO> InScheList = service.getInboundScheList(in_schedule_cd);
-				System.out.println(InScheList);
 				
 				model.addAttribute("InScheList", InScheList);
 				return "inbound/inbound_schedule_status";
@@ -335,34 +338,45 @@ public class IncomeController {
 							@RequestParam(value = "in_schedule_cd") String in_schedule_cd,
 							@RequestParam(value = "in_complete") String in_complete,
 							HttpServletResponse response, Model model, HttpSession session) {
+		// 해당 회원의 권한 조회
+		String sId = (String)session.getAttribute("sId");
 		
-//			System.out.println("과연 ? - " + in_schedule_cd + in_complete);
-			
-			// 해당 회원의 권한 조회
-			String sId = (String)session.getAttribute("sId");
-			
-			if(sId != null) { // 로그인 O
-				String priv_cd = (String)session.getAttribute("priv_cd");
-				int num = Integer.parseInt(priv_cd, 2);
-				int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
-				
-				if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시	
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 관리 권한 00011과 비교
 					
-					int updateCount = service.modifyComplete(inSchedule, in_schedule_cd, in_complete);
-						if(updateCount > 0) { // 종결 여부 변경 성공
-							return "inbound/inbound_schedule_list";
-						} else { // 종결 여부 변경 실패
-							model.addAttribute("msg", "종결여부 변경 불가!");
-							return "fail_back";
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+					if(in_complete.equals("1")) { // 현재 종결상태
+						int updateCount = service.modifyComplete(inSchedule, in_schedule_cd, in_complete);
+						if(updateCount > 0) {
+							return "success";
 						}
-				} else { // 권한 불일치
-					model.addAttribute("msg", "접근 권한 없음!");
-					return "fail_back";
-				}	
-			} else { // 로그인 X 
-				model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+					} else if(in_complete.equals("0")) { // 현재 미종결상태
+						System.out.println("현재 미종결인" + in_complete);
+						List<InScheduleInfoVO> InScheList = service.getInboundScheList(in_schedule_cd);
+						List<String> InScheListS = InScheList.stream().map(InScheduleInfoVO::getIn_complete_pr).collect(Collectors.toList());
+						List<Integer> InScheListI = InScheListS.stream().map(Integer::valueOf).collect(Collectors.toList());
+						int result = InScheListI.stream().reduce(1, (a,b) -> a * b);
+							if(result == 1) { // 하나의 발주서에 대한 모든 품목이 입고가 종결 되었을때
+								int updateCount = service.modifyComplete(inSchedule, in_schedule_cd, in_complete);
+								if(updateCount > 0) {
+									return "success";
+								}
+							} else if(result == 0) { // 모든 품목의 입고가 완료되지 않았을때
+								return "fail";
+							}
+					}
+					return "inbound/inbound_schedule_list";
+			} else { // 권한 X
+				System.out.println("지금 종결인데22222  : " + in_complete);
+				model.addAttribute("msg", "접근 권한 없음!");
 				return "fail_back";
-			}	
+			}
+		} else { // 로그인 X 
+					model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+					return "fail_back";
+		}
 	}
 
 	// -------------------------- 입고예정항목 ----------------------------- //

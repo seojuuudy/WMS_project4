@@ -14,6 +14,7 @@ public class InScheduleInfoVO {
 	private String remarks;
 	private String in_complete;
 	private String in_complete_pr;
+//	private String[] in_complete_pr;
 	private int product_cd;
 	private int in_schedule_qty;
 	private int in_qty;
@@ -29,7 +30,7 @@ public class InScheduleInfoVO {
 	private String product_type_cd;
 	private String product_image;
 	private String emp_name;
-	private int[] InScheCount;
+	private int InSchePerCnt;
 	
 	public InScheduleInfoVO() {
 		super();
@@ -39,7 +40,7 @@ public class InScheduleInfoVO {
 			String emp_num, Date in_date, String remarks, String in_complete, String in_complete_pr, int product_cd,
 			int in_schedule_qty, int in_qty, String stock_cd, String in_type_name, String product_name,
 			int product_group_bottom_cd, String size_des, String unit, String barcode, double in_unit_price,
-			double out_unit_price, String product_type_cd, String product_image, String emp_name, int[] inScheCount) {
+			double out_unit_price, String product_type_cd, String product_image, String emp_name, int InSchePerCnt) {
 		super();
 		this.in_schedule_cd = in_schedule_cd;
 		this.in_type_cd = in_type_cd;
@@ -65,7 +66,7 @@ public class InScheduleInfoVO {
 		this.product_type_cd = product_type_cd;
 		this.product_image = product_image;
 		this.emp_name = emp_name;
-		InScheCount = inScheCount;
+		this.InSchePerCnt = InSchePerCnt;
 	}
 
 	public String getIn_schedule_cd() {
@@ -260,12 +261,12 @@ public class InScheduleInfoVO {
 		this.emp_name = emp_name;
 	}
 
-	public int[] getInScheCount() {
-		return InScheCount;
+	public int getInSchePerCnt() {
+		return InSchePerCnt;
 	}
 
-	public void setInScheCount(int[] inScheCount) {
-		InScheCount = inScheCount;
+	public void setInSchePerCnt(int inSchePerCnt) {
+		InSchePerCnt = inSchePerCnt;
 	}
 
 	@Override
@@ -278,8 +279,10 @@ public class InScheduleInfoVO {
 				+ ", product_group_bottom_cd=" + product_group_bottom_cd + ", size_des=" + size_des + ", unit=" + unit
 				+ ", barcode=" + barcode + ", in_unit_price=" + in_unit_price + ", out_unit_price=" + out_unit_price
 				+ ", product_type_cd=" + product_type_cd + ", product_image=" + product_image + ", emp_name=" + emp_name
-				+ ", InScheCount=" + Arrays.toString(InScheCount) + "]";
+				+ ", InSchePerCnt=" + InSchePerCnt + "]";
 	}
+
+	
 	
 
 }
