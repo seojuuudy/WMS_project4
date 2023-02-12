@@ -20,6 +20,7 @@ public class OutScheduleListVO {
 	private String size_des;
 	private int out_qty;
 	private String out_complete;
+	private int OutSchePerCnt;
 	
 	public OutScheduleListVO() {
 		super();
@@ -27,7 +28,7 @@ public class OutScheduleListVO {
 
 	public OutScheduleListVO(String out_schedule_cd, int product_cd, String product_name, String business_no,
 			String cust_name, int stock_cd, String emp_num, String emp_name, String in_type_cd, int out_schedule_qty,
-			Date out_date, String size_des, int out_qty, String out_complete) {
+			Date out_date, String size_des, int out_qty, String out_complete, int outSchePerCnt) {
 		super();
 		this.out_schedule_cd = out_schedule_cd;
 		this.product_cd = product_cd;
@@ -43,14 +44,7 @@ public class OutScheduleListVO {
 		this.size_des = size_des;
 		this.out_qty = out_qty;
 		this.out_complete = out_complete;
-	}
-
-	public String getOut_complete() {
-		return out_complete;
-	}
-
-	public void setOut_complete(String out_complete) {
-		this.out_complete = out_complete;
+		OutSchePerCnt = outSchePerCnt;
 	}
 
 	public String getOut_schedule_cd() {
@@ -157,14 +151,33 @@ public class OutScheduleListVO {
 		this.out_qty = out_qty;
 	}
 
+	public String getOut_complete() {
+		return out_complete;
+	}
+
+	public void setOut_complete(String out_complete) {
+		this.out_complete = out_complete;
+	}
+
+	public int getOutSchePerCnt() {
+		return OutSchePerCnt;
+	}
+
+	public void setOutSchePerCnt(int outSchePerCnt) {
+		OutSchePerCnt = outSchePerCnt;
+	}
+
 	@Override
 	public String toString() {
 		return "OutScheduleListVO [out_schedule_cd=" + out_schedule_cd + ", product_cd=" + product_cd
 				+ ", product_name=" + product_name + ", business_no=" + business_no + ", cust_name=" + cust_name
 				+ ", stock_cd=" + stock_cd + ", emp_num=" + emp_num + ", emp_name=" + emp_name + ", in_type_cd="
 				+ in_type_cd + ", out_schedule_qty=" + out_schedule_qty + ", out_date=" + out_date + ", size_des="
-				+ size_des + ", out_qty=" + out_qty + "]";
+				+ size_des + ", out_qty=" + out_qty + ", out_complete=" + out_complete + ", OutSchePerCnt="
+				+ OutSchePerCnt + "]";
 	}
+
+	
 	
 	
 }

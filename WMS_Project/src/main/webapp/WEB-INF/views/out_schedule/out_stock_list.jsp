@@ -27,7 +27,7 @@
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
 		function setParentText(stock_cd) {
-			alert('잘왔고?');
+// 			alert('잘왔고?');
 			
 			window.close();
 			opener.set_st(stock_cd);

@@ -56,5 +56,21 @@ public class ReleaseService {
 		return mapper.selectOutProcessing(out_schedule_cd, product_cd, outqty);
 	}
 
+	public List<OutScheduleListVO> getOut_schedule_sum() {
+		return mapper.selectOutScheduleSum();
+	}
+
+	public List<OutScheduleListVO> getOut_schedule_count() {
+		return mapper.selectOutScheduleCount();
+	}
+
+	public int outStockQty(Out_schedule_per_productVO ospp) {
+		return mapper.updateStockQty(ospp);
+	}
+
+	public int modifyOutQty(Out_schedule_per_productVO ospp) {
+		return mapper.updateOutQty(ospp);
+	}
+
 
 }

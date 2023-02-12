@@ -3,6 +3,7 @@ package com.itwillbs.wms4.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.itwillbs.wms4.service.ClientService;
 import com.itwillbs.wms4.service.HrService;
 import com.itwillbs.wms4.service.ProductService;
@@ -57,54 +60,87 @@ public class ReleaseController {
 	@GetMapping("/OutScheduleList.out") // 출고 예정 목록
 	public String outScheduleList(
 			@RequestParam(defaultValue = "1") int pageNum,
-			Model model) {
+			@RequestParam(defaultValue = "") String out_complete,
+			Model model, HttpSession session) {
 		
-		// ---------------------------------------------------------------------------
-		// 페이징 처리를 위한 변수 선언
-		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
-		int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
-//						System.out.println("startRow = " + startRow);
-		// ---------------------------------------------------------------------------
-		// Service 객체의 getReleaseList() 메서드를 호출하여 게시물 목록 조회
-		// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
-		// => 리턴타입 : List<OutScheduleListVO> out_schedule_list
-		List<OutScheduleListVO> out_schedule_list = service.getReleaseList(startRow, listLimit);
-		// ---------------------------------------------------------------------------
-		// 페이징 처리
-		int listCount = 10;
-				System.out.println("총 게시물 수 : " + listCount);
-		
-		int pageListLimit = 10;
-		
-		int maxPage = listCount / listLimit 
-						+ (listCount % listLimit == 0 ? 0 : 1); 
-		
-		int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
-		
-		int endPage = startPage + pageListLimit - 1;
-		
-		if(endPage > maxPage) {
-			endPage = maxPage;
+		String sId = (String)session.getAttribute("sId");
+
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O
+			// ---------------------------------------------------------------------------
+			// 페이징 처리를 위한 변수 선언
+			int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
+			int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
+	//						System.out.println("startRow = " + startRow);
+			// ---------------------------------------------------------------------------
+			// Service 객체의 getReleaseList() 메서드를 호출하여 게시물 목록 조회
+			// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
+			// => 리턴타입 : List<OutScheduleListVO> out_schedule_list
+			List<OutScheduleListVO> out_schedule_list = service.getReleaseList(startRow, listLimit);
+			List<OutScheduleListVO> outscheduleSum = service.getOut_schedule_sum();
+			List<OutScheduleListVO> outscheduleCount = service.getOut_schedule_count();
+			// ---------------------------------------------------------------------------
+			System.out.println("이건 합계 " + outscheduleSum);
+			System.out.println("이건 갯수 " + outscheduleCount);
+			// 페이징 처리
+			int listCount = 10;
+	//				System.out.println("총 게시물 수 : " + listCount);
+			
+			int pageListLimit = 10;
+			
+			int maxPage = listCount / listLimit 
+							+ (listCount % listLimit == 0 ? 0 : 1); 
+			
+			int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
+			
+			int endPage = startPage + pageListLimit - 1;
+			
+			if(endPage > maxPage) {
+				endPage = maxPage;
+			}
+			
+			// PageInfo 객체 생성 후 페이징 처리 정보 저장
+			PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+			// ---------------------------------------------------------------------------
+			// 조회 결과를 Model 객체에 "out_schedule_list" 속성명으로 저장
+			model.addAttribute("out_schedule_list", out_schedule_list);
+			model.addAttribute("outscheduleSum", outscheduleSum);
+			model.addAttribute("outscheduleCount", outscheduleCount);
+			model.addAttribute("pageInfo", pageInfo);
+			
+	//		System.out.println("out_schedule_list " + out_schedule_list);
+			
+			return "out_schedule/out_schedule_list";
+			} else { // 권한 X
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
 		}
-		
-		// PageInfo 객체 생성 후 페이징 처리 정보 저장
-		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
-		// ---------------------------------------------------------------------------
-		// 조회 결과를 Model 객체에 "out_schedule_list" 속성명으로 저장
-		model.addAttribute("out_schedule_list", out_schedule_list);
-		model.addAttribute("pageInfo", pageInfo);
-		
-//		System.out.println("out_schedule_list " + out_schedule_list);
-		
-		return "out_schedule/out_schedule_list";
 	}
 	
 	@GetMapping("/OutScheduleListIng.out") // 출고 예정 진행중 목록
 	public String outScheduleList(
 			@RequestParam(defaultValue = "1") int pageNum,
 			@ModelAttribute OutScheduleListVO outscheduleList,
+			HttpSession session,
 			Model model) {
 		
+		// 해당 회원의 권한 조회
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+					
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
 		// ---------------------------------------------------------------------------
 		// 페이징 처리를 위한 변수 선언
 		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
@@ -114,12 +150,12 @@ public class ReleaseController {
 		// Service 객체의 getReleaseList() 메서드를 호출하여 게시물 목록 조회
 		// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
 		// => 리턴타입 : List<OutScheduleListVO> out_schedule_list
-		System.out.println(outscheduleList.getOut_complete());
+//		System.out.println(outscheduleList.getOut_complete());
 		List<OutScheduleListVO> out_schedule_list = service.getReleaseIngList(outscheduleList.getOut_complete(), startRow, listLimit);
 		// ---------------------------------------------------------------------------
 		// 페이징 처리
 		int listCount = 10;
-				System.out.println("총 게시물 수 : " + listCount);
+//				System.out.println("총 게시물 수 : " + listCount);
 		
 		int pageListLimit = 10;
 		
@@ -144,7 +180,15 @@ public class ReleaseController {
 //		System.out.println("out_schedule_list " + out_schedule_list);
 		
 		return "out_schedule/out_schedule_list";
+		} else { // 권한 X
+			model.addAttribute("msg", "접근 권한 없음!");
+			return "fail_back";
+		}
+	} else { // 로그인 X 
+		model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+		return "fail_back";
 	}
+}
 	
 	
 	@GetMapping("/OutDetail.out") // 출고 예정품목 리스트별 출고상태
@@ -152,7 +196,7 @@ public class ReleaseController {
 		@ModelAttribute OutScheduleListVO outScheduleList,
 		Model model) {
 			List<OutScheduleListVO> outList = service.selectOutProcess(outScheduleList);
-			System.out.println(outList);
+//			System.out.println(outList);
 			
 			model.addAttribute("outList", outList);
 		return "out_schedule/out_detail";
@@ -179,11 +223,11 @@ public class ReleaseController {
 //			model.addAttribute("msg", "로그인 필수!");
 //			return "fail_back";
 //		}
-		System.out.println(release);
-		System.out.println(releaseProduct);
-		System.out.println(releaseProduct.getProduct_cd());
-		System.out.println(releaseProduct.getOutProductList());
-		System.out.println(releaseProduct.getOut_schedule_cd());
+//		System.out.println(release);
+//		System.out.println(releaseProduct);
+//		System.out.println(releaseProduct.getProduct_cd());
+//		System.out.println(releaseProduct.getOutProductList());
+//		System.out.println(releaseProduct.getOut_schedule_cd());
 //		System.out.println(releaseProduct.getProduct_cd().split(",")[0]);
 		
 //		List<Out_schedule_per_productVO> list = new ArrayList<Out_schedule_per_productVO>();
@@ -197,7 +241,15 @@ public class ReleaseController {
 //			System.out.println(arrayParam[i]);
 //		}
 		
+		String sId = (String)session.getAttribute("sId");
 		
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시	
 		int insertCount = service.registRelease(release, releaseProduct.getOutProductList());
 //		
 //		
@@ -210,14 +262,31 @@ public class ReleaseController {
 				model.addAttribute("msg", "등록 실패!");
 				return "fail_back";
 			}
-	}
+		} else { // 권한 불일치
+			model.addAttribute("msg", "접근 권한 없음!");
+			return "fail_back";
+		}	
+	} else { // 로그인 X 
+		model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+		return "fail_back";
+	}	
+}
 	
 	@GetMapping(value = "/ClientSearchList.out") // 거래처 목록조회
 	public String clientSearchList(
 			@RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(defaultValue = "1") int pageNum,
-			Model model) {
+			Model model, HttpSession session) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O
 		// ---------------------------------------------------------------------------
 		// 페이징 처리를 위한 변수 선언
 		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
@@ -231,7 +300,7 @@ public class ReleaseController {
 		// ---------------------------------------------------------------------------
 		// 페이징 처리
 		int listCount = clientService.getClientListCount(searchType, keyword);
-				System.out.println("총 게시물 수 : " + listCount);
+//				System.out.println("총 게시물 수 : " + listCount);
 		
 		int pageListLimit = 10;
 		
@@ -253,26 +322,35 @@ public class ReleaseController {
 		model.addAttribute("clientList", clientList);
 		model.addAttribute("pageInfo", pageInfo);
 		
-		System.out.println("clientList " + clientList);
+//		System.out.println("clientList " + clientList);
 		
 		return "out_schedule/clientSearchList";
+			} else { // 권한 X
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
 	}
+}
 	
 	@GetMapping(value = "/SearchList.out")
 	public String hrList(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
 		
-//		String sId = (String)session.getAttribute("sId");
-//		
-//		if(sId != null) { // 로그인O
-//			// 해당 회원의 권한 가져오기
-//			String priv_cd = (String)session.getAttribute("priv_cd");
-//			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
-//			int num = Integer.parseInt(priv_cd, 2);
-//			int cpriv_cd = 8; // 사원조회 권한 01000과 비교
-//				
-//			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+		String sId = (String)session.getAttribute("sId");
+		
+		if(sId != null) { // 로그인O
+			// 해당 회원의 권한 가져오기
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			// 문자열로 저장된 2진수 데이터 권한코드를 2진수로 변환
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+				
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 O
+			
 			
 				int listLimit = 10;
 				int startRow = (pageNum-1) * listLimit;
@@ -296,14 +374,14 @@ public class ReleaseController {
 				model.addAttribute("pageInfo", pageInfo);
 				
 				return "out_schedule/employee_Search_list";
-//			} else { // 권한 불일치시
-//				model.addAttribute("msg", "접근 권한 없음!");
-//				return "fail_back";
-//			}
-//		} else { // 로그인X
-//			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
-//			return "fail_back";
-//		}
+			} else { // 권한 불일치시
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인X
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
 				
 				
 	};
@@ -439,7 +517,7 @@ public class ReleaseController {
 		String[] outScheduleArr = out_schedule_cd.split(",");
 		String[] product_cdArr = product_cd.split(",");
 		String[] outqtyArr = outqty.split(",");
-		System.out.println("outScheduleArr : " + outScheduleArr + ", product_cdArr :" + product_cdArr + ", outqtyArr" + outqtyArr);
+//		System.out.println("outScheduleArr : " + outScheduleArr + ", product_cdArr :" + product_cdArr + ", outqtyArr" + outqtyArr);
 		List<OutProcess_cd_stockVO> processList = new ArrayList<OutProcess_cd_stockVO>();
 		
 		for(int i=0;i<outScheduleArr.length;i++) {
@@ -447,15 +525,15 @@ public class ReleaseController {
 			product_cd = product_cdArr[i];
 			outqty = outqtyArr[i];
 			OutProcess_cd_stockVO process = service.getOutScheduleProcess(out_schedule_cd, product_cd, outqty);
-			System.out.println("여기보자 " + process);
+//			System.out.println("여기보자 " + process);
 			processList.add(process);
 		}
-		System.out.println("out_schedule_cd : " + out_schedule_cd + ", product_cd :" + product_cd + ",outqty : " + outqty);
+//		System.out.println("out_schedule_cd : " + out_schedule_cd + ", product_cd :" + product_cd + ",outqty : " + outqty);
 		
 		
 		
 		model.addAttribute("processList", processList);
-		System.out.println("processList : " + processList);
+//		System.out.println("processList : " + processList);
 		
 		
 		return "out_schedule/out_process";
@@ -492,103 +570,46 @@ public class ReleaseController {
 //		return "out_schedule/out_process";
 //	}
 	
-	
-	@PostMapping("/ControlOutqty.out")
-	public void controlQutqty(
-			@ModelAttribute OutProcess_cd_stockVO outProcess,
-			HttpSession session,
-			Model model) {
-		      System.out.println("ControlOutqty 여기로 와 ㅠ outProcess: " + outProcess);
-		      
-//		      for(int i = 0; i < control.getStock_cd_arr().length; i++) {
-//		         
-//		         Stock_controlVO stock_control = new Stock_controlVO();
-//		         
-//		         stock_control.setStock_cd(control.getStock_cd_arr()[i]);
-//		         stock_control.setControl_qty(control.getControl_qty_arr()[i]);
-//		         stock_control.setMoving_stock_cd(control.getMoving_stock_cd_arr()[i]);
-//		         stock_control.setMoving_qty(control.getMoving_qty_arr()[i]);
-//		         stock_control.setProduct_name(control.getProduct_name_arr()[i]);
-//		         
-//		         // 상세 위치 문자열을 찾기 위해 "창고 구역 위치" 전체를 갖고 와서 자름
-//		         System.out.println("loc_in_area을 찾기!: " + control.getWh_loc_in_area_arr()[i].isEmpty());
-//		         
-//		         String loc_in_area = "";
-//		         if(control.getWh_loc_in_area_arr()[i].isEmpty() == false) {
-//		            loc_in_area = control.getWh_loc_in_area_arr()[i];
-//		            loc_in_area.lastIndexOf(" ");
-//		            
-//		            loc_in_area = loc_in_area.substring(loc_in_area.lastIndexOf(" ") + 1);
-//		            
-//		            System.out.println("문자열 찾기: " + loc_in_area);
-//		         } 
-//		         
-////		         System.out.println("적요값: " + control.getRemarks_arr()[i]);
-//		         
-//		         if(control.getRemarks_arr()[i].isEmpty()) {
-//		            stock_control.setRemarks("");
-//		         } else {
-//		            stock_control.setRemarks(control.getRemarks_arr()[i]);
-//		         }
-//		         
-//		         System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
-//		               + ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
-//		         
-//		         int stock_cd = stock_control.getStock_cd();
-////		         System.out.println("stock_cd: " + stock_cd);
-//		         int stock_qty = stock_control.getControl_qty();
-//		         // 기존 재고 번호에 대한 수량 변경
-//		         int updateCount = service.modifyStock(stock_cd, stock_qty);
-//		         
-//		         if(updateCount > 0) {
-//		            
-//		            int moving_qty = stock_control.getMoving_qty();
-//		            System.out.println("moving_qty: " + moving_qty);
-//		            // 이동할 재고 수량이 있는 경우
-//		            if(moving_qty != 0) {
-//		               int moving_stock_cd = stock_control.getMoving_stock_cd();
-//		               // 이동할 재고 수량이 있지만 재고 번호가 없는 경우(이동 재고 번호가 0인 경우
-//		               // 위치만 가져가서 재고 번호를 제외한 나머지를 stock에 insert 하기
-//		               // 이동랑 수량이 
-//		               if(moving_stock_cd == 0 && !loc_in_area.equals("")) {
-//		                  
-//		                  String product_name = stock_control.getProduct_name();
-//		                  int product_cd = service.getProduct_cd(product_name);
-//		                  int wh_loc_in_area_cd = service.getAreaCd(loc_in_area);
-//		                  
-//		                  int insertCount = service.registStock(product_cd, moving_qty, wh_loc_in_area_cd);
-//		                  
-//		                  
-//		               } else {
-//		                  
-//		                  // 이동 재고 번호를 조회하여 이동할 재고 수량 update
-//		                  int updateCount2 = service.modifyMovingStock(moving_stock_cd, moving_qty);
-//		                  // 이동 재고 수량 update 성공시 -> 재고 이력 테이블 컬럼 추가
-//		                  if(updateCount2 > 0) {
-//		                     // 재고 이력 테이블 컬럼 추가를 위한 product_cd와 emp_num 조회 필요
-//		                     String product_name = stock_control.getProduct_name();
-//		                     int product_cd = service.getProduct_cd(product_name);
-//		                     System.out.println("product_cd: " + product_cd);
-//		                     String emp_num = service.getEmpNum(sId);
-//		                     String remarks = stock_control.getRemarks();
-//		                     System.out.println("remarks: " + remarks);
-//		                     int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
-//		                     int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
-//		                     
-//		                  }
-//		               }
-//		               
-//		            }
-//		            
-//		         } else {
-//		            model.addAttribute("msg", "재고 조정 작업 실패!");
-//		            return "fail_back";
-//		         }
-//		         
-//		      }
-//
-//		      return "redirect:/Stock.st";
-//		   }
-		
-	}
+//	@ResponseBody
+//	@PostMapping("/ControlOutqty.out")
+//	public void controlQutqty(
+//			@RequestBody String out_schedule_cdArr,
+////			@ModelAttribute OutProcess_cd_stockVO outProcess,
+//			HttpSession session,
+//			HttpServletResponse response,
+//			Model model) {
+//		      System.out.println("ControlOutqty 여기로 와 ㅠ outProcess: " + out_schedule_cdArr);
+//		      Gson gson = new Gson();
+//		      // JSON 데이터(배열 내부에 객체가 저장되어 있는 JSON 문자열)을 파싱하여 저장할
+//		      // 자바의 객체로 변환하기 위해 Gson 객체의 fromJson() 메서드 활용
+//		      // => gson.fromJson(JSON 데이터, 파싱할클래스명.class);
+//		      // => 단, List 등의 복합 객체일 경우 별도의 클래스를 통해 타입을 지정해야함
+//		      //    ex) new TypeToken<List<BoardVO>>(){}.getType()
+////		      Out_schedule_per_productVO[] array = gson.fromJson(out_schedule_cdArr, Out_schedule_per_productVO[].class);
+////		      List<Out_schedule_per_productVO> osppList = Arrays.asList(array);
+//		      List<Out_schedule_per_productVO> osppList = 
+//						gson.fromJson(out_schedule_cdArr, new TypeToken<List<Out_schedule_per_productVO>>(){}.getType());
+////		      
+//		      System.out.println(osppList);
+//		      
+//		      for(Out_schedule_per_productVO ospp : osppList) {
+//		    	  System.out.println("releaseController : " + ospp);
+//		    	  
+//		    	  int stockUpdateCount = service.outStockQty(ospp); // stock 테이블 재고 수량 수정
+//		    	  System.out.println(stockUpdateCount);
+//		    	  
+//		    	  int osppUpdateCount = service.modifyOutQty(ospp); // out_schedule_per_product 테이블 출고 수량 수정
+//		    	  if(osppUpdateCount > 0) {
+//		  				System.out.println("출고 수량 조정 완료");
+//		  			}
+//		  			
+//  					try {
+//  						response.setCharacterEncoding("UTF-8");
+//  						response.getWriter().print("true"); // toString() 생략됨
+//  					} catch (Exception e) {
+//  						e.printStackTrace();
+//  					}
+//		  	}   
+//		      
+//	}
 }	

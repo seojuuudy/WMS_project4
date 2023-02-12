@@ -28,8 +28,8 @@
 	<script type="text/javascript">
 		function setParentText(product_cd, product_name, size_des, idx) {
 // 			alert("확인1 : " + product_cd);
-			alert("확인2 : " + product_name);
-			alert("확인3 : " + idx);
+// 			alert("확인2 : " + product_name);
+// 			alert("확인3 : " + idx);
 			
 			window.close();
 			opener.set_pr(product_cd, product_name, size_des, idx, this);
@@ -73,16 +73,11 @@
                       <table class="table table-striped">
                         <thead>
                           <tr>
-                            <th>이미지</th>
                             <th>품목코드</th> <!-- 품목명 또는 품목코드 클릭 시 상세정보 조회 및 수정화면 표시 -->
                             <th>품목명</th> <!-- 품목명 또는 품목코드 클릭 시 상세정보 조회 및 수정화면 표시 -->
-                            <th>품목구분</th>
                             <th>대분류</th>
                             <th>소분류</th>
                             <th>규격</th>
-                            <th>바코드</th>
-                            <th>입고단가</th>
-                            <th>출고단가</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -90,11 +85,6 @@
 			<!-- 품목 반복문 들어갈 자리 -->
 			<c:forEach var="product" items="${productList }">
 				<tr>
-					<td class="py-1">
-						<c:if test="${not empty product.product_image }">
-							<img src="${pageContext.request.contextPath }/resources/upload/${product.product_image}" alt="image" />
-						</c:if>
-					</td>
 					<td>${product.product_cd}</td>
 					<td>
 						<a href="javascript:setParentText('${product.product_cd }', '${product.product_name }','${product.size_des }', '${param.idx }')">${product.product_name }</a>
@@ -103,13 +93,9 @@
 <%-- 							${product.product_name} --%>
 <!-- 						</a> -->
 					</td>
-					<td>${product.product_type_name}</td>
 					<td>${product.product_group_top_name}</td>
 					<td>${product.product_group_bottom_name}</td>
 					<td>${product.size_des}</td>
-					<td>${product.barcode}</td>
-					<td>${product.in_unit_price}</td>
-					<td>${product.out_unit_price}</td>
 				</tr>
 			</c:forEach>
 			 <!-- 품목 반복문 들어갈 자리 -->

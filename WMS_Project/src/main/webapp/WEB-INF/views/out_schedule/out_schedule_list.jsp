@@ -162,8 +162,8 @@
        <div class="col-lg-12 grid-margin stretch-card">
            <div class="card">
               	<div class="card-body">
-                    <h4 class="card-title">출고예정항목</h4>
-                    <p class="card-description">출고예정항목</p>
+                    <h4 class="card-title">출고 예정 항목</h4>
+                    <p class="card-description">출고 예정 항목</p>
 					 <form action="OutScheduleList.out">
 						<!-- 검색 타입 추가 -->
 						<div class="form-group">
@@ -257,12 +257,12 @@
                         <tbody>
                         
                         <!-- 출고 예정 목록 반복문 들어갈 자리 -->
-                        <c:forEach var="release" items="${out_schedule_list }">
+                        <c:forEach var="release" items="${out_schedule_list }" varStatus="status">
                           <tr>
                             <td>
                             	<input type="hidden" name="out_schedule_cd" id="out_schedule_cd" value="${release.out_schedule_cd}">
                             	<input type="hidden" name="out_complete" id="out_complete" value="${release.out_complete}">
-                             <a href ="OutDetail.out" > ${release.out_schedule_cd}</a>
+                             <a href="javascript:processPop('${release.out_schedule_cd}');">${release.out_schedule_cd}</a>
                            </td>
                            <c:choose>
                            		<c:when test="${release.in_type_cd eq '01'}">
@@ -274,9 +274,9 @@
                            	</c:choose>
                             <td>${release.cust_name}</td>
                             <td>${release.emp_name}</td>
-                            <td>${release.product_name}[${release.size_des }]</td>
+                             <td>${release.product_name}[${release.size_des }] 외 ${outscheduleCount[status.index].outSchePerCnt - 1}건</td>
                             <td>${release.out_date}</td>
-                            <td>${release.out_qty}</td>
+                             <td>${outscheduleSum[status.index].out_schedule_qty}</td>
 <%--                             <td><label class="badge badge-info" onclick="open_sta('${ins.in_schedule_cd}')">조회</label></td> --%>
 <%--                          		<button type="button" class="btn btn-primary btn-rounded i" onclick="location.href='Detail.hr?emp_email=${emp.emp_email}'">상세조회</button> --%>
 <%--                             	<button type="button" class="btn btn-primary btn-rounded i" onclick="location.href='Update.hr?emp_email=${emp.emp_email}'">수정</button> --%>

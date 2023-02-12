@@ -86,12 +86,8 @@
                             <th>거래처코드</th>
                             <th>거래처명</th>
                             <th>대표자명</th>
-                            <th>대표전화</th>
-                            <th>모바일</th>
-                            <th>주소</th>
                             <th>업태</th>
                             <th>종목</th>
-                            <th>비고</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -121,12 +117,8 @@
 <%-- 										${client.cust_name } --%>
 <!-- 									</a> -->
 								<td>${client.boss_name }</td>
-								<td>${client.tel }</td>
-								<td>${client.mobile_no }</td>
-								<td>${client.addr }</td>
 								<td>${client.uptae }</td>
 								<td>${client.jongmok }</td>
-								<td>${client.remarks }</td>
 							</tr>
 						</c:forEach>
                         </tbody>
