@@ -570,46 +570,46 @@ public class ReleaseController {
 //		return "out_schedule/out_process";
 //	}
 	
-//	@ResponseBody
-//	@PostMapping("/ControlOutqty.out")
-//	public void controlQutqty(
-//			@RequestBody String out_schedule_cdArr,
-////			@ModelAttribute OutProcess_cd_stockVO outProcess,
-//			HttpSession session,
-//			HttpServletResponse response,
-//			Model model) {
-//		      System.out.println("ControlOutqty 여기로 와 ㅠ outProcess: " + out_schedule_cdArr);
-//		      Gson gson = new Gson();
-//		      // JSON 데이터(배열 내부에 객체가 저장되어 있는 JSON 문자열)을 파싱하여 저장할
-//		      // 자바의 객체로 변환하기 위해 Gson 객체의 fromJson() 메서드 활용
-//		      // => gson.fromJson(JSON 데이터, 파싱할클래스명.class);
-//		      // => 단, List 등의 복합 객체일 경우 별도의 클래스를 통해 타입을 지정해야함
-//		      //    ex) new TypeToken<List<BoardVO>>(){}.getType()
-////		      Out_schedule_per_productVO[] array = gson.fromJson(out_schedule_cdArr, Out_schedule_per_productVO[].class);
-////		      List<Out_schedule_per_productVO> osppList = Arrays.asList(array);
-//		      List<Out_schedule_per_productVO> osppList = 
-//						gson.fromJson(out_schedule_cdArr, new TypeToken<List<Out_schedule_per_productVO>>(){}.getType());
-////		      
-//		      System.out.println(osppList);
+	@ResponseBody
+	@PostMapping("/ControlOutqty.out")
+	public void controlQutqty(
+			@RequestBody String out_schedule_cdArr,
+//			@ModelAttribute OutProcess_cd_stockVO outProcess,
+			HttpSession session,
+			HttpServletResponse response,
+			Model model) {
+		      System.out.println("ControlOutqty 여기로 와 ㅠ outProcess: " + out_schedule_cdArr);
+		      Gson gson = new Gson();
+		      // JSON 데이터(배열 내부에 객체가 저장되어 있는 JSON 문자열)을 파싱하여 저장할
+		      // 자바의 객체로 변환하기 위해 Gson 객체의 fromJson() 메서드 활용
+		      // => gson.fromJson(JSON 데이터, 파싱할클래스명.class);
+		      // => 단, List 등의 복합 객체일 경우 별도의 클래스를 통해 타입을 지정해야함
+		      //    ex) new TypeToken<List<BoardVO>>(){}.getType()
+//		      Out_schedule_per_productVO[] array = gson.fromJson(out_schedule_cdArr, Out_schedule_per_productVO[].class);
+//		      List<Out_schedule_per_productVO> osppList = Arrays.asList(array);
+		      List<Out_schedule_per_productVO> osppList = 
+						gson.fromJson(out_schedule_cdArr, new TypeToken<List<Out_schedule_per_productVO>>(){}.getType());
 //		      
-//		      for(Out_schedule_per_productVO ospp : osppList) {
-//		    	  System.out.println("releaseController : " + ospp);
-//		    	  
-//		    	  int stockUpdateCount = service.outStockQty(ospp); // stock 테이블 재고 수량 수정
-//		    	  System.out.println(stockUpdateCount);
-//		    	  
-//		    	  int osppUpdateCount = service.modifyOutQty(ospp); // out_schedule_per_product 테이블 출고 수량 수정
-//		    	  if(osppUpdateCount > 0) {
-//		  				System.out.println("출고 수량 조정 완료");
-//		  			}
-//		  			
-//  					try {
-//  						response.setCharacterEncoding("UTF-8");
-//  						response.getWriter().print("true"); // toString() 생략됨
-//  					} catch (Exception e) {
-//  						e.printStackTrace();
-//  					}
-//		  	}   
-//		      
-//	}
+		      System.out.println(osppList);
+		      
+		      for(Out_schedule_per_productVO ospp : osppList) {
+		    	  System.out.println("releaseController : " + ospp);
+		    	  
+		    	  int stockUpdateCount = service.outStockQty(ospp); // stock 테이블 재고 수량 수정
+		    	  System.out.println(stockUpdateCount);
+		    	  
+		    	  int osppUpdateCount = service.modifyOutQty(ospp); // out_schedule_per_product 테이블 출고 수량 수정
+		    	  if(osppUpdateCount > 0) {
+		  				System.out.println("출고 수량 조정 완료");
+		  			}
+		  			
+  					try {
+  						response.setCharacterEncoding("UTF-8");
+  						response.getWriter().print("true"); // toString() 생략됨
+  					} catch (Exception e) {
+  						e.printStackTrace();
+  					}
+		  	}   
+		      
+	}
 }	

@@ -97,16 +97,16 @@
 			var out_schedule_cdArr = new Array();
 			var out_qtyArr = new Array();
 			var stock_cdArr = new Array();
-			window.close();
+// 			window.close();
 	        for(let i=0; i<$(".out_schedule_cd").length; i++){
 	        	var out_schedule_cd = $(".out_schedule_cd").eq(i).text();
 	        	var out_qty = $(".out_qty").eq(i).text();
 	        	var stock_cd = $(".stock_cd").eq(i).val();
 // 				console.log("stock_cd값" + stock_cd);
 // 	        	alert(stock_cd);
-				out_schedule_cdArr.push({"out_schedule_cd":out_schedule_cd});
-				out_schedule_cdArr.push({"out_qty":out_qty});
-				out_schedule_cdArr.push({"stock_cd":stock_cd});
+				out_schedule_cdArr.push({"out_schedule_cd":out_schedule_cd, "out_qty":out_qty, "stock_cd":stock_cd});
+// 				out_schedule_cdArr.push("out_qty":out_qty);
+// 				out_schedule_cdArr.push({"stock_cd":stock_cd});
 // 				+ "" + stock_cd);
 // 				out_qtyArr.push(out_qty);
 // 				stock_cdArr.push(stock_cd);
@@ -119,22 +119,22 @@
 // 		    for (int i = 0; i < array.length(); i++) {
 // 		        String item = array.getString(i);
 		        // Do something with the item
-// 	         $.ajax({
-// 	        	type:"POST",
-// 	            url:"ControlOutqty.out",
-// 	            dataType: "text", // 응답 데이터 타입
-// 				contentType: "application/json", // 요청 시 전송 데이터 타입
-// 				data: JSON.stringify(out_schedule_cdArr), 
-// 	            dataType: "text",
-// 		          success: function(result){
-// 	                if(result == "true"){
-// 		            	alert("사용가넝");
-// 						window.close();
-// 	                } else {
-// 		            	alert("이미 존재합니다");
-// 	                }
-// 	              }
-// 	         }); // ajax
+	         $.ajax({
+	        	type:"POST",
+	            url:"ControlOutqty.out",
+	            dataType: "text", // 응답 데이터 타입
+				contentType: "application/json", // 요청 시 전송 데이터 타입
+				data: JSON.stringify(out_schedule_cdArr), 
+	            dataType: "text",
+		          success: function(result){
+	                if(result == "true"){
+		            	alert("사용가넝");
+						window.close();
+	                } else {
+		            	alert("이미 존재합니다");
+	                }
+	              }
+	         }); // ajax
 	 	  });
 	   });
 	</script>
