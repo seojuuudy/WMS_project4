@@ -32,8 +32,10 @@
 	 $(document).on("click","#btn", function(){
  		$("#processform").submit();
  		  
+ 		alert("입고처리 완료되었습니다.")
  		setTimeout(function() { // 데이터 전송을 위해 시간 설정
-              window.close();
+	    	opener.location.reload();
+ 			 self.close();
            }, 100);
 	  });  
  	 
