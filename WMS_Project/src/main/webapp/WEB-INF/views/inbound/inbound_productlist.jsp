@@ -55,10 +55,18 @@
 			    arr.push($("#in_schedule_cd"+index).text());
 				arr2.push($("#product_cd"+index).val());
 				arr3.push($("#in_date"+index).text());
+				
+// 			alert(arr + "," + arr2 + "," + arr3)
+	 	    var _width = '1200';
+	 	    var _height = '600';
+	 	 	 
+	 	    // 팝업을 가운데 정렬하기 위해 값 구하기
+	 	    var _left = Math.ceil(( window.screen.width - _width )/2);
+	 	    var _top = Math.ceil(( window.screen.height - _height )/2);
+	 	 
+	 	    window.open("pdProcessList.in?in_schedule_cd="+arr+"&product_cd="+arr2+"&in_date="+arr3, '입고처리', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
 			 }
 		 });
-// 			alert(arr + "," + arr2 + "," + arr3)
-			location.href="pdProcessList.in?in_schedule_cd=" + arr + "&product_cd=" + arr2 + "&in_date=" + arr3;
 		}
 	}
 		

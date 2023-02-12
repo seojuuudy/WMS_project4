@@ -26,7 +26,17 @@
  	<!-- jquery -->
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
+ 	 
 	$("document").ready(function(){
+		
+	 $(document).on("click","#btn", function(){
+ 		$("#processform").submit();
+ 		  
+ 		setTimeout(function() { // 데이터 전송을 위해 시간 설정
+              window.close();
+           }, 100);
+	  });  
+ 	 
 	    let sum1 = 0;
 	    $('input[id*="in_schedule_qty"]').each(function(){
 // 	    	if(!isNaN($(this).val())){ // 숫자만 들어오기 때문에 XX
@@ -52,9 +62,9 @@
                sum3 += parseInt($(this).val());
    	     });
    	     $("input[name=sum3]").val(sum3);
-
+   	     
     } // function
- 	  
+    
 	<!-- 재고코드 검색 팝업 -->
  	function openPopup1(index) {
  	    var _width = '650';
@@ -86,19 +96,6 @@
   </head>
   <body>
   
-    <div class="container-scroller">
-     <!-- 사이드바 -->
-      <jsp:include page="../partials/sidebar_WMS.jsp"></jsp:include>
-      <!-- 사이드바 -->
-      
-      <div class="container-fluid page-body-wrapper">
-        <!-- 색상 커스텀 설정 -->
-        <jsp:include page="../partials/settings-panel.jsp"></jsp:include>
-        <!-- 색상 커스텀 설정 -->
-        <!-- 상단 메뉴바 -->
-      	<jsp:include page="../partials/navbar.jsp"></jsp:include>
-        <!-- 상단 메뉴바  -->
-        
         <!-- 본문 영역 -->
         <div class="main-panel">
 
@@ -109,6 +106,7 @@
                     <h4 class="card-title">입고처리</h4>
                     <p class="card-description">입고처리</p>
 					 <form action="DoInbound" method="POST" id="processform">
+<!-- 					 <form method="POST" id="processform"> -->
 						<!-- 검색 타입 추가 -->
 						<div class="form-group">
                       	<div class="input-group">
@@ -181,7 +179,8 @@
                       </table>
                     </div>
 			        <div class="template-demo" style="text-align: right;">
-	           			<button type="submit" class="btn btn-primary btn-rounded btn-fw">등록</button>
+<!-- 	           			<button type="submit" id="btn" class="btn btn-primary btn-rounded btn-fw">등록</button> -->
+	           			<button type="button" id="btn" class="btn btn-primary btn-rounded btn-fw">등록</button>
            			</div>
 				 </form>
                	</div>
@@ -193,9 +192,6 @@
       </div>
       <!-- page-body-wrapper ends -->
     </div>
-    	<footer class="footer">
-          	<jsp:include page="../partials/footer.jsp"></jsp:include>
-        </footer>
         
     <!-- plugins:js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendors/js/vendor.bundle.base.js"></script>
