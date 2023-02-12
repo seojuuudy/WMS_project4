@@ -16,7 +16,14 @@ public interface StockMapper {
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
 			@Param("listLimit") int listLimit);
-
+	
+	List<Stock_listVO> selectProcdStockList(
+			@Param("product_cd") int product_cd, 
+			@Param("searchType") String searchType, 
+			@Param("keyword") String keyword, 
+			@Param("startRow") int startRow, 
+			@Param("listLimit") int listLimit);
+	
 	int selectStockListCount(String keyword);
 
 	int updateStock(@Param("stock_cd") int stock_cd, @Param("stock_qty") int stock_qty);

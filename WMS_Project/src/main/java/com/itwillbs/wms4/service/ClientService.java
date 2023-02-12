@@ -22,7 +22,7 @@ public class ClientService {
 		return mapper.selectClientList(searchType, keyword, startRow, listLimit);
 	}
 
-	public int getBoardListCount(String searchType, String keyword) {
+	public int getClientListCount(String searchType, String keyword) {
 		return mapper.selectClientListCount(searchType, keyword);
 	}
 

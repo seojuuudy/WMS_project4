@@ -30,20 +30,31 @@ public class ClientController {
 			@RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(defaultValue = "1") int pageNum,
+			HttpSession session,
 			Model model) {
+		
+		String sId = (String)session.getAttribute("sId");
+		
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 2; // 재고 조회 권한 00010과 비교
+			
+		if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시	
 		// ---------------------------------------------------------------------------
 		// 페이징 처리를 위한 변수 선언
 		int listLimit = 10; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
 		int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
 //				System.out.println("startRow = " + startRow);
 		// ---------------------------------------------------------------------------
-		// Service 객체의 getBoardList() 메서드를 호출하여 게시물 목록 조회
+		// Service 객체의 getClientList() 메서드를 호출하여 게시물 목록 조회
 		// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
 		// => 리턴타입 : List<ClientVO> clientList
 		List<ClientVO> clientList = service.getClientList(searchType, keyword, startRow, listLimit);
 		// ---------------------------------------------------------------------------
 		// 페이징 처리
-		int listCount = service.getBoardListCount(searchType, keyword);
+		int listCount = service.getClientListCount(searchType, keyword);
 				System.out.println("총 게시물 수 : " + listCount);
 		
 		int pageListLimit = 10;
@@ -69,6 +80,15 @@ public class ClientController {
 		System.out.println("clientList " + clientList);
 		
 		return "client/clientList";
+			} else {
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}
+		} else { // 로그인 X 
+		
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}
 	}
 
 	@GetMapping(value = "/ClientRegist.cl") // 거래처 등록폼
@@ -82,72 +102,124 @@ public class ClientController {
 		
 		System.out.println(client);
 		String sId = (String)session.getAttribute("sId");
-		if(sId == null || sId.equals("")) {
-			model.addAttribute("msg", "로그인 필수!");
-			return "fail_back";
-		}
-		
-		client.setUptae(client.getUptae().replaceAll(",", "/"));
-		client.setJongmok(client.getJongmok().replaceAll(",", "/"));
-		int insertCount = service.registClient(client);
-		// 등록 성공/실패에 따른 포워딩 작업 수행
-			if(insertCount > 0) { // 성공
-				
-				return "redirect:/ClientList.cl";
-			} else { // 실패
-				// "msg" 속성명으로 "글 쓰기 실패!" 메세지 전달 후 fail_back 포워딩
-				model.addAttribute("msg", "등록 실패!");
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+			
+			client.setUptae(client.getUptae().replaceAll(",", "/"));
+			client.setJongmok(client.getJongmok().replaceAll(",", "/"));
+			int insertCount = service.registClient(client);
+			// 등록 성공/실패에 따른 포워딩 작업 수행
+				if(insertCount > 0) { // 성공
+					
+					return "redirect:/ClientList.cl";
+				} else { // 실패
+					// "msg" 속성명으로 "글 쓰기 실패!" 메세지 전달 후 fail_back 포워딩
+					model.addAttribute("msg", "등록 실패!");
+					return "fail_back";
+				}
+			} else { // 권한 불일치
+				model.addAttribute("msg", "접근 권한 없음!");
 				return "fail_back";
-			}
-	}
-	
+			}	
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}	
+	}	
 	// 거래처 상세정보
 	@GetMapping(value = "/ClientDetail.cl")
 	public String clientDetail(
 			@RequestParam(defaultValue = "") String business_no, 
 			@RequestParam(defaultValue = "") String cust_name, 
+			HttpSession session,
 			Model model
 			) {
-		ClientVO client = service.getClient(business_no, cust_name);
-		System.out.println(client);
-		
-		model.addAttribute("client", client);
-		return "client/clientDetail";
-	}
+		String sId = (String)session.getAttribute("sId");
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				ClientVO client = service.getClient(business_no, cust_name);
+				System.out.println(client);
+				
+				model.addAttribute("client", client);
+				return "client/clientDetail";
+			} else { // 권한 불일치
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}	
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
+			return "fail_back";
+		}	
+	}	
 	
 	// 거래처 수정
 	@PostMapping(value = "/ClientModify.cl")
 	public String clientModify(
 			@ModelAttribute ClientVO client,
+			HttpSession session,
 			Model model
 			) {
-		System.out.println("수정하기전 " + client);
-		client.setUptae(client.getUptae().replaceAll(",", "/"));
-		client.setJongmok(client.getJongmok().replaceAll(",", "/"));
-		int updateCount = service.clientModify(client);
-		System.out.println("수정후 "+ client);
-		if(updateCount > 0) {
-			return "redirect:/ClientList.cl";
-		} else {
-			model.addAttribute("msg", "수정 실패!");
+		String sId = (String)session.getAttribute("sId");
+		// 해당 회원의 권한 조회
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+					
+		//		System.out.println("수정하기전 " + client);
+				client.setUptae(client.getUptae().replaceAll(",", "/"));
+				client.setJongmok(client.getJongmok().replaceAll(",", "/"));
+				int updateCount = service.clientModify(client);
+		//		System.out.println("수정후 "+ client);
+				if(updateCount > 0) {
+					return "redirect:/ClientList.cl";
+				} else {
+					model.addAttribute("msg", "수정 실패!");
+					return "fail_back";
+				}
+			}  else { // 권한 불일치
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}	
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
 			return "fail_back";
-		}
-	}
+		}	
+	}	
 	
 	// 거래처 삭제
 	@GetMapping(value = "/ClientDelete.cl")
 	public String clientDelete(
 			HttpSession session, @ModelAttribute ClientVO client, Model model) {
 		String sId = (String)session.getAttribute("sId");
-		
-		// 1. 세션 아이디가 없을 경우 "잘못된 접근"
-		if(sId == null || sId.equals("")) {
-			model.addAttribute("msg", "잘못된 접근입니다!");
+		if(sId != null) { // 로그인 O
+			String priv_cd = (String)session.getAttribute("priv_cd");
+			int num = Integer.parseInt(priv_cd, 2);
+			int cpriv_cd = 3; // 재고 조회, 재고 관리 권한 00011과 비교
+			
+			if((num & cpriv_cd) == cpriv_cd) { // 권한 일치시
+				service.removeClient(client);
+				return "redirect:/ClientList.cl";
+			} else { // 권한 불일치
+				model.addAttribute("msg", "접근 권한 없음!");
+				return "fail_back";
+			}	
+		} else { // 로그인 X 
+			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
 			return "fail_back";
-		} else {
-			service.removeClient(client);
-			return "redirect:/ClientList.cl";
-		}
+		}	
 	}
 	
 	@GetMapping(value="/CheckBusinessNo.cl")

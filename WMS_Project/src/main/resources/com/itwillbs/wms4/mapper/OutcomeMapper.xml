@@ -2,4 +2,104 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itwillbs.wms4.mapper.OutcomeMapper">
   
+  <!-- 창고 목록 페이징 처리 작업 -->
+	<select id="selectOutListCount" resultType="int">
+		SELECT COUNT(*)
+			FROM out_schedule_per_product -- 이후 작업 분기 일어남
+			<if test="!keyword.equals('')">
+				WHERE
+				<choose>
+					<when test="searchType.equals('out_schedule_cd')">
+						out_schedule_cd LIKE '%${keyword}%'
+					</when>
+					<when test="searchType.equals('out_schedule_qty')">
+						out_schedule_qty LIKE '%${keyword}%' 
+					</when>
+					<when test="searchType.equals('remarks')">
+						remarks LIKE '%${keyword}%' 
+					</when>
+				</choose>					
+			</if>
+	</select>
+  
+    <!-- 창고 목록 작업 -->
+	<select id="outList" resultType="com.itwillbs.wms4.vo.Out_schedule_per_productVO">
+		SELECT *
+			FROM out_schedule_product
+		<!-- 1. 검색어(keyword) 가 널스트링이 아닐 때 검색어 추가 WHERE 절 수행, 아니면 생략 -->
+		<!-- => 조건이 하나일 경우 if 태그를 사용하여 단일 조건 판별(if 문 구조) -->
+		<if test='!keyword.equals("")'>
+			WHERE
+			<choose>
+				<when test="searchType.equals('os.out_schedule_cd')">
+					os.out_schedule_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('c.buisness_no')">
+					c.buisness_no LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('c.cust_name')">
+					c.cust_name LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('p.product_cd')">
+					p.product_cd LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('p.product_name')">
+					p.product_name LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('os.out_date')">
+					os.out_date LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('ospp.out_schedule_qty')">
+					ospp.out_schedule_qty LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('out_not_qty')">
+					out_not_qty LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('out_qty')">
+					ospp.out_qty LIKE '%${keyword}%' 
+				</when>
+				<when test="searchType.equals('remarks')">
+					os.remarks LIKE '%${keyword}%' 
+				</when>
+			</choose>		
+		</if>
+		LIMIT 
+			#{startRow}
+			, #{listLimit}
+	</select>
+	
+	<!-- 출고 수정 폼 요청 작업-->
+	<select id="getOutModify" resultType="com.itwillbs.wms4.vo.Out_schedule_per_productVO">
+		SELECT 
+			out_schedule_cd, business_no, cust_name, product_cd, 
+			product_name, out_date, out_schedule_qty, out_not_qty, out_qty, remarks 
+		FROM 
+			out_schedule_product
+		<if test='!keyword.equals("")'>
+		WHERE 
+			out_schedule_cd = #{out_schedule_cd}
+		</if>
+	</select>
+	
+	<update id="OutUpdate">
+  	    UPDATE
+			out_schedule os
+			, client c
+			, out_schedule_per_product ospp
+			, product p
+			, stock s 
+		SET 
+        	os.OUT_DATE = #{out_date},
+        	ospp.OUT_SCHEDULE_QTY = #{out_schedule_qty},
+        	ospp.OUT_QTY = #{out_qty},
+        	os.REMARKS = #{remarks}
+    	WHERE
+	    	os.OUT_SCHEDULE_CD = #{out_schedule_cd}
+        	AND os.BUSINESS_NO = c.BUSINESS_NO
+        	AND os.OUT_SCHEDULE_CD = ospp.OUT_SCHEDULE_CD
+        	AND p.PRODUCT_CD = ospp.PRODUCT_CD
+        	AND s.STOCK_CD = ospp.STOCK_CD
+  	</update>
+  	
+  
 </mapper>

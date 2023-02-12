@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itwillbs.wms4.mapper.ReleaseMapper">
+  <insert id="insertRelease">
+  	<selectKey keyProperty="out_schedule_idx" resultType="String" order="BEFORE">
+  		SELECT COUNT(*)
+  			FROM out_schedule
+  	</selectKey>
+  	INSERT 
+  		INTO out_schedule
+  		VALUES(
+  			CONCAT(DATE_FORMAT(#{release.out_schedule_cd}, '%Y%m%d'), "-", #{out_schedule_idx}+1)
+  			,#{release.in_type_cd}
+			,#{release.business_no}
+			,#{release.emp_num}
+			,#{release.out_date}
+			,#{release.remarks}
+			, 0
+  		)
+  </insert>
+  <insert id="insertProductRelease" parameterType="java.util.List">
+  	<selectKey keyProperty="out_schedule_idx" resultType="String" order="BEFORE">
+  		SELECT COUNT(*)
+  			FROM out_schedule
+  	</selectKey>
+  	INSERT 
+  		INTO out_schedule_per_product
+  			(
+  			out_schedule_cd
+  			,product_cd
+			,out_schedule_qty
+			,out_qty
+			,out_date
+			,remarks
+			,stock_cd
+			,out_complete
+  			)
+  		VALUES
+	  		 <foreach collection="releaseProduct" item="releaseProduct" separator=",">
+				 	(CONCAT(DATE_FORMAT(#{release.out_schedule_cd}, '%Y%m%d'), "-", #{out_schedule_idx}), 
+				 	 #{releaseProduct.product_cd},
+			  		 #{releaseProduct.out_schedule_qty}, #{releaseProduct.out_qty}, 
+			  		 #{releaseProduct.out_date}, #{releaseProduct.remarks}, 
+			  		 0, 0
+			  		 )
+  			</foreach>
+  </insert>
+  <select id="selectReleaseList" resultType="com.itwillbs.wms4.vo.OutScheduleListVO">
+  		SELECT *
+  			FROM outScheduleList
+  			GROUP BY out_schedule_cd
+  			LIMIT 
+			#{startRow}
+			, #{listLimit}
+  </select>
+  
+  <update id="updateComplete">
+  	<selectKey keyProperty="out_complete" resultType="int">
+  		SELECT out_complete
+  			FROM out_schedule
+  			WHERE out_schedule_cd = #{out_schedule_cd}
+  	</selectKey>
+  	update out_schedule
+  		<choose>
+  			<when test="out_complete eq 0">
+		  		SET out_complete = 1
+  			</when>
+			<otherwise>
+		  		SET out_complete = 0
+			</otherwise>  				
+  		</choose>
+	  		WHERE out_schedule_cd = #{out_schedule_cd}
+  </update>
+  <select id="selectReleaseIngList" resultType="com.itwillbs.wms4.vo.OutScheduleListVO">
+  	SELECT *
+		FROM outScheduleList
+		GROUP BY out_schedule_cd
+		HAVING out_complete = ${out_complete}
+		LIMIT 
+		#{startRow}
+		, #{listLimit}
+  </select>
+  <select id="selectOutProcess" resultType="com.itwillbs.wms4.vo.OutScheduleListVO">
+  	SELECT *
+  		FROM outScheduleList
+  		WHERE 
+  			out_schedule_cd = #{out_schedule_cd}
+  
+  </select>
+  <select id="selectOutProcessing" resultType="com.itwillbs.wms4.vo.OutProcess_cd_stockVO">
+  	SELECT *
+  		FROM outProcess_cd_stock
+  		WHERE 
+  			out_schedule_cd = #{out_schedule_cd}
+  			AND product_cd = #{product_cd}
+  </select>
+<!--   <select id="selectOutScheduleProcess" resultType="com.itwillbs.wms4.vo.OutProcess_cd_stockVO"> -->
+<!--   	SELECT * -->
+<!--   		FROM outProcess_cd_stock -->
+<!--   		WHERE out_schedule_cd IN  -->
+<!--   			<foreach item="process" collection="list" open="(" close=")" separator=", "> -->
+<!--   				#{process.out_schedule_cd} -->
+  			
+<!--   			</foreach> -->
+<!--   		= #{out_schedule_cd} -->
+<!--   			AND	out_qty = #{out_qty}  -->
+<!--   </select> -->
+</mapper>

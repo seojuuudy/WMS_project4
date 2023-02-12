@@ -542,7 +542,7 @@ public class productController {
 					int startRow = (pageNum-1) * listLimit;
 					
 					List<ClientVO> clientList = cservice.getClientList(searchType, keyword, startRow, listLimit);
-					int listCount = cservice.getBoardListCount(searchType, keyword);
+					int listCount = cservice.getClientListCount(searchType, keyword);
 					
 					int pageListLimit = 10;
 					int maxPage = listCount / listLimit + (listCount % listLimit != 0 ? 1 : 0);
