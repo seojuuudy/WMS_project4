@@ -120,16 +120,16 @@
   	</update>
   	
   	<!-- 사원정보 수정시 사원번호 업데이트 -->
-	<update id="modifyEmp_num">
-		<selectKey keyProperty="emp_num" resultType="String" order="BEFORE">
-			SELECT CONCAT(#{dept_cd}, MID(#{hire_date}, 3, 2), LPAD(#{idx}, 3, '0'))
-				FROM employees 
- 				WHERE emp_email = #{emp_email}
-		</selectKey>
-		UPDATE employees
-			SET emp_num = #{emp_num}
-			WHERE emp_email = #{emp_email}
-	</update>
+<!-- 	<update id="modifyEmp_num"> -->
+<!-- 		<selectKey keyProperty="emp_num" resultType="String" order="BEFORE"> -->
+<!-- 			SELECT CONCAT(#{dept_cd}, MID(#{hire_date}, 3, 2), LPAD(#{idx}, 3, '0')) -->
+<!-- 				FROM employees  -->
+<!--  				WHERE emp_email = #{emp_email} -->
+<!-- 		</selectKey> -->
+<!-- 		UPDATE employees -->
+<!-- 			SET emp_num = #{emp_num} -->
+<!-- 			WHERE emp_email = #{emp_email} -->
+<!-- 	</update> -->
 	
 	<!-- 이메일 중복체크 -->
 	<select id="checkEmail" resultType="int">

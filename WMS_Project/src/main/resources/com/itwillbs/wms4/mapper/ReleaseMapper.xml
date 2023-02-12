@@ -123,10 +123,10 @@
 	<update id="updateOutQty">
  		UPDATE out_schedule_per_product
  			SET 
- 				out_qty = (out_qty + #{out_qty})
+ 				out_qty = (out_qty + #{ospp.out_qty})
  			WHERE
- 				out_schedule_cd = #{out_schedule_cd}
-				AND stock_cd = #{stock_cd}
+ 				out_schedule_cd = #{ospp.out_schedule_cd}
+				AND stock_cd = #{ospp.stock_cd}
  	</update>
  	<update id="updateStockQty">
 		<selectKey resultType="int" order="BEFORE" keyProperty="stock_qty">

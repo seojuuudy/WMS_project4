@@ -323,9 +323,9 @@ public class HrController {
 			int updateCount = service.modifyEmployees(employees);
 			
 			// 사원 번호 업데이트
-			int updateCount2 = service.modifyEmp_num(employees);
+//			int updateCount2 = service.modifyEmp_num(employees);
 			
-			if(updateCount > 0 && updateCount2 > 0) { // 사원정보 수정 성공
+			if(updateCount > 0) { // 사원정보 수정 성공
 		        
 				// 수정 된 권한을 세션에 다시 저장
 				if(sId == employees.getEmp_email()) { // 세션 아이디와 수정된 사원이 같을때
