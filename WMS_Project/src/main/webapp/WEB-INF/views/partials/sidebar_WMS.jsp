@@ -77,10 +77,10 @@
       <div class="collapse" id="ui-basic2">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item">
-            <a class="nav-link" href="#">출고 예정</a>
+            <a class="nav-link" href="OutScheduleList.out">출고 예정</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">출고 처리</a>
+            <a class="nav-link" href="OutScheduleProductList.out">출고 처리</a>
           </li>
         </ul>
       </div>

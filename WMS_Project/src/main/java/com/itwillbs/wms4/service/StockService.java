@@ -20,7 +20,11 @@ public class StockService {
 	public List<Stock_listVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
 		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
 	}
-
+	
+	public List<Stock_listVO> getProcdStockList(int product_cd, String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.selectProcdStockList(product_cd, searchType, keyword, startRow, listLimit);
+	}
+	
 	public int getStockListCount(String keyword) {
 		return mapper.selectStockListCount(keyword);
 	}
