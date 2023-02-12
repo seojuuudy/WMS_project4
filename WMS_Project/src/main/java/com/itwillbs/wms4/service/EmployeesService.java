@@ -30,4 +30,9 @@ public class EmployeesService {
 		return mapper.selectPriv_cd(emp_email);
 	}
 
+	// 사이드바 사진 출력
+	public String getPhoto(String emp_email) {
+		return mapper.selectPhoto(emp_email);
+	}
+
 }

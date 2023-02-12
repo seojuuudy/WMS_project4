@@ -6,7 +6,14 @@
     <li class="nav-item nav-profile border-bottom">
       <a href="#" class="nav-link flex-column">
        <div class="nav-profile-image">
-         <img src="${pageContext.request.contextPath }/resources/assets/images/user-Icon.png" alt="profile" /> <!-- 사진 있으면 뜨고 없으면 기본 이미지-->
+      		<c:choose>
+				<c:when test="${empty sessionScope.sId }">
+        			<img src="${pageContext.request.contextPath }/resources/assets/images/user-Icon.png" alt="profile" /> <!-- 사진 있으면 뜨고 없으면 기본 이미지-->
+				</c:when>
+				<c:otherwise>
+			        <img src="${pageContext.request.contextPath }/resources/upload/${sessionScope.photo}" alt="image" />
+		        </c:otherwise>
+	        </c:choose>
          <!--change to offline or busy as needed-->
        </div>
        <div class="nav-profile-text d-flex ml-0 mb-3 flex-column">

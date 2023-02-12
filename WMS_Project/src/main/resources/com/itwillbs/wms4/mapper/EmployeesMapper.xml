@@ -31,4 +31,11 @@
 			WHERE EMP_EMAIL = #{emp_email}
 	</select>
 	
+	<!-- 사이드바 사진 출력 -->
+	<select id="selectPhoto" resultType="String">
+		SELECT photo
+			FROM employees
+			WHERE EMP_EMAIL = #{emp_email}
+	</select>
+	
 </mapper>
