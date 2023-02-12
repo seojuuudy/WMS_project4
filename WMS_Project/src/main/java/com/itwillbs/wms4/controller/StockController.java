@@ -217,10 +217,10 @@ public class StockController {
 	         stock_control.setProduct_name(control.getProduct_name_arr()[i]);
 	         
 	         // 상세 위치 문자열을 찾기 위해 "창고 구역 위치" 전체를 갖고 와서 자름
-	         System.out.println("loc_in_area을 찾기!: " + control.getWh_loc_in_area_arr()[i].isEmpty());
+//	         System.out.println("loc_in_area을 찾기!: " + control.getWh_loc_in_area_arr()[i].isEmpty());
 	         
 	         String loc_in_area = "";
-	         if(control.getWh_loc_in_area_arr()[i].isEmpty() == false) {
+	         if(control.getWh_loc_in_area_arr().length != 0) {
 	            loc_in_area = control.getWh_loc_in_area_arr()[i];
 	            loc_in_area.lastIndexOf(" ");
 	            

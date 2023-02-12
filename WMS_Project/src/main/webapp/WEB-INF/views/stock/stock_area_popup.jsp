@@ -38,9 +38,8 @@
 			
 			$("button[name=selectBtn]").on("click", function goRegistPage() {
 				let index = ${index };
-				
 				$("#moving_stock_cd_arr" + index, opener.document).val(0);
-				$("#wh_loc_in_area_arr" + index, opener.document).val(
+				$("#moving_wh_loc_in_area_arr" + index, opener.document).val(
 						$(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
 						+ $(this).parents("tr").find(".wh_loc_in_area").text());
