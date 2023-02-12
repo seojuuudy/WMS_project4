@@ -113,7 +113,7 @@ public class IncomeController {
 					// Service_cl 객체의 getBoardList() 메서드를 호출하여 게시물 목록 조회
 					// => 파라미터 : 검색타입, 검색어, 시작행번호, 목록갯수   
 					// => 리턴타입 : List<ClientVO> clientList
-					List<ClientVO> clientList = service_cl.getBoardList(searchType, keyword, startRow, listLimit);
+					List<ClientVO> clientList = service_cl.getClientList(searchType, keyword, startRow, listLimit);
 					// ---------------------------------------------------------------------------
 					// 페이징
 					int listCount = service_cl.getClientListCount(searchType, keyword);
@@ -218,7 +218,7 @@ public class IncomeController {
 				List<ProductVO> productList = service_pr.getProductList(searchType, keyword, startRow, listLimit);
 				
 				int listCount = service_pr.getProductListCount(searchType, keyword);
-				int pageListLimit = 10;
+				int pageListLimit = 20;
 				int maxPage = listCount / listLimit + (listCount % listLimit != 0 ? 1 : 0);
 				int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
 				int endPage = startPage * pageListLimit - 1;

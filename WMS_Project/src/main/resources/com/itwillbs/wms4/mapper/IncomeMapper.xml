@@ -229,14 +229,12 @@
 	
 	<!-- 진행 상태 변경(완료) -->
  	<update id="updateComplete1">
- 		UPDATE stock s
-			JOIN product p USING(product_cd) 
-			JOIN in_schedule_per_product ip USING(stock_cd)
+ 		UPDATE V_inbound_product
 			SET in_complete = "1"
 			WHERE  
- 				ip.in_schedule_cd = #{in_schedule_cd}
-	 			AND p.product_cd = #{product_cd}
- 	 			AND ip.in_schedule_qty - #{in_qty} = 0
+ 				in_schedule_cd = #{in_schedule_cd}
+	 			AND product_cd = #{product_cd}
+ 	 			AND in_schedule_qty - in_qty = 0
  	</update> 
  	
  	<!-- 구역명 문자열로 cd 조회 -->
