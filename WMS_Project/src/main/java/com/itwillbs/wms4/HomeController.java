@@ -33,7 +33,7 @@ public class HomeController {
 				
 			return "main";
 		} else { // 로그인X
-			return "login_form";
+			return "loginXmain";
 		} // ~~~~ if-else end~~~~
 	
 	}

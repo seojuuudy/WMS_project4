@@ -41,8 +41,8 @@
               <h3 class="page-title">기본등록</h3>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-<!--                   <li class="breadcrumb-item"><a href="#">UI Elements</a></li> -->
-<!--                   <li class="breadcrumb-item active" aria-current="page"> Typography </li> -->
+                  <li class="breadcrumb-item active" aria-current="page"> 기본등록 </li>
+                  <li class="breadcrumb-item"><a href="MainWMSList"> WMS </a></li>
                 </ol>
               </nav>
             </div><!-- div 5 끝 -->

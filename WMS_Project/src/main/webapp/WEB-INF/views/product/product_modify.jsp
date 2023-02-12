@@ -69,10 +69,12 @@ function findClient() {
 
 // 삭제 확인창
 function confirmDelete() {
-	alert("product code : " + ${productInfo.product_cd});
+// 	alert("product code : " + ${productInfo.product_cd});
 	let result = confirm("품목을 삭제하시겠습니까?");
 	if(result) {
 		location.href = "ProductDelete.pr?product_cd=" + ${productInfo.product_cd};
+		alert("삭제가 완료되었습니다. ");
+		
 	}
 }
 // 이미지 삭제
