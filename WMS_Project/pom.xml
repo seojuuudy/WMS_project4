@@ -100,6 +100,13 @@
 		    <artifactId>json</artifactId>
 		    <version>20220924</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.10.1</version>
+		</dependency>
 				
 		<!-- 6. SQL 로그에 사용할 log4jdbc-log4j2 라이브러리 -->
 		<!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1 -->
