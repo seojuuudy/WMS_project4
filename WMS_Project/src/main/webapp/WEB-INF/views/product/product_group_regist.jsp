@@ -73,7 +73,7 @@ $(function() {
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">품목그룹명(대)</label>
+                      <label class="col-sm-3 col-form-label">품목 그룹명(대)</label>
                       <div class="col-sm-9">
                         <input type="text" name="product_group_top_name" id="inputGroupBig" class="form-control" required="required"/>
                       </div>
