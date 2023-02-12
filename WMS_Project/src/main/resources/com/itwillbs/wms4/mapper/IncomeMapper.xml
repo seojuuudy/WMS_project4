@@ -145,16 +145,16 @@
 		<if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('in_schedule_cd')">
-					AND WHERE in_schedule_cd LIKE '%${keyword}%'
+					AND in_schedule_cd LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('cust_name')">
-					AND WHERE cust_name LIKE '%${keyword}%'
+					AND cust_name LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('product_name')">
-					AND WHERE product_name LIKE '%${keyword}%'
+					AND product_name LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('in_date')">
-					AND WHERE in_date LIKE '%${keyword}%' 
+					AND in_date LIKE '%${keyword}%' 
 				</when>
 			</choose>		
 		</if>

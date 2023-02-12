@@ -95,7 +95,7 @@
 		
 	});
 		function prpop(ii) {
-			alert(ii);
+// 			alert(ii);
 // 			var prIndex = this.id.replace("product_cd", "");
 // 			var btnVal = $("#product_cd" + prIndex).val();
 // 			var pr = $("#product_cd" + prIndex).val();

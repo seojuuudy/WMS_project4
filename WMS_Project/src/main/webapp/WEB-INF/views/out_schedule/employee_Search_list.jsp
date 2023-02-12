@@ -91,9 +91,6 @@
                             <th>사원명</th>
                             <th>부서</th>
                             <th>직급</th>
-                            <th>연락처</th>
-                            <th>E-mail</th>
-                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -111,12 +108,6 @@
                             <td>${emp.emp_name}</td>
                             <td>${emp.dept_name}</td>
                             <td>${emp.grade_name}</td>
-                            <td>${emp.emp_tel}</td>
-                            <td>${emp.emp_email}</td>
-                            <td>
-                         		<button type="button" class="btn btn-primary btn-rounded i" onclick="location.href='Detail.hr?emp_email=${emp.emp_email}'">상세조회</button>
-                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="location.href='Update.hr?emp_email=${emp.emp_email}'">수정</button>
-                            </td>
                           </tr>
                         </c:forEach>
                          
@@ -124,7 +115,6 @@
                       </table>
                     </div>
 			        <div class="template-demo" style="text-align: right;">
-	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="location.href='Regist.hr'">신규등록</button>
            			</div>
          
 				         <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->

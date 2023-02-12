@@ -79,7 +79,7 @@
 	
 	<div id="InsertPageArea">
 		 			
-		 <a href="#" >
+		 <a href="OutScheduleList.out" >
 			 <i class="mdi mdi-export"></i>
 			출고관리
 		 </a>

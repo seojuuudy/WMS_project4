@@ -37,5 +37,13 @@ public interface ReleaseMapper {
 			@Param("product_cd") String product_cd,
 			@Param("outqty") String outqty);
 
+	public List<OutScheduleListVO> selectOutScheduleSum();
+
+	public List<OutScheduleListVO> selectOutScheduleCount();
+
+	public int updateStockQty(@Param("ospp") Out_schedule_per_productVO ospp);
+
+	public int updateOutQty(@Param("ospp") Out_schedule_per_productVO ospp);
+
 
 }

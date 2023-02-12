@@ -59,18 +59,84 @@
 		console.log(sum);
 		$("#sum_out_schedule_qty").text(sum);
 	});	
-	function submitAndClose() {
-		document.forms[0].submit();
-		window.close();
-	}
-	function stockpop(product_cd, ){
+	
+	function stockpop(product_cd ){
 		let url = "StockSearchList.out?product_cd=" + product_cd;
 		let pop = window.open(url,'searchList','location=no,toolbar=no,width=700, height=700, left=0, top=0,resizable=yes,scrollbars=yes');
 		}
 	function set_st(stock_cd){
-		document.getElementById("out_qty").value = stock_cd;
-		objWindow.close();
+// 		let stockCdElements = document.getElementsByName("stock_cd");
+// 		for (let i = 0; i < stockCdElements.length; i++) {
+// 		  stockCdElements[i].value = stock_cd;
+// 		}
+// 		console.log(document.getElementsByName("stock_cd").length);
+// 		for(var i = 0; i <document.getElementsByName("stock_cd").length; i++ ){
+// 			document.getElementById("stock_cd")[i].value = stock_cd;
+			
+// 		}
+		let stockCdElements = document.getElementsByName("stock_cd");
+		for (let i = 0; i < stockCdElements.length; i++) {
+			  let stockCdId = "stock_cd" + i;
+			  let stockCdElement = document.getElementById(stockCdId);
+			  if (stockCdElement) {
+			    stockCdElement.value = stock_cd;
+			  }
+		}
+// 		objWindow.close();
 	}
+    $(function (){
+
+
+    });
+	$(function() {
+		// 거래처 코드 중복확인
+	   $("#releaseBtn").on("click", function() {
+	        $(".out_schedule_cd").length;
+	        $(".out_qty").length;
+	        $(".stock_cd").length;
+			var out_schedule_cdArr = new Array();
+			var out_qtyArr = new Array();
+			var stock_cdArr = new Array();
+			window.close();
+	        for(let i=0; i<$(".out_schedule_cd").length; i++){
+	        	var out_schedule_cd = $(".out_schedule_cd").eq(i).text();
+	        	var out_qty = $(".out_qty").eq(i).text();
+	        	var stock_cd = $(".stock_cd").eq(i).val();
+// 				console.log("stock_cd값" + stock_cd);
+// 	        	alert(stock_cd);
+				out_schedule_cdArr.push({"out_schedule_cd":out_schedule_cd});
+				out_schedule_cdArr.push({"out_qty":out_qty});
+				out_schedule_cdArr.push({"stock_cd":stock_cd});
+// 				+ "" + stock_cd);
+// 				out_qtyArr.push(out_qty);
+// 				stock_cdArr.push(stock_cd);
+	        }
+// 				console.log("r값" + out_schedule_cdArr);
+// 				console.log("d값" + out_qtyArr);
+// 				console.log("s값" + stock_cdArr);
+		
+// 		    JSONArray array = new JSONArray(input);
+// 		    for (int i = 0; i < array.length(); i++) {
+// 		        String item = array.getString(i);
+		        // Do something with the item
+// 	         $.ajax({
+// 	        	type:"POST",
+// 	            url:"ControlOutqty.out",
+// 	            dataType: "text", // 응답 데이터 타입
+// 				contentType: "application/json", // 요청 시 전송 데이터 타입
+// 				data: JSON.stringify(out_schedule_cdArr), 
+// 	            dataType: "text",
+// 		          success: function(result){
+// 	                if(result == "true"){
+// 		            	alert("사용가넝");
+// 						window.close();
+// 	                } else {
+// 		            	alert("이미 존재합니다");
+// 	                }
+// 	              }
+// 	         }); // ajax
+	 	  });
+	   });
 	</script>
 	
   </head>
@@ -87,7 +153,7 @@
 		<!-- table 영역 -->
       	<div class="col-lg-12 grid-margin stretch-card">
            <div class="card">
-				<form action="ControlOutqty.out" method="post">
+				<form action="ControlOutqty.out" method="post" id ="form" >
               	<div class="card-body">
                     <h4 class="card-title">출고</h4>
                     <p class="card-description">일자
@@ -108,13 +174,13 @@
                           <!-- 반복문 들어갈 자리 -->
                         <c:forEach var="processList" items="${processList }" varStatus="status">
                           <tr>
-                            <td>${processList.out_schedule_cd}</td>
+                            <td class="out_schedule_cd" id = "out_schedule_cd${status.index }" >${processList.out_schedule_cd}</td>
                             <td>${processList.product_name}[${processList.size_des }]</td>
                             <td class ="out_qty" id="outqty${status.index }">
 <%--                           <td  class ="out_qty" value="${param.outqty }">${processList.out_qty} --%>
                              </td>   
                              <td>
-                                <input type="text" name="out_qty" id ="out_qty" class="form-control" onclick="stockpop(${processList.product_cd})" />
+                                <input type="text" name="stock_cd" id ="stock_cd${status.index}" class="stock_cd" onclick="stockpop(${processList.product_cd})" />
                              </td>
 <%--                              <td>${processList.stock_cd }</td> --%>
 <%--                             <td>${processList.stock_qty }</td> --%>
@@ -137,7 +203,8 @@
                       </table>
 			        <div class="template-demo" style="text-align: right;">
 <!-- 	           			<input type="submit" class="btn btn-primary btn-rounded btn-fw" value="출고"> -->
-	           			<button type="button" class="btn btn-primary btn-rounded btn-fw" onclick="submitAndClose()">출고</button>
+	           			<button type="button" id="releaseBtn" class="btn btn-primary btn-rounded btn-fw" >출고</button>
+<!-- 	           			<button type="button" id="releaseBtn" class="btn btn-primary btn-rounded btn-fw" onclick="submitAndClose()">출고</button> -->
            			</div>
                     </div>
        	  </form> 

@@ -49,11 +49,25 @@
   		SELECT *
   			FROM outScheduleList
   			GROUP BY out_schedule_cd
+  			ORDER BY out_schedule_cd
   			LIMIT 
 			#{startRow}
 			, #{listLimit}
   </select>
-  
+  <select id="selectOutScheduleSum" resultType="com.itwillbs.wms4.vo.OutScheduleListVO">
+		SELECT SUM(out_schedule_qty) AS out_schedule_qty, out_schedule_cd AS out_schedule_cd
+			FROM outScheduleList
+			GROUP BY out_schedule_cd
+			ORDER BY out_schedule_cd DESC
+	</select>
+	
+	<select id="selectOutScheduleCount" resultType="com.itwillbs.wms4.vo.OutScheduleListVO">
+		SELECT COUNT(*) AS OutSchePerCnt, out_schedule_cd AS out_schedule_cd
+         FROM outScheduleList
+         GROUP BY out_schedule_cd
+         ORDER BY out_schedule_cd DESC
+	</select>
+	
   <update id="updateComplete">
   	<selectKey keyProperty="out_complete" resultType="int">
   		SELECT out_complete
@@ -105,4 +119,26 @@
 <!--   		= #{out_schedule_cd} -->
 <!--   			AND	out_qty = #{out_qty}  -->
 <!--   </select> -->
+
+	<update id="updateOutQty">
+ 		UPDATE out_schedule_per_product
+ 			SET 
+ 				out_qty = (out_qty + #{out_qty})
+ 			WHERE
+ 				out_schedule_cd = #{out_schedule_cd}
+				AND stock_cd = #{stock_cd}
+ 	</update>
+ 	<update id="updateStockQty">
+		<selectKey resultType="int" order="BEFORE" keyProperty="stock_qty">
+			SELECT stock_qty 
+				FROM stock 
+				WHERE stock_cd = #{ospp.stock_cd}
+		</selectKey>
+		UPDATE 
+			stock
+			SET 
+				stock_qty = #{stock_qty} - #{ospp.out_qty}
+			WHERE
+				stock_cd = #{ospp.stock_cd}
+	</update>
 </mapper>

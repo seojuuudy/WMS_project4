@@ -97,7 +97,7 @@
 						<li class="nav-item"><a class="nav-link"
 							href="InboundScheduleList.in">입고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="OutScheduleProductList.out">출고 관리</a></li>
+							href="OutScheduleList.out">출고 관리</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="Stock.st">재고 조정</a></li>
 					</ul>
