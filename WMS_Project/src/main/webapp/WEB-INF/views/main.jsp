@@ -131,7 +131,7 @@
      
      
   </head>
-  <body onload="build(); showClock()">
+  <body onload="build()">
     <div class="container-scroller">
       <!-- 사이드바 -->
       <jsp:include page="partials/sidebar.jsp"></jsp:include>
