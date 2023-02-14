@@ -34,14 +34,50 @@
   </head>
 <script src="http://code.jquery.com/jquery-3.6.3.min.js"></script>
 <script type="text/javascript">
-<%--=============================================220210 영준 팝업수정창 수정본================================================================================================= --%>
-window.onunload = function(){
-	window.opener.location.reload(true);
-	window.close();
-};
-<%--=============================================220210 영준 팝업수정창 수정본================================================================================================= --%>
-
-
+$(function() {
+	  $("#updateParent").click(function() {
+		var index = ${param.index}; 
+		  
+		alert("수정 완료");
+	    var out_date = $("#out_date").val();
+	    var out_schedule_qty = $("#out_schedule_qty").val();
+	    var out_qty = $("#out_qty").val();
+	    var remarks = $("#remarks").val();
+	    var out_schedule_cd = $("#out_schedule_cd").val();
+	    
+	    window.opener.$("#out_date" + index).text(out_date);
+	    window.opener.$("#out_schedule_qty" + index).text(out_schedule_qty);
+	    window.opener.$("#out_qty" + index).text(out_qty);
+	    window.opener.$("#remarks" + index).text(remarks);
+// 	    window.opener.$("#out_schedule_cd" + index).text(out_schedule_cd);
+	    window.opener.focus();
+	    window.close();
+	    $.ajax({
+	    	  type: "POST",
+	    	  url: "OutUpdatePro.out",
+	    	  data: {
+	    	    "out_date": out_date,
+	    	    "out_schedule_qty": out_schedule_qty,
+	    	    "out_qty": out_qty,
+	    	    "remarks": remarks,
+	    	    "out_schedule_cd": out_schedule_cd
+	    	  },
+	    	  success: function(result) {
+	    	    if (result > 0) {
+	    	      console.log("Value successfully stored in the database.");
+	    	      alert("수정완료");
+		           window.opener.location.reload();
+		           self.close();
+	    	    } else {
+	    	      console.error("An error occurred while storing the value in the database:", result);
+	    	    }
+	    	  },
+	    	  error: function(xhr, status, error) {
+	    	    console.error("An error occurred while making the AJAX request:", error);
+	    	  }
+	    	});
+	  });
+	});
 </script>
   <body>
         <!-- 본문 영역 -->
@@ -77,7 +113,7 @@ window.onunload = function(){
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">품목명[규격]</label>
                       <div class="col-sm-9">
-                      	<input type="text" class="form-control" value="${out.product_cd }" name="product_cd" id="product_cd" readonly="readonly"><br>
+                      	<input type="text" class="form-control" value="${out.product_name }[${out.size_des }]" name="product_name" id="product_name" readonly="readonly"><br>
                       </div>
                     </div>
                   </div>
@@ -100,14 +136,14 @@ window.onunload = function(){
                     </div>
                   </div>
                   
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-3 col-form-label">출고지시수량</label>
-                      <div class="col-sm-9">
-                        <input type="number" class="form-control" value="${out.out_qty }" name="out_qty" id="out_qty"/>
-                      </div>
-                    </div>
-                  </div>
+<!--                   <div class="col-md-6"> -->
+<!--                     <div class="form-group row"> -->
+<!--                       <label class="col-sm-3 col-form-label">출고지시수량</label> -->
+<!--                       <div class="col-sm-9"> -->
+<%--                         <input type="number" class="form-control" value="${out.out_qty }" name="out_qty" id="out_qty"/> --%>
+<!--                       </div> -->
+<!--                     </div> -->
+<!--                   </div> -->
                 
                   <div class="col-md-6">
                     <div class="form-group row">
@@ -119,7 +155,9 @@ window.onunload = function(){
                   </div>
                   
                   <div class="template-demo" style="text-align: center;">
-	                  <input type="submit" class="btn btn-primary mr-2" value="수정하기"/>
+	                  <input type="button" class="btn btn-primary mr-2" value="수정하기" id="updateParent"/>
+<%--    	                  <button type=button class="btn btn-primary mr-2" onclick="OutModify('${out.out_schedule_cd }', '${out.out_date }')">수정</button> --%>
+	                  
 	                  <input type="button" class="btn btn-light" onclick="close();" value="취소">
                   </div>
                   </form>

@@ -13,15 +13,27 @@
 			WHERE EMP_EMAIL = #{emp_email}
 	</select>
 	
-	<select id="selectEmployee" resultType="com.itwillbs.wms4.vo.EmployeesVO">
-		SELECT * 
-			FROM employees
+	<select id="selectEmployee" resultType="com.itwillbs.wms4.vo.Employee_detailVO">
+		SELECT e.emp_num, e.emp_name, e.dept_cd, e.emp_tel, e.emp_dtel, e.emp_email,
+				e.hire_date, e.photo, d.dept_name, g.grade_name
+		FROM employees e
+		JOIN departments d
+		ON e.dept_cd = d.dept_cd
+		JOIN grade g
+		ON e.grade_cd = g.grade_cd
 			WHERE EMP_EMAIL = #{sId}
 	</select>
 	
 	<!-- 해당 회원의 권한 조회 -->
 	<select id="selectPriv_cd" resultType="String">
 		SELECT priv_cd
+			FROM employees
+			WHERE EMP_EMAIL = #{emp_email}
+	</select>
+	
+	<!-- 사이드바 사진 출력 -->
+	<select id="selectPhoto" resultType="String">
+		SELECT photo
 			FROM employees
 			WHERE EMP_EMAIL = #{emp_email}
 	</select>
