@@ -105,16 +105,16 @@ $(document).ready(function() {
               	<div class="card-body">
                     <h4 class="card-title"><a href="OutScheduleList.out">출고 예정 목록</a></h4>
                     <p class="card-description">Out process list</p>
-						<form action="OutScheduleList.out">
+						<form action="OutScheduleProductList.out">
 								<!-- 검색 타입 추가 -->
 								<div class="form-group">
 		                      		<div class="input-group">
 		                        		<div class="input-group-prepend">
 				                         	<select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle"
 				                         	 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<option value="os.out_schedule_cd" <c:if test="${param.searchType eq 'os.out_schedule_cd'}">selected</c:if>>출고예정번호</option>
-												<option value="c.cust_name" <c:if test="${param.searchType eq 'c.cust_name'}">selected</c:if>>보낸곳</option>
-												<option value="p.product_cd" <c:if test="${param.searchType eq 'p.product_cd'}">selected</c:if>>품목명</option>
+												<option value="out_schedule_cd" <c:if test="${param.searchType eq 'out_schedule_cd'}">selected</c:if>>출고예정번호</option>
+												<option value="cust_name" <c:if test="${param.searchType eq 'cust_name'}">selected</c:if>>보낸곳</option>
+												<option value="product_name" <c:if test="${param.searchType eq 'product_name'}">selected</c:if>>품목명</option>
 					                        </select>
 		                        		</div>
 											<input type="text" class="form-control" name="keyword" value="${param.keyword }">
@@ -137,28 +137,30 @@ $(document).ready(function() {
                             <th>적요</th>
                           </tr>
                         </thead>
-<%--=============================================220210 영준 팝업수정창 수정본================================================================================================= --%>
                         <tbody>
                         
                         <c:forEach var="out" items="${outList }" varStatus="status">
-                          	<tr>
-                          	<td>
-                          	<input type="checkbox" name ="checkbox" id ="checkbox_${status.index }" class="selected" value="${out.out_schedule_cd }/${out.product_cd}/${out.out_not_qty }" > 
-                          	</td>
-                            <td><a href="OutModify.out?out_schedule_cd=${out.out_schedule_cd }&pageNum=${pageNum}&cust_name=${cust_name}" 
-								onclick="window.open(this.href, '_blank', 'width=650, height=800'); return false;">
-                            <div id="out_schedule_cd${status.index }">${out.out_schedule_cd }</div></a></td>
-<!-- 	                          	출고예정번호(yyyy/mm/dd - nn) 클릭 시 해당 출고품목 수정화면이동  -->
-<%--=============================================220210 영준 팝업수정창 수정본================================================================================================= --%>
-                            <td>${out.cust_name }</td>
-                            <td>${out.product_name }</td>
-                            <td>${out.out_date }</td>
-                            <td>${out.out_schedule_qty }</td>
-                            <td id ="out_not_qty${status.index }">${out.out_not_qty }</td>
-<%--                             <td><input type="number" value="${out.out_qty }" id ="out_qty${status.index }" > </td> --%>
-                            <td><input type="number" value="0" id ="out_qty${status.index }" > </td>
-                            <td>${out.remarks }</td>
-   						  </tr>
+                        	<input type="hidden" id="product_cd${status.index}" value="${out.product_cd}">
+                       		<tr>
+	                          	<td>
+	                          		<input type="checkbox" name ="checkbox" id ="checkbox_${status.index }" class="selected" value="${out.out_schedule_cd }/${out.product_cd}/${out.out_not_qty }" > 
+	                          	</td>
+	                            <td>
+	                            	<a href="OutModify.out?out_schedule_cd=${out.out_schedule_cd }&pageNum=${pageNum}&=_date=${out.out_date}&out_schedule_qty=${out.out_schedule_qty}&out_qty=${out.out_qty}&remarks=${out.remarks}&index=${status.index}&product_cd=${out.product_cd}" 
+									onclick="window.open(this.href, '_blank', 'width=650, height=800'); return false;">
+	                            <div id="out_schedule_cd${status.index }">${out.out_schedule_cd }</div>
+	                            	</a>
+	                            </td>
+	<!-- 	                          	출고예정번호(yyyy/mm/dd - nn) 클릭 시 해당 출고품목 수정화면이동  -->
+	                            <td>${out.cust_name }</td>
+	                            <td>${out.product_name }</td>
+	                            <td id="out_date${status.index}">${out.out_date }</td>
+	                            <td id="out_schedule_qty${status.index}">${out.out_schedule_qty }</td>
+	                            <td id ="out_not_qty${status.index }">${out.out_not_qty }</td>
+	<%--                             <td><input type="number" value="${out.out_qty }" id ="out_qty${status.index }" > </td> --%>
+	                            <td><input type="number" value="0" id ="out_qty${status.index }" > </td>
+	                            <td id="remarks${status.index}">${out.remarks }</td>
+   						  	</tr>
                         </c:forEach>
                          
                         </tbody>

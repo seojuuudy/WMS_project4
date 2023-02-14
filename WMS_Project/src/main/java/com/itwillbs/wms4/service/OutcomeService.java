@@ -1,5 +1,6 @@
 package com.itwillbs.wms4.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,24 @@ public class OutcomeService {
 	}
 	
 	// 출고 항목 수정폼
-	public List<Out_schedule_per_productVO> getOutModify(String out_schedule_cd) {
-		return mapper.getOutModify(out_schedule_cd);
+	public List<Out_schedule_per_productVO> getOutModify(String out_schedule_cd, int product_cd) {
+		return mapper.getOutModify(out_schedule_cd, product_cd);
 	}
 
-	// 출고 항목 수정 비즈니스 로직
-	public int OutUpdate(Out_schedule_per_productVO outProductVO) {
-		return mapper.OutUpdate(outProductVO);
+	public int OutUpdate(Out_schedule_per_productVO outProductVO, int product_cd, Date out_date, 
+						int out_schedule_qty, int out_qty,
+						String out_schedule_cd, String remarks) {
+		
+		System.out.println("아웃서비스");
+		System.out.println("product_cd: " + product_cd);
+		System.out.println("out_date: " + out_date);
+		System.out.println("out_schedule_qty: " + out_schedule_qty);
+		System.out.println("out_qty: " + out_qty);
+		System.out.println("remarks: " + remarks);
+		System.out.println("out_schedule_cd: " + out_schedule_cd);
+		return mapper.updateOutList(outProductVO, product_cd, out_date, out_schedule_qty, out_qty, out_schedule_cd, remarks);
 	}
+
 	
 	
 	
