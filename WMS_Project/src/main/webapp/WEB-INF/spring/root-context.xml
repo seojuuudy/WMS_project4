@@ -10,9 +10,9 @@
 <!-- 1. HikariCP 를 활용한 DB 접속 정보 설정을 위해 HikariConfig 객체 설정(JDBC 기본 설정) -->
 <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
    <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-   <property name="jdbcUrl" value="jdbc:log4jdbc:mysql://itwillbs-rds-class5-team4.cwyqfeylunq5.ap-northeast-2.rds.amazonaws.com:3306/itwillbs_rds_class5_team4"></property>
-   <property name="username" value="root"></property>
-   <property name="password" value="class50823"></property>
+   <property name="jdbcUrl" value="jdbc:log4jdbc:mysql://db.itwillbs.dev:3306/class5_220823_team4_c"></property>
+   <property name="username" value="class5_220823_team4"></property>
+   <property name="password" value="1234"></property>
 </bean>
 
 <!-- 2. HikariCP 의 DataSource 객체 생성을 위해 HikariConfig 객체 전달 -->
