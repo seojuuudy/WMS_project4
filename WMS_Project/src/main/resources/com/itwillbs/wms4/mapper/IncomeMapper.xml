@@ -205,8 +205,6 @@
 		UPDATE in_schedule_per_product ip, wh_area wa, wh_location wl, product p, stock s
 			SET ip.in_qty = in_qty + #{in_qty}
 		    	, ip.stock_cd = #{stock_cd}
-			    , wl.wh_area_cd = #{wh_area_cd}
-			    , s.wh_loc_in_area_cd = #{wh_loc_in_area_cd}
 			WHERE 
 				ip.product_cd = p.product_cd
 	 			AND p.product_cd = s.product_cd
@@ -296,13 +294,16 @@
 			JOIN product p USING(product_cd)
 			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
 	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+	 	WHERE s.product_cd = ${product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('stock_cd')">
-					WHERE s.stock_cd LIKE '%${keyword}%'
+<!-- 					WHERE s.stock_cd LIKE '%${keyword}%' -->
+					AND s.stock_cd LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('product_name')">
-					WHERE p.product_name LIKE '%${keyword}%'
+<!-- 					WHERE p.product_name LIKE '%${keyword}%' -->
+					AND p.product_name LIKE '%${keyword}%'
 				</when>
 			</choose>		
 		</if>
@@ -317,13 +318,16 @@
 			JOIN product p USING(product_cd)
 			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
 	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+	 	WHERE s.product_cd = ${product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('stock_cd')">
-					WHERE s.stock_cd LIKE '%${keyword}%'
+<!-- 					WHERE s.stock_cd LIKE '%${keyword}%' -->
+					AND s.stock_cd LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('product_name')">
-					WHERE p.product_name LIKE '%${keyword}%'
+<!-- 					WHERE p.product_name LIKE '%${keyword}%' -->
+					AND p.product_name LIKE '%${keyword}%'
 				</when>
 			</choose>		
 		</if>

@@ -634,16 +634,20 @@ public class IncomeController {
 	public String searcheStockcd(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum,
-			@RequestParam(defaultValue = "1") int index) {
+			@RequestParam(defaultValue = "1") int index,
+			@RequestParam(defaultValue = "1") int product_cd
+			) {
 		
 		int listLimit = 10;
 		int startRow = (pageNum-1) * listLimit;
 		
 		// 재고 목록 조회
-		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
+//		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
+		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit, product_cd);
 		
 		// 재고 목록 갯수 조회
-		int listCount = service.getStockListCount(searchType, keyword);
+		int listCount = service.getStockListCount(searchType, keyword, product_cd);
+//		int listCount = service.getStockListCount(searchType, keyword, product_cd);
 		int pageListLimit = 8;
 		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
