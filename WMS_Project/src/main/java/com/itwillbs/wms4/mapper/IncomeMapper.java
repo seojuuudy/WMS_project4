@@ -114,12 +114,16 @@ public interface IncomeMapper {
 			@Param("searchType") String searchType, 
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
-			@Param("listLimit") int listLimit);
+			@Param("listLimit") int listLimit, 
+			@Param("product_cd") int product_cd
+			);
 
 	// 재고 목록 갯수 조회
 	int selectStockListCount(
 			@Param("searchType") String searchType, 
-			@Param("keyword") String keyword);
+			@Param("keyword") String keyword, 
+			@Param("product_cd") int product_cd
+			);
 
 	// 품목 목록 조회
 	List<V_Inbound_ProductVO> selectProductList(

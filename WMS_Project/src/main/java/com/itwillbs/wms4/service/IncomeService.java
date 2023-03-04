@@ -126,13 +126,16 @@ public class IncomeService {
 	
 	// -------------------- 팝업창 검색 ---------------
 	// 재고 목록 조회
-	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
-		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
+//	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
+//		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
+//	}
+	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit, int product_cd) {
+		return mapper.selectStockList(searchType, keyword, startRow, listLimit, product_cd);
 	}
 
 	// 재고 목록 갯수 조회
-	public int getStockListCount(String searchType, String keyword) {
-		return mapper.selectStockListCount(searchType, keyword);
+	public int getStockListCount(String searchType, String keyword, int product_cd) {
+		return mapper.selectStockListCount(searchType, keyword, product_cd);
 	}
 
 	// 품목 목록 조회

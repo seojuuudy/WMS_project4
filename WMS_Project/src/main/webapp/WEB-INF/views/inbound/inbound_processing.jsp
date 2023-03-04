@@ -68,16 +68,17 @@
     } // function
     
 	<!-- 재고코드 검색 팝업 -->
- 	function openPopup1(index) {
+//  	function openPopup1(index) {
+ 	function openPopup1(index, product_cd) {
  	    var _width = '650';
  	    var _height = '380';
- 	    var pindex = index;
  	 
  	    // 팝업을 가운데 정렬하기 위해 값 구하기
  	    var _left = Math.ceil(( window.screen.width - _width )/2);
  	    var _top = Math.ceil(( window.screen.height - _height )/2); 
  	 
- 	    window.open('SearchStockcd?index='+index, '재고코드 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+//  	    window.open('SearchStockcd?index='+index, '재고코드 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+ 	    window.open('SearchStockcd?index='+index+'&product_cd='+product_cd, '재고코드 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	}
  	
  	<!-- 구역명_선반위치 검색 팝업 -->
@@ -156,7 +157,8 @@
                       			<div class="input-group">
                         			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" onclick="new_Stockcd(${status.index })">
                         		<div class="input-group-append">
-                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index })">검색</button>
+<%--                           			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index })">검색</button> --%>
+                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index }, ${inproduct.product_cd})">검색</button>
                         		</div>
                     			</div>
                      		 </div></td>

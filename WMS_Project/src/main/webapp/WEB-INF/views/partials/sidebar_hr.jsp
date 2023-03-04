@@ -69,12 +69,6 @@
           <li class="nav-item">
             <a class="nav-link" href="List.hr">사원 목록</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Dropdowns</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Typography</a>
-          </li>
         </ul>
       </div>
     </li>
