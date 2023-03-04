@@ -38,7 +38,7 @@
         	$("#locationcd"+index, opener.document).val((area+"_"+location)); // 구역코드_위치코드
 //         	window.opener.updateStockcd(stock_cd, index);
 			window.close();
-        SS}
+        }
         
 	</script>
 	<!-- jquery -->
@@ -68,10 +68,9 @@
                         </div>
                        	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
-                          <input type="hidden" name="index" class="btn btn-sm btn-primary" value="${index}" />
+                          <input type="hidden" name="index" value="${index}" />
                         </div>
                     </div>
-						</form>
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -85,6 +84,7 @@
                         <tbody>
                         
                         <c:forEach var="stock" items="${stockList }" varStatus="status">
+                          <input type="hidden" name="product_cd" value="${stock.product_cd}" />
                           <tr>
                           	<td id="cstock_cd${status.count }"><a href="javacsript:void(0)" onclick="send_stockcd(${status.count })">${stock.stock_cd}</a></td>
 							<td>${stock.product_name}</td>
@@ -98,6 +98,7 @@
                         </tbody>
                       </table>
                     </div>
+				</form>
          
 				         <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->
 				    

@@ -289,7 +289,7 @@
 	
 	<!-- 재고 목록 조회 -->
 	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.V_StockinfoVO">
-		SELECT s.stock_cd, p.product_name, wh_area, wh_loc_in_area
+		SELECT s.stock_cd, p.product_name, p.product_cd, wh_area, wh_loc_in_area
 			FROM stock s
 			JOIN product p USING(product_cd)
 			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd

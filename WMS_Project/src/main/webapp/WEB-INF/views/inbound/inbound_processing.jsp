@@ -30,13 +30,19 @@
 	$("document").ready(function(){
 		
 	 $(document).on("click","#btn", function(){
- 		$("#processform").submit();
- 		  
- 		alert("입고처리 완료되었습니다.")
- 		setTimeout(function() { // 데이터 전송을 위해 시간 설정
-	    	opener.location.reload();
- 			 self.close();
-           }, 100);
+		 if($('input[id^="in_qty"]').val() <= 0) { // 입고지시수량이 0 이하이면 알림창
+			 alert("입고지시수량을 입력해주세요!")
+		 } else if(!$('input[id^="locationcd"]').val()) { // 위치를 선택하지 않으면 알림창
+			 alert("위치를 선택해주세요!")
+	   	 } else {
+	 		$("#processform").submit();
+	 		  
+	 		alert("입고처리 완료되었습니다.")
+	 		setTimeout(function() { // 데이터 전송을 위해 시간 설정
+		    	opener.location.reload();
+	 			 self.close();
+	           }, 100);
+		 }
 	  });  
  	 
 	    let sum1 = 0;
@@ -63,7 +69,16 @@
    	     $('input[id^="in_qty"]').each(function(){
                sum3 += parseInt($(this).val());
    	     });
-   	     $("input[name=sum3]").val(sum3);
+   	     
+   	     let num = $('input[id^="in_schedule_qty"]').val()-$('input[id^="in_qty"]').val(); // 입고예정수량 - 입고지시수량
+   	     let num2 = $('input[id^="not_in_qty"]').val(); // 미입고수량
+   	     
+   	     if(num < 0) { // 미입고수량보다 큰 수를 입력받으면 동작 제어
+   	    	 alert("입고지시수량은 " + num2 + "개를 초과할 수 없습니다!")
+   	    	 $('input[id^="in_qty"]').val(num2); 
+   	     } else { // 동작O
+	   	     $("input[name=sum3]").val(sum3);
+   	     }
    	     
     } // function
     
@@ -143,16 +158,15 @@
 							 <input type="hidden" name="wh_area_cd" value="${inproduct.wh_area_cd}"> <!-- 내부구역코드 -->
                          <tr>
                             <td><input type="text" id="in_schedule_cd${status.index }" name="in_schedule_cd" 
-                            value="${inproduct.in_schedule_cd}" class="form-control" readonly="readonly"></td> 
+                            	value="${inproduct.in_schedule_cd}" class="form-control" readonly="readonly"></td> 
                          	<td><input type="text" id="product_name${status.index }" name="product_name" 
-                         	value="${inproduct.product_name}" class="form-control" readonly="readonly"></td>
+                         		value="${inproduct.product_name}" class="form-control" readonly="readonly"></td>
                             <td><input type="number" id="in_schedule_qty${status.index }" name="in_schedule_qty"
-                             class="form-control" value="${inproduct.in_schedule_qty}" readonly="readonly"></td>
+                            	class="form-control" value="${inproduct.in_schedule_qty}" readonly="readonly"></td>
                             <td><input type="number" id="not_in_qty${status.index }" name="not_in_qty" class="form-control" 
                             	value="${inproduct.in_schedule_qty - inproduct.in_qty}" readonly="readonly"></td>
                             <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="in_qty" 
-                           		 id="in_qty${status.index }" class="form-control" value="0" 
-                           		 onclick="onchage_inqty(${status.index })"></td>
+                           		id="in_qty${status.index }" class="form-control" value="0" onclick="onchage_inqty(${status.index })"></td>
                             <td><div class="col-sm-12">
                       			<div class="input-group">
                         			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" onclick="new_Stockcd(${status.index })">
