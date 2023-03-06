@@ -573,16 +573,13 @@ public class IncomeController {
 					inProduct.setWh_loc_in_area_cd(wh_loc_in_area_cd);
 					
 					// ----- 재고 번호 처리 
-		//			int stock_cd = inboundArr.getStock_cd()[i];
-		//			System.out.println("stock_cd : " + stock_cd);
-					
 					if(inboundArr.getStock_cd()[i]==0) { // 불러온 재고코드가 비어있으면
 						int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
 						inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
 						
-					// 조회한 재고번호 생성
-					// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd, in_qty(입고지시수량)
-					service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd); // 16이라는 재고번호를 생성
+						// 조회한 재고번호 생성
+						// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd
+						service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd); // 신규 재고번호를 생성
 					} else { // 불러온 재고코드가 비어있지 않으면
 						inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
 					} // if문
@@ -626,7 +623,6 @@ public class IncomeController {
 		}
 		
 	}
-	
 		
 	// ---------------------------------------------- 팝업창
 	// 재고 목록 조회 - 키워드 처리
@@ -647,7 +643,6 @@ public class IncomeController {
 		
 		// 재고 목록 갯수 조회
 		int listCount = service.getStockListCount(searchType, keyword, product_cd);
-//		int listCount = service.getStockListCount(searchType, keyword, product_cd);
 		int pageListLimit = 8;
 		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
