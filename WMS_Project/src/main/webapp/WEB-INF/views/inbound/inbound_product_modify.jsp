@@ -28,7 +28,21 @@
   	<script>
   	<!-- 납기일자에 등록된 날짜 표시 -->
 //  	document.getElementById("in_date").value = ${inProduct.in_date }
- 	
+
+ 	$("document").ready(function(){
+	 	<!-- 입고예정수량 변경시 수량 제어 -->
+	 	$('input[id="in_schedule_qty"]').on("input", function() {
+	   		 let in_schedule_qty = parseInt($(this).val()); // 입력받은 입고예정수량
+	    	 
+	   		 if($.isNumeric(in_schedule_qty)) { // 입력받은 입고예정수량이 숫자(정수)일 때 
+	        	$("#not_in_qty").val(parseInt($("#in_schedule_qty").val()) - parseInt($("#in_qty").val()));
+	    	 } else { // 입력받은 입고예정수량이 숫자가 아닐때
+	       		alert("숫자를 입력해주세요!");
+	        	$(this).val(""); // 입력값이 숫자가 아닌 경우 value 초기화
+	    	}
+		});
+ 	});
+     	
  	<!-- 품목명 검색 팝업 -->
  	function search_pname() {
  	    var _width = '650';
@@ -41,10 +55,6 @@
  	    window.open('SearchProduct', '품목명 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	}
  	
- 	<!-- 입고예정수량 변경시 수량 제어 -->
- 	function change_qty() {
- 		 $("#not_in_qty").val(parseInt($("#in_schedule_qty").val())-($("#in_qty").val()));
-	}
  	
  	<!-- 수정 작업 완료시 팝업창 닫힘 -->
  	<!-- 데이터 전송 후 팝업창을 닫기 위해 submit이 아닌 ajax로 동작시킴 -->
@@ -134,7 +144,7 @@
                     <div class="form-group row">
                       <label class="col-sm-5 col-form-label">입고예정수량</label>
                       <div class="col-sm-9">
-                        <input type="number" min="0" name="in_schedule_qty" id="in_schedule_qty" value="${inProduct.in_schedule_qty }" class="form-control" onchange="change_qty()"/>
+                        <input type="number" min="0" name="in_schedule_qty" id="in_schedule_qty" value="${inProduct.in_schedule_qty }" class="form-control"/>
                       </div>
                     </div>
                   </div>
@@ -185,17 +195,17 @@
               </div>
              </div>
             </div>
-           </div>
-          </div>
-        
-		<!-- table -->	
-
-        </div>
         <!-- 본문 영역 --> 
-      </div>
-      <!-- page-body-wrapper ends -->
-    </div>
+           </div>
     <!-- container-scroller -->
+    
+<!--       page-body-wrapper ends -->
+<!--           </div> -->
+<!-- 		<!-- table -->	 -->
+<!--         </div> -->
+<!--       </div> -->
+<!--     </div> -->
+    
     <!-- plugins:js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
