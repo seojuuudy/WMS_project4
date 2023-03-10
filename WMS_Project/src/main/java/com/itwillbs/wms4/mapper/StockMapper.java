@@ -55,12 +55,19 @@ public interface StockMapper {
 
 	int selectAreaListCount(String keyword);
 
-	int selectAreaCd(String loc_in_area);
+	int selectAreaCd(String wh_area);
 
 	int insertStock(@Param("product_cd") int product_cd, @Param("moving_qty") int moving_qty, 
-			@Param("wh_loc_in_area_cd") int wh_loc_in_area_cd);
+					@Param("wh_loc_in_area_cd") int wh_loc_in_area_cd);
 
 	int selectStockHistoryListCount(int stock_cd);
+
+	int selectStockCd(@Param("product_cd") int product_cd, @Param("moving_qty") int moving_qty, 
+					  @Param("wh_loc_in_area_cd") int wh_loc_in_area_cd);
+
+	int deleteStock(int stock_cd);
+
+	int selectLocInAreaCd(@Param("loc_in_area") String loc_in_area, @Param("area_cd") int area_cd);
 
 
 }

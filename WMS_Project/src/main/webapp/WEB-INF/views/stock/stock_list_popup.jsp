@@ -26,25 +26,18 @@
  	<!-- jquery -->
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
-		// 재고 수량 합계 계산을 위한 제이쿼리 식
 		$(function() {
-			sum = 0;
-			for(var i = 0; i < $(".stock_qty").length; i++) {
-				var stock = $(".stock_qty").eq(i).text();
-				sum += parseInt(stock);
-			}
-			$("#sum_stock_qty").text(sum);
-			
-			$(":button").on("click", function goRegistPage(i) {
+			$(":submit").on("click", function goRegistPage(i) {
 // 				alert("선택한 위치: " + $(this).parents("tr").find(".wh_name").text() + " "
-						+ $(this).parents("tr").find(".wh_area").text() + " "
-						+ $(this).parents("tr").find(".wh_loc_in_area").text();
-			let index = ${index };
+// 						+ $(this).parents("tr").find(".wh_area").text() + " "
+// 						+ $(this).parents("tr").find(".wh_loc_in_area").text();
+			let index = opener.window.name;
 				$("#moving_stock_cd_arr" + index, opener.document).val($(this).parents("tr").find(".stock_cd").text());
 				$("#moving_wh_loc_in_area_arr" + index, opener.document).val(
 						$(this).parents("tr").find(".wh_name").text() + " "
 						+ $(this).parents("tr").find(".wh_area").text() + " "
 						+ $(this).parents("tr").find(".wh_loc_in_area").text());
+// 				alert(index);
 				window.close();
 			});
 			
@@ -130,7 +123,7 @@
 	                            <td class="wh_loc_in_area">${stock.wh_loc_in_area }</td>
 	                            <td class="stock_qty">${stock.stock_qty }</td>
 	                            <td>
-                            	<button type="button" class="btn btn-primary btn-rounded i" >선택</button>
+                            	<button type="submit" class="btn btn-primary btn-rounded i" >선택</button>
                             	</td>
 	                          </tr>
 	                         </c:forEach>

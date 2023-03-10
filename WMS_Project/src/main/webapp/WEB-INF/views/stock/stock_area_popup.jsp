@@ -28,16 +28,9 @@
 	<script type="text/javascript">
 		// 재고 수량 합계 계산을 위한 제이쿼리 식
 		$(function() {
-			sum = 0;
-			for(var i = 0; i < $(".stock_qty").length; i++) {
-				var stock = $(".stock_qty").eq(i).text();
-				sum += parseInt(stock);
-			}
-			$("#sum_stock_qty").text(sum);
 			
-			
-			$("button[name=selectBtn]").on("click", function goRegistPage() {
-				let index = ${index };
+			$("button[name=selectBtn]").on("click", function goRegistPage(i) {
+				let index = opener.window.name;
 				$("#moving_stock_cd_arr" + index, opener.document).val(0);
 				$("#moving_wh_loc_in_area_arr" + index, opener.document).val(
 						$(this).parents("tr").find(".wh_name").text() + " "

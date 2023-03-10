@@ -47,8 +47,8 @@
 											+ "<td name='stock_cd'><input type='text' name='stock_cd_arr' class='form-control' id='stock_cd_arr" + i + "' value='" + data[i].stock_cd + "' readonly='readonly'></td>"
 											+ "<td name='product_name'><input type='text' name='product_name_arr' class='form-control' id='product_name_arr" + i + "' value='" + data[i].product_name + "' readonly='readonly'></td>"
 											+ "<td name='size_des'><input type='text' name='size_des_arr' class='form-control' id='size_des_arr" + i + "' value='" + data[i].size_des + "' readonly='readonly'></td>"
-											+ "<td name='wh_area'><input type='text' class='form-control' name='wh_area_arr' value='" + data[i].wh_area + "(" + data[i].wh_name + ")" + "' readonly='readonly'></td>"
-											+ "<td name='wh_loc_in_area'><input type='text' class='form-control' name='loc_in_area_arr' value='" + data[i].wh_loc_in_area + "' readonly='readonly'></td>"
+											+ "<td name='wh_area'><input type='text' class='form-control' name='wh_area_arr' id='wh_area_arr" + i + "' value='" + data[i].wh_area + "(" + data[i].wh_name + ")" + "' readonly='readonly'></td>"
+											+ "<td name='wh_loc_in_area'><input type='text' class='form-control' name='loc_in_area_arr' id='loc_in_area_arr" + i + "' value='" + data[i].wh_loc_in_area + "' readonly='readonly'></td>"
 											+ "<td name='stock_qty'><input type='text' name='stock_qty_arr' class='form-control' id='stock_qty_arr" + i + "' value='" + data[i].stock_qty + "' readonly='readonly'></td>"
 											+ "<td><input type='text' name='control_qty_arr' class='form-control' id='control_qty_arr" + i + "' onblur='stock_qty_sum(" + i + ")' value=0 onKeyup='onlyNumber(this)'></td>"
 											+ "<td class='moving_area'><input type='text' name='moving_stock_cd_arr' class='form-control' id='moving_stock_cd_arr" + i + "' class='moving_stock_cd_arr' value=0>&nbsp;<input type='button' name='area_btn' onclick='stock_search(" + i + ")' class='btn btn-sm btn-outline-primary' value='재고선택'></td>"
@@ -62,15 +62,69 @@
 					}
 				});
 			
+			// 재고 수량보다 조정수량 + 이동수량이 클 경우 페이지 이동 불가
+			$('#stockForm').submit(function() {
+	        	 let sum = 0;
+	        	 
+	        	 for(let i = 0; i < $("input[name=stock_cd_arr]").length; i++) {
+	        		 let sum = parseInt($("#control_qty_arr" + i).val()) + parseInt($("#moving_qty_arr" + i).val());
+// 						alert(sum);
+					
+					if(parseInt($("#stock_qty_arr" + i).val()) < parseInt($("#control_qty_arr" + i).val())) {
+						alert(parseInt($("#stock_qty_arr" + i).val()) < parseInt($("#control_qty_arr" + i).val()));
+						
+	                	alert("조정 수량이 현재 재고 수량보다 클 수 없습니다!");
+	                	return false;
+	             	}
+
+					if($('#stock_qty_arr' + i).val() < sum) {
+	                	alert("조정 수량과 이동 수량의 합이 재고 수량보다 클 수 없습니다!");
+	                return false;
+	             	}
+					
+					if($("#control_qty_arr" + i).val() == 0) {
+	                	let result = confirm("조정수량이 0이면 재고에서 삭제됩니다. 삭제하시겠습니까?");
+	                	
+	                	if(!result) {
+			                return false;
+	                	}
+	             	}
+					
+					// 이동 위치가 있는데 이동 수량이 0인 경우 이동하지 않도록 함
+					if($("#moving_wh_loc_in_area_arr" + i).val() !== "") {
+// 						alert($("#moving_wh_loc_in_area_arr" + i).val());
+						if($("#moving_qty_arr" + i).val() == 0) {
+	                		alert("이동수량이 0인 경우 조정이 불가능합니다!");
+	                		console.log($("#moving_wh_loc_in_area_arr" + i).val());
+			                return false;
+							
+						}
+	             	}
+					
+					// 현재 위치와 같은 위치로 이동할 경우 이동할 수 없도록 제한
+					let wareArea = $("#wh_area_arr" + i).val().substring($("#wh_area_arr" + i).val().indexOf('(') + 1, $("#wh_area_arr" + i).val().indexOf(')'));
+					let area = wareArea + " " + $("#wh_area_arr" + i).val().split('(', 1) + " " + $("#loc_in_area_arr" + i).val();
+					
+					if(area == $("#moving_wh_loc_in_area_arr" + i).val()) {
+						alert("현재 재고 위치와 같은 위치로 재고 이동할 수 없습니다!");
+						return false;
+					}
+				
+
+	        	 }
+	        	 
+	          });
 
 		});
 			
 			function stock_search(index) {
 				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
+				window.name = index;
 				window.open("StockPopup.st?index=" + index,"_blank", options);
 			}
 			function area_search(index) {
 				let options = "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=1200, height=800, top=0,left=0";
+				window.name = index;
 				window.open("Stock_area_popup.st?index=" + index,"_blank", options);
 			}
 			
@@ -112,7 +166,7 @@
                     <h4 class="card-title">재고 조정</h4>
                     <p class="card-description">Stock Control</p>
                     <div class="table-responsive">
-		 <form action="StockControlPro.st">
+		 <form action="StockControlPro.st" id="stockForm">
                       <table class="table table-striped">
                         <thead>
                           <tr>
