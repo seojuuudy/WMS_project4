@@ -170,11 +170,18 @@
   		SELECT COUNT(*)
   			FROM wh_detail
   	</select>
-  	
+  	<!-- 위치 조회해서 위치 코드 조회해오기 -->
   	<select id="selectAreaCd" resultType="int">
+  		SELECT wh_area_cd
+			FROM wh_area
+			WHERE wh_area = #{wh_area}
+  	</select>
+  	
+  	<select id="selectLocInAreaCd" resultType="int">
   		SELECT wh_loc_in_area_cd
   			FROM wh_location
-  			WHERE wh_loc_in_area = #{loc_in_area}
+  			WHERE wh_area_cd = #{area_cd}
+  			AND wh_loc_in_area = #{loc_in_area}
   	</select>
   	
   	<insert id="insertStock">
@@ -188,4 +195,19 @@
   				, #{moving_qty}
   			)
   	</insert>
+  	
+  	<!-- 새로운 재고 번호 추가 후 재고 이력에 insert 하기 위하여 재고 번호 조회하기 -->
+  	<select id="selectStockCd" resultType="int">
+  		SELECT stock_cd
+  			FROM stock
+  			WHERE product_cd = #{product_cd}
+  			AND wh_loc_in_area_cd = #{wh_loc_in_area_cd}
+  			AND stock_qty = #{moving_qty}
+  	</select>
+  	<!-- 조정 수량이 0일 경우 재고 삭제 작업 -->
+  	<delete id="deleteStock">
+  		DELETE 
+  			FROM stock
+  			WHERE stock_cd = #{stock_cd}
+  	</delete>
 </mapper>

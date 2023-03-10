@@ -47,6 +47,8 @@ public class StockService {
 
 	public int registStockHistory(int stock_cd, int product_cd, int moving_stock_cd, int moving_qty, String emp_num,
 			String remarks) {
+		System.out.println("가져온 새 재고번호: " + stock_cd);
+		System.out.println("가져온 재고번호: " + moving_stock_cd);
 		return mapper.insertStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
 	}
 
@@ -67,16 +69,28 @@ public class StockService {
 		return mapper.selectAreaListCount(keyword);
 	}
 
-	public int getAreaCd(String loc_in_area) {
-		return mapper.selectAreaCd(loc_in_area);
-	}
-
 	public int registStock(int product_cd, int moving_qty, int wh_loc_in_area_cd) {
 		return mapper.insertStock(product_cd, moving_qty, wh_loc_in_area_cd);
 	}
 
 	public int getStockHistoryListCount( int stock_cd) {
 		return mapper.selectStockHistoryListCount(stock_cd);
+	}
+
+	public int getStock_cd(int product_cd, int moving_qty, int wh_loc_in_area_cd) {
+		return mapper.selectStockCd(product_cd, moving_qty, wh_loc_in_area_cd);
+	}
+
+	public int removeStock(int stock_cd) {
+		return mapper.deleteStock(stock_cd);
+	}
+
+	public int getAreacd(String wh_area) {
+		return mapper.selectAreaCd(wh_area);
+	}
+
+	public int getLocInAreaCd(String loc_in_area, int area_cd) {
+		return mapper.selectLocInAreaCd(loc_in_area, area_cd);
 	}
 
 
