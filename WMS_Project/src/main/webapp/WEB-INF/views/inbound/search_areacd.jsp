@@ -26,20 +26,74 @@
  	<!-- jquery -->
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
-		<!-- 입고 처리의 재고번호에 값 전달 -->
-        function send_area(area, location){
-			let index = ${index }; // 부모창의 인덱스
-        	$("#locationcd"+index, opener.document).val((area+"_"+location));
-			window.close();
+	
+		<!-- 입고 처리의 구역명_선반위치에 값 전달 -->
+        function send_area(i, area_cd, location_cd) {
+			const index = ${index}; // 부모창의 인덱스
+			const product_cd = ${product_cd}; // 품목 코드
+	    	const area = document.getElementById("area"+i).innerHTML;
+        	const location = document.getElementById("location"+i).innerHTML;
+        	
+        	// 창고 위치 중복을 검사하는 check 함수 호출
+        	check(location_cd, product_cd, function(result) { 
+        	    if(result) { // 중복된 창고 위치가 없으면 실행
+        	
+        	    	// 부모창에 구역명_위치명 전달
+		        	$("#location"+index, opener.document).val((area+"_"+location));
+		        	
+		        	// 이미 hidden 값으로 넘긴 구역_위치 코드가 존재한다면 삭제
+		        	if($("#location" + index, opener.document).find("input[name='wh_area_cd']").length > 0) {
+		        		$("#location" + index, opener.document).find("input[name='wh_area_cd']").remove();
+		        		$("#location" + index, opener.document).find("input[name='wh_loc_in_area_cd']").remove();
+		        	} 
+		        	
+		        	// 구역코드, 위치코드 넘기기
+		       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_area_cd' value='"+ area_cd +"'>");
+		       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_loc_in_area_cd' value='"+ location_cd +"'>");
+		        	
+		       		// 부모창에 재고번호 전달
+		       		
+		        	window.close();
+        		} else { // 중복된 창고 위치가 존재하면 알림창
+        		 	 alert("해당 위치에 이미 재고가 존재합니다.");
+        		} // if문 끝
+        	}) // check 함수 끝
         }
-//         function send_area(area, location,area_cd, location_cd){
-// 			let index = ${index }; // 부모창의 인덱스
-//         	$("#locationcd"+index, opener.document).val((area+"_"+location));
-//         	$("#processform", opener.document).append("<input type='hidden' name='location_cd' value='"+index+","+ area_cd +","+ location_cd + "'>");
-// 			alert(index + "," + area_cd + "," + location_cd);
-//         	window.close();
-//         }
         
+        // 신규 재고번호 (수정하는중)
+        function newStockcd() {
+        	$.ajax({
+        		  url: 'getMaxstock_cd',
+        		  type: 'GET',
+        		  dataType: 'json',
+        		  async: false, // 동기적 처리위해 async를 false로 설정
+        		  success: function(stock_cd) {
+        			  Maxstock_cd = stock_cd;
+        		  }
+       		}); // ajax
+        	return Maxstock_cd;
+        }
+        
+     	// 위치 중복 검사
+        function check(location_cd, product_cd, callback) {
+            $.ajax({
+                url: 'ck_Locatecd',
+                type: 'GET',
+                dataType: 'json',
+                data: { location_cd: location_cd, product_cd: product_cd }, // 데이터 전달
+                success: function(data) {
+                    if(data == 0) { // 중복검사 결과가 0이면 true
+//                         alert(data)
+                    	callback(true);
+                    } else {
+                        callback(false); 
+                    }
+                },
+                error: function() {
+                    callback(false);
+                }
+            }); // ajax
+        }
 	</script>
 	<!-- jquery -->
   </head>
@@ -68,7 +122,7 @@
                         </div>
                        	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
-                          <input type="hidden" name="index" class="btn btn-sm btn-primary" value="${index}" />
+                          <input type="hidden" name="index" value="${index}" />
                         </div>
                     </div>
 						</form>
@@ -82,18 +136,15 @@
                           </tr>
                         </thead>
                         <tbody>
-                        
-                        <c:forEach var="area" items="${areaList }" varStatus="status">
-                          <tr>
-                          	<td id="area${status.count }">${area.wh_area}</td>
-							<td id="loc${status.count }">${area.wh_loc_in_area}</td>
-                          	<td>
-                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="send_area('${area.wh_area}','${area.wh_loc_in_area}')">선택</button>
-<%--                             	<button type="button" class="btn btn-primary btn-rounded i" onclick="send_area('${area.wh_area}','${area.wh_loc_in_area}','${area.wh_loc_in_area_cd}','${area.wh_area_cd}')">선택</button> --%>
-                            </td>
-                          </tr>
-                        </c:forEach>
-                         
+	                        <c:forEach var="area" items="${areaList }" varStatus="status">
+	                          <tr>
+	                          	<td id="area${status.index }">${area.wh_area}</td>
+								<td id="location${status.index }">${area.wh_loc_in_area}</td>
+	                          	<td>
+	                            	<button type="button" class="btn btn-primary btn-rounded i" onclick="send_area(${status.index },'${area.wh_area_cd}','${area.wh_loc_in_area_cd}')">선택</button>
+	                            </td>
+	                          </tr>
+	                        </c:forEach>
                         </tbody>
                       </table>
                     </div>

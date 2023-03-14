@@ -91,14 +91,6 @@ public interface IncomeMapper {
 	// 진행상태 완료로 변경
 	int updateComplete1(V_Inbound_ProcessingVO inProduct);
 	
-	// 구역명 문자열로 구역명cd조회
-	String selectAreacd(String wh_area);
-	
-	// 위치명 문자열로 cd조회
-	String selectlocationcd(
-			@Param("wh_loc_in_area") String wh_loc_in_area, 
-			@Param("wh_area") String wh_area);
-	
 	// 새재고번호 조회
 	int selectnewStockcd();
 	
@@ -114,15 +106,13 @@ public interface IncomeMapper {
 			@Param("searchType") String searchType, 
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
-			@Param("listLimit") int listLimit, 
-			@Param("product_cd") int product_cd
+			@Param("listLimit") int listLimit
 			);
 
 	// 재고 목록 갯수 조회
 	int selectStockListCount(
 			@Param("searchType") String searchType, 
-			@Param("keyword") String keyword, 
-			@Param("product_cd") int product_cd
+			@Param("keyword") String keyword 
 			);
 
 	// 품목 목록 조회
@@ -157,5 +147,9 @@ public interface IncomeMapper {
 			@Param("emp_num") String emp_num, 
 			@Param("remarks") String remarks);
 
+	// 창고 위치 중복 검사
+	public int selectCheckLocatecd(
+			@Param("location_cd") int location_cd, 
+			@Param("product_cd") int product_cd);
 
 }

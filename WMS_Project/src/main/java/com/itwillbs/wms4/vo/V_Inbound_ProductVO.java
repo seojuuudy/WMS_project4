@@ -18,7 +18,6 @@ public class V_Inbound_ProductVO {
 	private String size_des;
 	private String cust_name;
 	private int product_cd;
-	private String locationcd;
 	private int wh_loc_in_area_cd;
 	private int wh_area_cd;
 	private String wh_loc_in_area;
@@ -27,31 +26,6 @@ public class V_Inbound_ProductVO {
 	
 	public V_Inbound_ProductVO() {
 		super();
-	}
-
-	public V_Inbound_ProductVO(String in_schedule_cd, int in_schedule_qty, int in_qty, Date in_date, String remarks,
-			int stock_cd, String in_complete, String business_no, String product_name, String size_des,
-			String cust_name, int product_cd, String locationcd, int wh_loc_in_area_cd, int wh_area_cd,
-			String wh_loc_in_area, String wh_area, String emp_num) {
-		super();
-		this.in_schedule_cd = in_schedule_cd;
-		this.in_schedule_qty = in_schedule_qty;
-		this.in_qty = in_qty;
-		this.in_date = in_date;
-		this.remarks = remarks;
-		this.stock_cd = stock_cd;
-		this.in_complete = in_complete;
-		this.business_no = business_no;
-		this.product_name = product_name;
-		this.size_des = size_des;
-		this.cust_name = cust_name;
-		this.product_cd = product_cd;
-		this.locationcd = locationcd;
-		this.wh_loc_in_area_cd = wh_loc_in_area_cd;
-		this.wh_area_cd = wh_area_cd;
-		this.wh_loc_in_area = wh_loc_in_area;
-		this.wh_area = wh_area;
-		this.emp_num = emp_num;
 	}
 
 	public String getIn_schedule_cd() {
@@ -150,14 +124,6 @@ public class V_Inbound_ProductVO {
 		this.product_cd = product_cd;
 	}
 
-	public String getLocationcd() {
-		return locationcd;
-	}
-
-	public void setLocationcd(String locationcd) {
-		this.locationcd = locationcd;
-	}
-
 	public int getWh_loc_in_area_cd() {
 		return wh_loc_in_area_cd;
 	}
@@ -203,9 +169,9 @@ public class V_Inbound_ProductVO {
 		return "V_Inbound_ProductVO [in_schedule_cd=" + in_schedule_cd + ", in_schedule_qty=" + in_schedule_qty
 				+ ", in_qty=" + in_qty + ", in_date=" + in_date + ", remarks=" + remarks + ", stock_cd=" + stock_cd
 				+ ", in_complete=" + in_complete + ", business_no=" + business_no + ", product_name=" + product_name
-				+ ", size_des=" + size_des + ", cust_name=" + cust_name + ", product_cd=" + product_cd + ", locationcd="
-				+ locationcd + ", wh_loc_in_area_cd=" + wh_loc_in_area_cd + ", wh_area_cd=" + wh_area_cd
-				+ ", wh_loc_in_area=" + wh_loc_in_area + ", wh_area=" + wh_area + ", emp_num=" + emp_num + "]";
+				+ ", size_des=" + size_des + ", cust_name=" + cust_name + ", product_cd=" + product_cd
+				+ ", wh_loc_in_area_cd=" + wh_loc_in_area_cd + ", wh_area_cd=" + wh_area_cd + ", wh_loc_in_area="
+				+ wh_loc_in_area + ", wh_area=" + wh_area + ", emp_num=" + emp_num + "]";
 	}
-	
+
 }

@@ -19,7 +19,6 @@ public class Inbound_ProductArrVO {
 	private String[] cust_name;
 	private int[] product_cd;
 	private String[] size_des;
-	private String[] locationcd;
 	private String[] wh_loc_in_area;
 	private int[] wh_loc_in_area_cd;
 	private String[] wh_area;
@@ -28,31 +27,6 @@ public class Inbound_ProductArrVO {
 	
 	public Inbound_ProductArrVO() {
 		super();
-	}
-
-	public Inbound_ProductArrVO(String[] in_schedule_cd, int[] in_schedule_qty, int[] in_qty, Date[] in_date,
-			String[] remarks, int[] stock_cd, String[] in_complete, String[] business_no, String[] product_name,
-			String[] cust_name, int[] product_cd, String[] size_des, String[] locationcd, String[] wh_loc_in_area,
-			int[] wh_loc_in_area_cd, String[] wh_area, int[] wh_area_cd, String[] emp_num) {
-		super();
-		this.in_schedule_cd = in_schedule_cd;
-		this.in_schedule_qty = in_schedule_qty;
-		this.in_qty = in_qty;
-		this.in_date = in_date;
-		this.remarks = remarks;
-		this.stock_cd = stock_cd;
-		this.in_complete = in_complete;
-		this.business_no = business_no;
-		this.product_name = product_name;
-		this.cust_name = cust_name;
-		this.product_cd = product_cd;
-		this.size_des = size_des;
-		this.locationcd = locationcd;
-		this.wh_loc_in_area = wh_loc_in_area;
-		this.wh_loc_in_area_cd = wh_loc_in_area_cd;
-		this.wh_area = wh_area;
-		this.wh_area_cd = wh_area_cd;
-		this.emp_num = emp_num;
 	}
 
 	public String[] getIn_schedule_cd() {
@@ -151,14 +125,6 @@ public class Inbound_ProductArrVO {
 		this.size_des = size_des;
 	}
 
-	public String[] getLocationcd() {
-		return locationcd;
-	}
-
-	public void setLocationcd(String[] locationcd) {
-		this.locationcd = locationcd;
-	}
-
 	public String[] getWh_loc_in_area() {
 		return wh_loc_in_area;
 	}
@@ -207,10 +173,9 @@ public class Inbound_ProductArrVO {
 				+ Arrays.toString(stock_cd) + ", in_complete=" + Arrays.toString(in_complete) + ", business_no="
 				+ Arrays.toString(business_no) + ", product_name=" + Arrays.toString(product_name) + ", cust_name="
 				+ Arrays.toString(cust_name) + ", product_cd=" + Arrays.toString(product_cd) + ", size_des="
-				+ Arrays.toString(size_des) + ", locationcd=" + Arrays.toString(locationcd) + ", wh_loc_in_area="
-				+ Arrays.toString(wh_loc_in_area) + ", wh_loc_in_area_cd=" + Arrays.toString(wh_loc_in_area_cd)
-				+ ", wh_area=" + Arrays.toString(wh_area) + ", wh_area_cd=" + Arrays.toString(wh_area_cd) + ", emp_num="
-				+ Arrays.toString(emp_num) + "]";
+				+ Arrays.toString(size_des) + ", wh_loc_in_area=" + Arrays.toString(wh_loc_in_area)
+				+ ", wh_loc_in_area_cd=" + Arrays.toString(wh_loc_in_area_cd) + ", wh_area=" + Arrays.toString(wh_area)
+				+ ", wh_area_cd=" + Arrays.toString(wh_area_cd) + ", emp_num=" + Arrays.toString(emp_num) + "]";
 	}
 	
 }

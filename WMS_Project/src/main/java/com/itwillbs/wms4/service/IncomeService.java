@@ -104,16 +104,6 @@ public class IncomeService {
 		return mapper.updateComplete1(inProduct);
 	} 
 	
-	// 구역명 문자열로 구역명cd조회
-	public String getAreacd(String wh_area) {
-		return mapper.selectAreacd(wh_area);
-	}
-	
-	// 위치 문자열로 위치cd조회
-	public String getlocationcd(String wh_loc_in_area, String wh_area) {
-		return mapper.selectlocationcd(wh_loc_in_area, wh_area);
-	}
-	
 	// 새재고번호 조회
 	public int getnewStockcd() {
 		return mapper.selectnewStockcd();
@@ -126,16 +116,13 @@ public class IncomeService {
 	
 	// -------------------- 팝업창 검색 ---------------
 	// 재고 목록 조회
-//	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
-//		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
-//	}
-	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit, int product_cd) {
-		return mapper.selectStockList(searchType, keyword, startRow, listLimit, product_cd);
+	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
+		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
 	}
 
 	// 재고 목록 갯수 조회
-	public int getStockListCount(String searchType, String keyword, int product_cd) {
-		return mapper.selectStockListCount(searchType, keyword, product_cd);
+	public int getStockListCount(String searchType, String keyword) {
+		return mapper.selectStockListCount(searchType, keyword);
 	}
 
 	// 품목 목록 조회
@@ -161,6 +148,11 @@ public class IncomeService {
 	// 입고이력 등록
 	public int registStockHistory(int stock_cd, int product_cd, int in_qty, String emp_num, String remarks) {
 		return mapper.insertStockHistory(stock_cd, product_cd, in_qty, emp_num, remarks);
+	}
+
+	// 창고 위치 중복 검사
+	public int checkLocatecd(int location_cd, int product_cd) {
+		return  mapper.selectCheckLocatecd(location_cd, product_cd);
 	}
 
 }

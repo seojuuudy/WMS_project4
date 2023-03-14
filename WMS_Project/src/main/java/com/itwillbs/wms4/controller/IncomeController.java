@@ -482,9 +482,6 @@ public class IncomeController {
 				, HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
-//		System.out.println("in_schedule_cd : " + in_schedule_cd);
-//		System.out.println("product_cd : " + product_cd);
-//		System.out.println("in_date : " + in_date);
 		
 		if(sId != null) { // 로그인O
 			// 해당 회원의 권한 가져오기
@@ -511,7 +508,6 @@ public class IncomeController {
 					inProductList.add(inProduct);
 				}
 				
-//					System.out.println("inProductList : " + inProductList);
 				model.addAttribute("inProductList", inProductList);
 				
 				return "inbound/inbound_processing";
@@ -538,6 +534,8 @@ public class IncomeController {
 				
 			if((num & cpriv_cd) == cpriv_cd) { // 권한 O {
 				
+				System.out.println("inboundArr : " + inboundArr);
+				
 				for(int i=0;i<inboundArr.getIn_schedule_cd().length;i++) {
 					V_Inbound_ProcessingVO inProduct = new V_Inbound_ProcessingVO();
 					inProduct.setIn_schedule_cd(inboundArr.getIn_schedule_cd()[i]); // 입고예정수량
@@ -545,72 +543,44 @@ public class IncomeController {
 					inProduct.setIn_date(inboundArr.getIn_date()[i]); // 납기일자
 					inProduct.setIn_qty(inboundArr.getIn_qty()[i]); // 총입고수량
 					inProduct.setEmp_num(inboundArr.getEmp_num()[i]); // 담당자 사원번호
+					inProduct.setWh_area_cd(inboundArr.getWh_area_cd()[i]); // 구역코드 저장
+					inProduct.setWh_loc_in_area_cd(inboundArr.getWh_loc_in_area_cd()[i]); // 위치코드 저장
+					inProduct.setRemarks(inboundArr.getRemarks()[i]); // 적요 저장
 					
-					// 품목코드 가져오기
+					// 품목코드, 위치코드, 적요 가져오기
 					int product_cd = inProduct.getProduct_cd();
-					
-					// 위치코드 구하는 for문
-					for(int j=0;j<inboundArr.getLocationcd().length;j++) {
-						String[] location = inboundArr.getLocationcd()[i].split("_");
-		//				System.out.println("area : " + location[0]);
-		//				System.out.println("location : " + location[1]);
-						
-						// 항목이 가진 창고 구역명과 위치명 저장
-						inProduct.setWh_area(location[0]); // 구역명 저장
-						inProduct.setWh_loc_in_area(location[1]); // 위치명 저장
-					} // for문
-					
-					String wh_area = inProduct.getWh_area();
-					String wh_loc_in_area = inProduct.getWh_loc_in_area();
-						
-					// 구역명으로 구역코드 조회
-					int wh_area_cd = Integer.parseInt(service.getAreacd(wh_area));
-					// 위치명으로 위치코드 조회
-					int wh_loc_in_area_cd = Integer.parseInt(service.getlocationcd(wh_loc_in_area, wh_area));
-					
-					// 구역명, 위치코드 저장
-					inProduct.setWh_area_cd(wh_area_cd);
-					inProduct.setWh_loc_in_area_cd(wh_loc_in_area_cd);
+					int wh_loc_in_area_cd = inProduct.getWh_loc_in_area_cd();
+					String remarks = inProduct.getRemarks();
 					
 					// ----- 재고 번호 처리 
-					if(inboundArr.getStock_cd()[i]==0) { // 불러온 재고코드가 비어있으면
+					if(inboundArr.getStock_cd()[i]==0) { // 불러온 재고코드가 0이면 (재고코드 존재X)
 						int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
 						inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
 						
 						// 조회한 재고번호 생성
-						// 파라미터 : stock_cd, product_cd, wh_loc_in_area_cd
 						service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd); // 신규 재고번호를 생성
 					} else { // 불러온 재고코드가 비어있지 않으면
 						inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
-					} // if문
+					} // if문 끝
 					
 					int stock_cd = inProduct.getStock_cd();
 					
-					// ----- 적요 처리
-					if(inboundArr.getRemarks()[i] == " ") {
-						String emptyremarks = " ";
-						inProduct.setRemarks(emptyremarks);
-					} else {
-						inProduct.setRemarks(inboundArr.getRemarks()[i]);
-					}
-					
 					// 1. 입고 처리 정보를 입력 받아 입고 정보 업데이트 (입고 수행)
-		//			System.out.println("입고 전 inProduct : " + inProduct);
 					service.changeinInbound(inProduct);
 					// 2. 재고에 입고수량 추가
 					int updateCount = service.changeInqty(inProduct);
 					// 3. 입고 예정 수량 - 입고 수량 = 0 -> 진행상태 완료(1)
 					service.changeInComplete(inProduct);
-		//			System.out.println("진행상태 완료 후 inProduct : " + inProduct);
 					
 					if(updateCount > 0) {
-						// 재고 이력 테이블 컬럼 추가를 위한 변수
+						// 입고 이력 추가를 위한 변수
 						int in_qty = inProduct.getIn_qty();
 						String emp_num = service_st.getEmpNum(sId);
-						String remarks = inProduct.getRemarks();
+						remarks = inProduct.getRemarks();
 						
+						// 입고 이력 등록
 		                service.registStockHistory(stock_cd, product_cd, in_qty, emp_num, remarks);
-		             } // 재고 히스토리 if문 
+		             } // 입고 이력 if문 
 				} // 입고처리 전체 for문 
 				return "redirect:/pdList.in";
 			} else { // 권한 불일치시
@@ -621,7 +591,19 @@ public class IncomeController {
 			model.addAttribute("msg", "로그인 후 이용가능 합니다!");
 			return "fail_back";
 		}
+	}
+	
+	// 창고 위치 중복 검사
+	@ResponseBody
+	@GetMapping(value = "/ck_Locatecd")
+	public int check_Locatecd(@RequestParam(defaultValue = "1") int location_cd,
+				@RequestParam(defaultValue = "1") int product_cd
+				) {
+		System.out.println("location_cd : " + location_cd + ", product_cd : " + product_cd);
 		
+		int count = service.checkLocatecd(location_cd, product_cd);
+		
+		return count;
 	}
 		
 	// ---------------------------------------------- 팝업창
@@ -630,19 +612,17 @@ public class IncomeController {
 	public String searcheStockcd(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum,
-			@RequestParam(defaultValue = "1") int index,
-			@RequestParam(defaultValue = "1") int product_cd
+			@RequestParam(defaultValue = "1") int index
 			) {
 		
 		int listLimit = 10;
 		int startRow = (pageNum-1) * listLimit;
 		
 		// 재고 목록 조회
-//		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
-		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit, product_cd);
+		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
 		
 		// 재고 목록 갯수 조회
-		int listCount = service.getStockListCount(searchType, keyword, product_cd);
+		int listCount = service.getStockListCount(searchType, keyword);
 		int pageListLimit = 8;
 		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
@@ -702,7 +682,8 @@ public class IncomeController {
 	public String searcheArea(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum,
-			@RequestParam(defaultValue = "1") int index) {
+			@RequestParam(defaultValue = "1") int index,
+			@RequestParam(defaultValue = "1") int product_cd) {
 		
 		int listLimit = 10;
 		int startRow = (pageNum-1) * listLimit;
@@ -726,8 +707,9 @@ public class IncomeController {
 
 		model.addAttribute("areaList", areaList);
 		model.addAttribute("pageInfo", pageInfo);
-		// 부모인덱스를 자식창으로 넘겨줌
+		// 부모인덱스와 품목코드를 자식창으로 넘겨줌
 		model.addAttribute("index", index);
+		model.addAttribute("product_cd", product_cd);
 		
 		return "inbound/search_areacd";
 	}
