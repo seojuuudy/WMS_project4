@@ -27,16 +27,24 @@
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
 		<!-- 입고 처리의 재고번호에 값 전달 -->
-        function send_stockcd(i){
-			let index = ${index }; // 부모창의 인덱스
-			let stock_cd = parseInt(document.getElementById("cstock_cd"+i).innerText);
+        function send_stockcd(i, area_cd, location_cd){
+			const index = ${index }; // 부모창의 인덱스
+			const stock_cd = parseInt(document.getElementById("cstock_cd"+i).innerText);
         	$("#stockcd"+index, opener.document).val(stock_cd);
         	
-        	let area = document.getElementById("area"+i).innerHTML;
-        	let location = document.getElementById("location"+i).innerHTML;
-//         	$("#locationcd"+index, opener.document).val((area+"_"+location)); // 구역명_위치명
-        	$("#locationcd"+index, opener.document).val((area+"_"+location)); // 구역코드_위치코드
-//         	window.opener.updateStockcd(stock_cd, index);
+        	const area = document.getElementById("area"+i).innerHTML;
+        	const location = document.getElementById("location"+i).innerHTML;
+        	$("#location"+index, opener.document).val((area+"_"+location)); // 구역명_위치명
+        	
+        	// 이미 hidden 값으로 넘긴 구역_위치 코드가 존재한다면 삭제
+        	if($("#location" + index, opener.document).find("input[name='wh_area_cd']").length > 0) {
+        		$("#location" + index, opener.document).find("input[name='wh_area_cd']").remove();
+        		$("#location" + index, opener.document).find("input[name='wh_loc_in_area_cd']").remove();
+        	} 
+        	
+       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_area_cd' value='"+ area_cd +"'>");
+       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_loc_in_area_cd' value='"+ location_cd +"'>");
+
 			window.close();
         }
         
@@ -54,21 +62,24 @@
        <div class="col-lg-12 grid-margin stretch-card">
            <div class="card">
               	<div class="card-body">
-                    <h4 class="card-title">재고번호검색</h4>
-                    <p class="card-description">재고번호검색</p>
+                    <h4 class="card-title">재고검색</h4>
+                    <p class="card-description">재고검색</p>
 					 <form action="SearchStockcd">
 						<!-- 검색 타입 추가 -->
 						<div class="form-group">
                       	<div class="input-group">
                         <div class="input-group-prepend">
                           <select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <option class="dropdown-item" value="stock_cd" <c:if test="${param.searchType eq 'stock_cd'}">selected</c:if>>재고번호</option>
                             <option class="dropdown-item" value="product_name" <c:if test="${param.searchType eq 'product_name'}">selected</c:if>>품목명</option>
+                            <option class="dropdown-item" value="stock_cd" <c:if test="${param.searchType eq 'stock_cd'}">selected</c:if>>재고번호</option>
+                            <option class="dropdown-item" value="wh_area" <c:if test="${param.searchType eq 'wh_area'}">selected</c:if>>구역명</option>
+                            <option class="dropdown-item" value="wh_loc_in_area" <c:if test="${param.searchType eq 'wh_loc_in_area'}">selected</c:if>>위치명</option>
                           </select>
                         </div>
                        	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
                           <input type="hidden" name="index" value="${index}" />
+                          <input type="hidden" name="product_cd" value="${product_cd}" />
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -82,27 +93,21 @@
                           </tr>
                         </thead>
                         <tbody>
-                        
-                        <c:forEach var="stock" items="${stockList }" varStatus="status">
-                          <input type="hidden" name="product_cd" value="${stock.product_cd}" />
-                          <tr>
-                          	<td id="cstock_cd${status.count }"><a href="javacsript:void(0)" onclick="send_stockcd(${status.count })">${stock.stock_cd}</a></td>
-							<td>${stock.product_name}</td>
-							<td id="area${status.count }">${stock.wh_area}</td>
-							<td id="location${status.count }">${stock.wh_loc_in_area}</td>
-<%-- 							<td id="area${status.count }">${stock.wh_area_cd}</td> --%>
-<%-- 							<td id="location${status.count }">${stock.wh_loc_in_area_cd}</td> --%>
-                          </tr>
-                        </c:forEach>
-                         
+	                        <c:forEach var="stock" items="${stockList }" varStatus="status">
+	                          <tr>
+	                          	<td id="cstock_cd${status.index }"><a href="javacsript:void(0)" onclick="send_stockcd(${status.index },'${stock.wh_area_cd}','${stock.wh_loc_in_area_cd}')">${stock.stock_cd}</a></td>
+								<td>${stock.product_name}</td>
+								<td id="area${status.index }">${stock.wh_area}</td>
+								<td id="location${status.index }">${stock.wh_loc_in_area}</td>
+	                          </tr>
+	                        </c:forEach>
                         </tbody>
                       </table>
                     </div>
 				</form>
-         
 				         <section id="pageList" style="text-align: center;"> <!-- 페이징 처리 영역 -->
 				    
-					     <!-- 만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
+						<!-- 만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
 						<c:choose>
 							<c:when test="${empty param.pageNum }">
 								<c:set var="pageNum" value="1" />

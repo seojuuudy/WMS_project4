@@ -8,26 +8,11 @@ public class V_StockinfoVO {
 	private int stock_qty;
 	private String product_name;
 	private String wh_loc_in_area;
-	private String in_schedule_cd;
 	private String wh_area;
 	private int wh_area_cd;
 	
 	public V_StockinfoVO() {
 		super();
-	}
-
-	public V_StockinfoVO(int stock_cd, int product_cd, int wh_loc_in_area_cd, int stock_qty, String product_name,
-			String wh_loc_in_area, String in_schedule_cd, String wh_area, int wh_area_cd) {
-		super();
-		this.stock_cd = stock_cd;
-		this.product_cd = product_cd;
-		this.wh_loc_in_area_cd = wh_loc_in_area_cd;
-		this.stock_qty = stock_qty;
-		this.product_name = product_name;
-		this.wh_loc_in_area = wh_loc_in_area;
-		this.in_schedule_cd = in_schedule_cd;
-		this.wh_area = wh_area;
-		this.wh_area_cd = wh_area_cd;
 	}
 
 	public int getStock_cd() {
@@ -78,14 +63,6 @@ public class V_StockinfoVO {
 		this.wh_loc_in_area = wh_loc_in_area;
 	}
 
-	public String getIn_schedule_cd() {
-		return in_schedule_cd;
-	}
-
-	public void setIn_schedule_cd(String in_schedule_cd) {
-		this.in_schedule_cd = in_schedule_cd;
-	}
-
 	public String getWh_area() {
 		return wh_area;
 	}
@@ -104,10 +81,9 @@ public class V_StockinfoVO {
 
 	@Override
 	public String toString() {
-		return "StockinfoVO [stock_cd=" + stock_cd + ", product_cd=" + product_cd + ", wh_loc_in_area_cd="
+		return "V_StockinfoVO [stock_cd=" + stock_cd + ", product_cd=" + product_cd + ", wh_loc_in_area_cd="
 				+ wh_loc_in_area_cd + ", stock_qty=" + stock_qty + ", product_name=" + product_name
-				+ ", wh_loc_in_area=" + wh_loc_in_area + ", in_schedule_cd=" + in_schedule_cd + ", wh_area=" + wh_area
-				+ ", wh_area_cd=" + wh_area_cd + "]";
+				+ ", wh_loc_in_area=" + wh_loc_in_area + ", wh_area=" + wh_area + ", wh_area_cd=" + wh_area_cd + "]";
 	}
 
 }

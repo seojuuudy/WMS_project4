@@ -235,22 +235,6 @@
  	 			AND in_schedule_qty - in_qty = 0
  	</update> 
  	
- 	<!-- 구역명 문자열로 cd 조회 -->
-	<select id="selectAreacd" resultType="string">
-		SELECT wh_area_cd
-			FROM wh_area
-			WHERE wh_area = #{wh_area}
-	</select>
-	
-	<!-- 위치명 문자열로 cd 조회 -->
-	<select id="selectlocationcd" resultType="string">
-		SELECT wl.wh_loc_in_area_cd
-			FROM wh_location wl
-			JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
-			WHERE wl.wh_loc_in_area = #{wh_loc_in_area}
-			AND wa.wh_area = #{wh_area}
-	</select>
-	
 	<!-- 새 재고번호 조회 -->
 	<select id="selectnewStockcd" resultType="int">
 		SELECT MAX(stock_cd) + 1 
@@ -285,25 +269,36 @@
   			)
   	</insert>
   	
+  	<!-- 창고위치 중복검사 -->
+  	<select id="selectCheckLocatecd" resultType="int">
+  		SELECT COUNT(stock_cd)
+  			FROM v_stockinfo
+  			WHERE wh_loc_in_area_cd = #{location_cd}
+  			AND product_cd = #{product_cd}
+  	</select>
+  	
 	<!-- 팝업창(검색) -->
 	
 	<!-- 재고 목록 조회 -->
 	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.V_StockinfoVO">
-		SELECT s.stock_cd, p.product_name, p.product_cd, wh_area, wh_loc_in_area
+		SELECT s.stock_cd, p.product_name, p.product_cd, wh_area, wh_loc_in_area, wl.wh_area_cd, s.wh_loc_in_area_cd
 			FROM stock s
 			JOIN product p USING(product_cd)
 			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
 	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
-	 	WHERE s.product_cd = ${product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('stock_cd')">
-<!-- 					WHERE s.stock_cd LIKE '%${keyword}%' -->
-					AND s.stock_cd LIKE '%${keyword}%'
-				</when>
 				<when test="searchType.equals('product_name')">
-<!-- 					WHERE p.product_name LIKE '%${keyword}%' -->
-					AND p.product_name LIKE '%${keyword}%'
+					WHERE p.product_name LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('stock_cd')">
+					WHERE s.stock_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_area')">
+					WHERE wh_area LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_loc_in_area')">
+					WHERE wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>		
 		</if>
@@ -318,18 +313,21 @@
 			JOIN product p USING(product_cd)
 			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
 	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
-	 	WHERE s.product_cd = ${product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('stock_cd')">
-<!-- 					WHERE s.stock_cd LIKE '%${keyword}%' -->
-					AND s.stock_cd LIKE '%${keyword}%'
-				</when>
 				<when test="searchType.equals('product_name')">
-<!-- 					WHERE p.product_name LIKE '%${keyword}%' -->
-					AND p.product_name LIKE '%${keyword}%'
+					WHERE p.product_name LIKE '%${keyword}%'
 				</when>
-			</choose>		
+				<when test="searchType.equals('stock_cd')">
+					WHERE s.stock_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_area_cd')">
+					WHERE wl.wh_area_cd LIKE '%${keyword}%'
+				</when>
+				<when test="searchType.equals('wh_loc_in_area_cd')">
+					WHERE s.wh_loc_in_area_cd LIKE '%${keyword}%'
+				</when>
+			</choose>			
 		</if>
 	</select>
  

@@ -84,34 +84,32 @@
 		<!-- 입고지시수량 변경 이벤트(수정중) --> 
 		$('input[id^="in_qty"]').on("input", function() {
 			
-   	     	let inScheduleQty = parseInt($('input[id^="in_schedule_qty"]').val()); // 입고예정수량
-   	  	 	let notInQty = parseInt($('input[id^="not_in_qty"]').val()); // 미입고수량
-   	  	 	let InQty = parseInt($('input[id^="in_qty"]').val()); // 입고지시수량
-   	  	 	
-   	  		var inQtyArr = $('input[id^="in_qty"]'); // 입고지시수량을 배열로 저장
+			let index = $(this).index('input[id^="in_qty"]'); // 인덱스
+		    let inScheduleQty = Number($('input[id^="in_schedule_qty"]').eq(index).val()); // 입고예정수량
+		    let notInQty = Number($('input[id^="not_in_qty"]').eq(index).val()); // 미입고수량
+		    let InQty = Number($('input[id^="in_qty"]').eq(index).val()); // 입고지시수량
     
-  		 	let sum3 = 0; // 입고지시수량 합계
+		    let sum3 = 0; // 입고지시수량 합계
 
-  		 	inQtyArr.each(function(index) {
-  		 	    let val = Number($(this).val());
-  		 	    if ($.isNumeric(val)) { 
-  		 	        sum3 += val;
-  		 	    } else { // 입력값이 숫자가 아닌 경우 알림창.. 이 떠야하는데 안뜬다.. 하..
-  		 	        alert("숫자를 입력해주세요!");
-  		 	        $(this).val(""); // 입력값이 숫자가 아닌 경우 value 초기화
-  		 	        return false; // 반복문 종료
-  		 	    }
-  		 	});
-   	     	
-  		 	 // 이 밑코드도 index 적용해야함
-	   	     let num = inScheduleQty - InQty; // 입고예정수량 - 입고지시수량
-   	     
-	   	     if(num < 0) { // 미입고수량보다 큰 수를 입력받으면 동작 제어
-	   	    	 alert("입고지시수량은 " + notInQty + "개를 초과할 수 없습니다!")
-	   	    	 $('input[id^="in_qty"]').val(""); 
-	   	     } else { // 동작O
-		   	     $("input[name=sum3]").val(sum3);
-	   	     }
+		    if (Number.isNaN(InQty)) { 
+		        alert("숫자를 입력해주세요!");
+		        $('input[id^="in_qty"]').eq(index).val(""); // 입력값이 숫자가 아닌 경우 value 초기화
+		        return false; // 반복문 종료
+		    } else {
+		        sum3 += InQty;
+		    }
+		    
+		    let num = inScheduleQty - InQty; // 입고예정수량 - 입고지시수량
+
+		    if(num < 0) { // 미입고수량보다 큰 수를 입력받으면 동작 제어
+		        alert("입고지시수량은 " + notInQty + "개를 초과할 수 없습니다!")
+		        $('input[id^="in_qty"]').eq(index).val(notInQty);
+		        
+		        $("input[name=sum3]").val(sum3);
+		    } else { // 동작O
+		        $("input[name=sum3]").val(sum3);
+		    }
+		    
    	 	 }); // 입고지시수량 이벤트 끝
 	  }) // document
 	  
@@ -125,12 +123,12 @@
  	    var _left = Math.ceil(( window.screen.width - _width )/2);
  	    var _top = Math.ceil(( window.screen.height - _height )/2); 
  	 
-//  	    window.open('SearchStockcd?index='+index, '재고코드 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
- 	    window.open('SearchStockcd?index='+index+'&product_cd='+product_cd, '재고코드 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+ 	    window.open('SearchStockcd?index='+index, '재고 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+//  	    window.open('SearchStockcd?index='+index+'&product_cd='+product_cd, '재고 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	} // 재고 검색 팝업 끝
  	
  	<!-- 구역명_선반위치 검색 팝업 -->
- 	function openPopup2(index) {
+ 	function openPopup2(index, product_cd) {
  	    var _width = '650';
  	    var _height = '380';
  	 
@@ -138,7 +136,7 @@
  	    var _left = Math.ceil(( window.screen.width - _width )/2);
  	    var _top = Math.ceil(( window.screen.height - _height )/2); 
  	 
- 	    window.open('SearchArea?index='+index, '위치 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+ 	    window.open('SearchArea?index='+index+'&product_cd='+product_cd, '위치 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	} // 구역 위치 검색 팝업 끝
 	</script>
 	<!-- jquery -->
@@ -175,42 +173,31 @@
                         </thead>
                         
                         <tbody>
-                        
                          <c:forEach var="inproduct" items="${inProductList }" varStatus="status">
-							 <input type="hidden" name="wh_loc_in_area" value="${inproduct.wh_loc_in_area}"> <!-- 위치명 -->
 							 <input type="hidden" name="product_cd" value="${inproduct.product_cd}"> <!-- 품목코드 -->
 							 <input type="hidden" name="in_date" value="${inproduct.in_date}"> <!-- 납기일자 -->
 							 <input type="hidden" name="emp_num" value="${inproduct.emp_num}"> <!-- 담당자 사원코드 -->
-							 <input type="hidden" name="remarks" value=" "> <!-- 적요 -->
-							 
-							 <input type="hidden" name="wh_area" value="${inproduct.wh_area}"> <!-- 내부구역명 -->							 
-							 <input type="hidden" name="wh_loc_in_area_cd" value="${inproduct.wh_loc_in_area_cd}"> <!-- 위치코드 -->
-							 <input type="hidden" name="wh_area_cd" value="${inproduct.wh_area_cd}"> <!-- 내부구역코드 -->
+							 <input type="hidden" name="remarks" value="${inproduct.remarks}"> <!-- 적요 -->
                          <tr>
-                            <td><input type="text" id="in_schedule_cd${status.index }" name="in_schedule_cd" 
-                            	value="${inproduct.in_schedule_cd}" class="form-control" readonly="readonly"></td> 
-                         	<td><input type="text" id="product_name${status.index }" name="product_name" 
-                         		value="${inproduct.product_name}" class="form-control" readonly="readonly"></td>
-                            <td><input type="number" id="in_schedule_qty${status.index }" name="in_schedule_qty"
-                            	class="form-control" value="${inproduct.in_schedule_qty}" readonly="readonly"></td>
-                            <td><input type="number" id="not_in_qty${status.index }" name="not_in_qty" class="form-control" 
-                            	value="${inproduct.in_schedule_qty - inproduct.in_qty}" readonly="readonly"></td>
-                            <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="in_qty" 
-                           		id="in_qty${status.index }" class="form-control"></td>
+                            <td><input type="text" id="in_schedule_cd${status.index }" name="in_schedule_cd" value="${inproduct.in_schedule_cd}" class="form-control" readonly="readonly"></td> 
+                         	<td><input type="text" id="product_name${status.index }" name="product_name" value="${inproduct.product_name}" class="form-control" readonly="readonly"></td>
+                            <td><input type="number" id="in_schedule_qty${status.index }" name="in_schedule_qty" class="form-control" value="${inproduct.in_schedule_qty}" readonly="readonly"></td>
+                            <td><input type="number" id="not_in_qty${status.index }" name="not_in_qty" class="form-control" value="${inproduct.in_schedule_qty - inproduct.in_qty}" readonly="readonly"></td>
+                            <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="in_qty" id="in_qty${status.index }" class="form-control"></td>
                             <td><div class="col-sm-12">
                       			<div class="input-group">
                         			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" onclick="new_Stockcd(${status.index })">
                         		<div class="input-group-append">
-<%--                           			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index })">검색</button> --%>
-                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index }, ${inproduct.product_cd})">검색</button>
+                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index })">검색</button>
+<%--                           			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index }, ${inproduct.product_cd})">검색</button> --%>
                         		</div>
                     			</div>
                      		 </div></td>
                      		 <td><div class="col-sm-14">
                       			<div class="input-group">
-                        			<input type="text" id="locationcd${status.index }" name="locationcd" class="form-control" placeholder="구역명_선반위치" />
+                        			<input type="text" id="location${status.index }" class="form-control" placeholder="구역명_선반위치" />
                         		<div class="input-group-append">
-                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup2(${status.index })">검색</button>
+                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup2(${status.index },'${inproduct.product_cd}')">검색</button>
                         		</div>
                     			</div>
                      		 </div></td>
