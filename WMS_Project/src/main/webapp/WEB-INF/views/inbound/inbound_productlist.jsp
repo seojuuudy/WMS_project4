@@ -123,8 +123,17 @@
                        	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
                         </div>
-						</form>
                     </div>
+					</form>
+						<div class="input-group">
+                          <select name="orderType" id="orderType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               <option class="dropdown-item" value="" disabled selected>정렬</option>
+							   <option class="dropdown-item" value="incd_asc" onclick="location.href='pdList.in?orderType=incd_asc'" <c:if test="${param.orderType eq 'incd_asc'}">selected</c:if>>입고예정번호(오름차순)</option>
+							   <option class="dropdown-item" value="incd_desc" onclick="location.href='pdList.in?orderType=incd_desc'" <c:if test="${param.orderType eq 'incd_desc'}">selected</c:if>>입고예정번호(내림차순)</option>
+							   <option class="dropdown-item" value="indate_asc" onclick="location.href='pdList.in?orderType=indate_asc'" <c:if test="${param.orderType eq 'indate_asc'}">selected</c:if>>납기일자(오름차순)</option>
+							   <option class="dropdown-item" value="indate_desc" onclick="location.href='pdList.in?orderType=indate_desc'" <c:if test="${param.orderType eq 'indate_desc'}">selected</c:if>>납기일자(내림차순)</option>
+						  </select>
+                        </div>
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>

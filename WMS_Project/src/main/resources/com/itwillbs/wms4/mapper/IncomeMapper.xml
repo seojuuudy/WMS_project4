@@ -133,7 +133,25 @@
 				</when>
 			</choose>		
 		</if>
+		<if test='keyword.equals("")'>
 			ORDER BY in_schedule_cd
+		</if>
+		<if test='!keyword.equals("")'>
+			<choose>
+				<when test="searchType.equals('incd_asc')">
+					ORDER BY in_schedule_cd 
+				</when>
+				<when test="searchType.equals('incd_desc')">
+					ORDER BY in_schedule_cd DESC
+				</when>
+				<when test="searchType.equals('indate_asc')">
+					ORDER BY in_date
+				</when>
+				<when test="searchType.equals('indate_desc')">
+					ORDER BY in_date DESC
+				</when>
+			</choose>		
+		</if>
 			LIMIT #{startRow}, #{listLimit}
 	</select>
 	
@@ -277,55 +295,57 @@
   			AND product_cd = #{product_cd}
   	</select>
   	
+  	<!-- 제일 큰 재고번호 검색 -->
+  	<select id="selectgetMaxstockcd" resultType="int">
+  		SELECT MAX(stock_cd)
+  			FROM stock
+  	</select>
+  	
 	<!-- 팝업창(검색) -->
 	
 	<!-- 재고 목록 조회 -->
 	<select id="selectStockList" resultType="com.itwillbs.wms4.vo.V_StockinfoVO">
-		SELECT s.stock_cd, p.product_name, p.product_cd, wh_area, wh_loc_in_area, wl.wh_area_cd, s.wh_loc_in_area_cd
-			FROM stock s
-			JOIN product p USING(product_cd)
-			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
-	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+		SELECT stock_cd, product_name, product_cd, wh_area, wh_loc_in_area, wh_area_cd, wh_loc_in_area_cd
+			FROM v_stockinfo
+	 	WHERE product_cd = #{product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('product_name')">
-					WHERE p.product_name LIKE '%${keyword}%'
+					AND product_name LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('stock_cd')">
-					WHERE s.stock_cd LIKE '%${keyword}%'
+					AND stock_cd LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('wh_area')">
-					WHERE wh_area LIKE '%${keyword}%'
+					AND wh_area LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('wh_loc_in_area')">
-					WHERE wh_loc_in_area LIKE '%${keyword}%'
+					AND wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>		
 		</if>
-			ORDER BY s.stock_cd
+			ORDER BY stock_cd
 			LIMIT #{startRow}, #{listLimit}
 	</select>
 	
 	<!-- 재고 목록 개수 조회 -->
 	<select id="selectStockListCount" resultType="int">
 		SELECT COUNT(*)
-			FROM stock s
-			JOIN product p USING(product_cd)
-			JOIN wh_location wl on wl.wh_loc_in_area_cd = s.wh_loc_in_area_cd
-	 		JOIN wh_area wa on wa.wh_area_cd = wl.wh_area_cd
+			FROM v_stockinfo
+ 		WHERE product_cd = #{product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
 				<when test="searchType.equals('product_name')">
-					WHERE p.product_name LIKE '%${keyword}%'
+					AND product_name LIKE '%${keyword}%'
 				</when>
 				<when test="searchType.equals('stock_cd')">
-					WHERE s.stock_cd LIKE '%${keyword}%'
+					AND stock_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_area_cd')">
-					WHERE wl.wh_area_cd LIKE '%${keyword}%'
+				<when test="searchType.equals('wh_area')">
+					AND wh_area LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_loc_in_area_cd')">
-					WHERE s.wh_loc_in_area_cd LIKE '%${keyword}%'
+				<when test="searchType.equals('wh_loc_in_area')">
+					AND wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>			
 		</if>

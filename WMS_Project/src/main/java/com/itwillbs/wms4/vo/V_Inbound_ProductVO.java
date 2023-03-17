@@ -3,6 +3,8 @@ package com.itwillbs.wms4.vo;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 // 입고처리 view
 public class V_Inbound_ProductVO {
 

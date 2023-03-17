@@ -64,8 +64,8 @@ public class IncomeService {
 	// --------------------- 입고예정항목 --------------------
 	// 입고 예정 항목 목록 조회
 	public List<V_Inbound_ProductVO> getinProductList(String searchType, String keyword, int startRow,
-			int listLimit) {
-		return mapper.selectinProductList(searchType, keyword, startRow, listLimit);
+			int listLimit, String orderType) {
+		return mapper.selectinProductList(searchType, keyword, startRow, listLimit, orderType);
 	}
 
 	// 입고 예정 항목 목록 갯수
@@ -114,15 +114,25 @@ public class IncomeService {
 		return mapper.insertStock_cd(stockcd, product_cd, wh_loc_in_area_cd);
 	}
 	
+	// 창고 위치 중복 검사
+	public int checkLocatecd(int location_cd, int product_cd) {
+		return mapper.selectCheckLocatecd(location_cd, product_cd);
+	}
+
+	// 제일 큰 재고번호 검색
+	public int getMaxstockcd() {
+		return mapper.selectgetMaxstockcd();
+	}
+	
 	// -------------------- 팝업창 검색 ---------------
 	// 재고 목록 조회
-	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit) {
-		return mapper.selectStockList(searchType, keyword, startRow, listLimit);
+	public List<V_StockinfoVO> getStockList(String searchType, String keyword, int startRow, int listLimit, int product_cd) {
+		return mapper.selectStockList(searchType, keyword, startRow, listLimit, product_cd);
 	}
 
 	// 재고 목록 갯수 조회
-	public int getStockListCount(String searchType, String keyword) {
-		return mapper.selectStockListCount(searchType, keyword);
+	public int getStockListCount(String searchType, String keyword, int product_cd) {
+		return mapper.selectStockListCount(searchType, keyword, product_cd);
 	}
 
 	// 품목 목록 조회
@@ -150,9 +160,6 @@ public class IncomeService {
 		return mapper.insertStockHistory(stock_cd, product_cd, in_qty, emp_num, remarks);
 	}
 
-	// 창고 위치 중복 검사
-	public int checkLocatecd(int location_cd, int product_cd) {
-		return  mapper.selectCheckLocatecd(location_cd, product_cd);
-	}
+
 
 }

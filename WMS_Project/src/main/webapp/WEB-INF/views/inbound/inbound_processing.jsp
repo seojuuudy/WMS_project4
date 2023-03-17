@@ -28,6 +28,9 @@
 	<script type="text/javascript">
  	 
 	$("document").ready(function(){
+		  $('#in_qty').on('change', function() {
+			    formreset(index);
+		  });
 		
 		<!-- 합계 계산 -->
 	    let sum1 = 0;
@@ -53,7 +56,7 @@
 			// 1. 입고지시수량 유효성 검사
 			inQtyArr.each(function(index) {
 			    if (this.value <= 0) { // 입고지시수량이 0 이하이면 알림창
-			        alert("입고지시수량을 입력해주세요!");
+			        alert("입고지시수량을 입력해주세요!\n\n ❌수량은 숫자로만 입력 가능합니다.❌");
 			        isValid = false; // 유효성 체크 실패
 			        return false; // 반복문 종료
 			    } // 입고지시수량이 0 이상이면 if문이 실행되지 않으므로 true
@@ -81,40 +84,57 @@
 			}
 		 }); // 폼 전송 유효성 검사 끝
  	 
-		<!-- 입고지시수량 변경 이벤트(수정중) --> 
+		<!-- 입고지시수량 변경 이벤트 --> 
 		$('input[id^="in_qty"]').on("input", function() {
 			
 			let index = $(this).index('input[id^="in_qty"]'); // 인덱스
 		    let inScheduleQty = Number($('input[id^="in_schedule_qty"]').eq(index).val()); // 입고예정수량
 		    let notInQty = Number($('input[id^="not_in_qty"]').eq(index).val()); // 미입고수량
-		    let InQty = Number($('input[id^="in_qty"]').eq(index).val()); // 입고지시수량
-    
-		    let sum3 = 0; // 입고지시수량 합계
-
-		    if (Number.isNaN(InQty)) { 
-		        alert("숫자를 입력해주세요!");
-		        $('input[id^="in_qty"]').eq(index).val(""); // 입력값이 숫자가 아닌 경우 value 초기화
-		        return false; // 반복문 종료
-		    } else {
-		        sum3 += InQty;
+		    let InQty = Number($(this).val()); // 입고지시수량 : input창에 사용자가 입력한 값
+		    
+		    if(InQty > notInQty) { // 미입고수량보다 큰 수를 입력받으면 동작 제어
+		    	alert("입고지시수량은 " + notInQty + "개를 초과할 수 없습니다!")
+		    	InQty = notInQty;
+		    	$('input[id^="in_qty"]').eq(index).val(InQty);
 		    }
 		    
-		    let num = inScheduleQty - InQty; // 입고예정수량 - 입고지시수량
-
-		    if(num < 0) { // 미입고수량보다 큰 수를 입력받으면 동작 제어
-		        alert("입고지시수량은 " + notInQty + "개를 초과할 수 없습니다!")
-		        $('input[id^="in_qty"]').eq(index).val(notInQty);
-		        
-		        $("input[name=sum3]").val(sum3);
-		    } else { // 동작O
-		        $("input[name=sum3]").val(sum3);
+		    let sum = 0; // 입고지시수량 합계
+		    
+		    for (let i = 0; i < $("input[id^=in_qty]").length; i++) {
+		        let qty = Number($('input[id^="in_qty"]').eq(i).val()); // 각 인덱스의 입고지시수량
+		        if (!isNaN(qty)) { // 숫자인 경우에만 합산
+		            sum += qty;
+		        }
 		    }
+		    
+		    $("input[name=sum3]").val(sum); // 입고지시수량 총 합계
 		    
    	 	 }); // 입고지시수량 이벤트 끝
 	  }) // document
 	  
+  	var maxStockCd; // 전역변수 선언
+	  	
+	<!-- 새 재고번호 생성 -->
+	function newStockcd(index) {
+		  if ($("#stockcd"+index).val() && $("#stockcd"+index).val() != 0) { // value 값이 이미 존재하는 경우
+		    maxStockCd = $("#stockcd"+index).val(); // maxStockCd에 해당 값을 대입
+		  } else if (maxStockCd) { // value 값이 존재하지않고 maxStockCd 값이 설정되어있다면 +1
+		    ++maxStockCd;
+		  } else { // value 값이 존재하지않고 maxStockCd 값이 초기화되지 않은 상태면 최대 재고번호로 설정
+		   	  $.ajax({
+			      url: 'getMaxstockcd',
+			      type: 'GET',
+			      async: false,
+			      dataType: 'json',
+			      success: function(stock_cd) {
+			        maxStockCd = stock_cd+1;
+			      }
+		      }); // ajax
+		  }
+		  $("#stockcd"+index).val(maxStockCd);
+	}
+	
 	<!-- 재고코드 검색 팝업 -->
-//  	function openPopup1(index) {
  	function openPopup1(index, product_cd) {
  	    var _width = '650';
  	    var _height = '380';
@@ -123,8 +143,7 @@
  	    var _left = Math.ceil(( window.screen.width - _width )/2);
  	    var _top = Math.ceil(( window.screen.height - _height )/2); 
  	 
- 	    window.open('SearchStockcd?index='+index, '재고 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
-//  	    window.open('SearchStockcd?index='+index+'&product_cd='+product_cd, '재고 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
+ 	    window.open('SearchStockcd?index='+index+'&product_cd='+product_cd, '재고 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	} // 재고 검색 팝업 끝
  	
  	<!-- 구역명_선반위치 검색 팝업 -->
@@ -153,11 +172,6 @@
                     <p class="card-description">입고처리</p>
 					 <form action="DoInbound" method="POST" id="processform">
 <!-- 					 <form method="POST" id="processform"> -->
-						<!-- 검색 타입 추가 -->
-						<div class="form-group">
-                      	<div class="input-group">
-                        </div>
-                    </div>
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -186,16 +200,15 @@
                             <td><input type="number" min="0" max="${inproduct.in_schedule_qty - inproduct.in_qty}" name="in_qty" id="in_qty${status.index }" class="form-control"></td>
                             <td><div class="col-sm-12">
                       			<div class="input-group">
-                        			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" onclick="new_Stockcd(${status.index })">
+                        			<input type="text" id="stockcd${status.index }" name="stock_cd" class="form-control" value="0" readonly="readonly" onclick="new_Stockcd(${status.index })">
                         		<div class="input-group-append">
-                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index })">검색</button>
-<%--                           			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index }, ${inproduct.product_cd})">검색</button> --%>
+                          			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup1(${status.index }, ${inproduct.product_cd})">검색</button>
                         		</div>
                     			</div>
                      		 </div></td>
                      		 <td><div class="col-sm-14">
                       			<div class="input-group">
-                        			<input type="text" id="location${status.index }" class="form-control" placeholder="구역명_선반위치" />
+                        			<input type="text" id="location${status.index }" class="form-control" placeholder="구역명_선반위치" readonly="readonly"/>
                         		<div class="input-group-append">
                           			<button class="btn btn-sm btn-primary" type="button" onclick="openPopup2(${status.index },'${inproduct.product_cd}')">검색</button>
                         		</div>
