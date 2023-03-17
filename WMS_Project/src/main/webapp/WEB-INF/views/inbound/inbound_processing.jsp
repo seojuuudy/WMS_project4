@@ -28,9 +28,6 @@
 	<script type="text/javascript">
  	 
 	$("document").ready(function(){
-		  $('#in_qty').on('change', function() {
-			    formreset(index);
-		  });
 		
 		<!-- 합계 계산 -->
 	    let sum1 = 0;
@@ -50,7 +47,7 @@
 			
 			// 인덱스를 사용하기 위해 배열 저장
 			var inQtyArr = $('input[id^="in_qty"]');
-			var locCdArr = $('input[id^="locationcd"]');
+			var locCdArr = $('input[id^="location"]');
 			var isValid = true; // 입고지시수량과 위치의 유효성 검사를 위한 변수
 			
 			// 1. 입고지시수량 유효성 검사
@@ -72,7 +69,6 @@
 			        } // 위치가 선택되어 있으면 true
 			    });
 			}
-			
 			if(isValid) { // 모든 유효성 검사 통과
 			    $("#processform").submit(); // 폼전송
 			    alert("입고처리 완료되었습니다.");
