@@ -50,7 +50,7 @@
 			var locCdArr = $('input[id^="location"]');
 			var isValid = true; // 입고지시수량과 위치의 유효성 검사를 위한 변수
 			
-			// 1. 입고지시수량 유효성 검사
+			// 1. 입고지시수량 유효성 검사 
 			inQtyArr.each(function(index) {
 			    if (this.value <= 0) { // 입고지시수량이 0 이하이면 알림창
 			        alert("입고지시수량을 입력해주세요!\n\n ❌수량은 숫자로만 입력 가능합니다.❌");
