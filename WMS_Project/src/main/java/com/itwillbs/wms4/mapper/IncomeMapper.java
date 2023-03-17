@@ -51,7 +51,9 @@ public interface IncomeMapper {
 			@Param("searchType") String searchType, 
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
-			@Param("listLimit") int listLimit);
+			@Param("listLimit") int listLimit,
+			@Param("orderType") String orderType 
+			);
 
 	// 입고 예정 항목 목록 갯수
 	int selectinProductListCount(
@@ -100,19 +102,29 @@ public interface IncomeMapper {
 			@Param("product_cd") int product_cd, 
 			@Param("wh_loc_in_area_cd") int wh_loc_in_area_cd);
 	
+	// 창고 위치 중복 검사
+	public int selectCheckLocatecd(
+			@Param("location_cd") int location_cd, 
+			@Param("product_cd") int product_cd);
+
+	// 제일 큰 재고번호 검색
+	public int selectgetMaxstockcd();
+	
 	// --------------- 팝업창(검색) -----------------
 	// 재고 목록 조회
 	List<V_StockinfoVO> selectStockList(
 			@Param("searchType") String searchType, 
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
-			@Param("listLimit") int listLimit
+			@Param("listLimit") int listLimit,
+			@Param("product_cd") int product_cd
 			);
 
 	// 재고 목록 갯수 조회
 	int selectStockListCount(
 			@Param("searchType") String searchType, 
-			@Param("keyword") String keyword 
+			@Param("keyword") String keyword,
+			@Param("product_cd") int product_cd
 			);
 
 	// 품목 목록 조회
@@ -147,9 +159,6 @@ public interface IncomeMapper {
 			@Param("emp_num") String emp_num, 
 			@Param("remarks") String remarks);
 
-	// 창고 위치 중복 검사
-	public int selectCheckLocatecd(
-			@Param("location_cd") int location_cd, 
-			@Param("product_cd") int product_cd);
+
 
 }

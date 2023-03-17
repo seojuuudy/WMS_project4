@@ -1,6 +1,8 @@
 package com.itwillbs.wms4.controller;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,15 +10,20 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.itwillbs.wms4.service.ClientService;
 import com.itwillbs.wms4.service.HrService;
 import com.itwillbs.wms4.service.IncomeService;
@@ -382,7 +389,9 @@ public class IncomeController {
 	@GetMapping(value = "/pdList.in")
 	public String productList(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
-			@RequestParam(defaultValue = "1") int pageNum, HttpSession session) {
+			@RequestParam(defaultValue = "1") int pageNum, 
+			@RequestParam(defaultValue = "") String orderType,
+			HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
 		
@@ -399,7 +408,7 @@ public class IncomeController {
 				int startRow = (pageNum-1) * listLimit;
 		
 				// 입고 예정 항목 목록 조회
-				List<V_Inbound_ProductVO> inProductList = service.getinProductList(searchType, keyword, startRow, listLimit);
+				List<V_Inbound_ProductVO> inProductList = service.getinProductList(searchType, keyword, startRow, listLimit, orderType);
 				
 				// 입고 예정 항목 목록 갯수 조회
 				int listCount = service.getinProductListCount(searchType, keyword);
@@ -461,16 +470,53 @@ public class IncomeController {
 	}
 	
 	// 입고 예정 항목 수정 비즈니스 작업 
+//	@ResponseBody
+//	@PostMapping(value = "/pdModifyPro.in")
+//	public int productModify(@ModelAttribute V_Inbound_ProductVO inProduct, 
+//			@RequestParam String product_name, @RequestParam int product_cd, 
+//			@RequestParam int in_schedule_qty, @RequestParam Date in_date, 
+//			@RequestParam String remarks, @RequestParam String in_schedule_cd,
+//			@RequestParam Date ex_in_date ) {
+//		
+//		int updateCount = service.modifyProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
+//		
+//		return updateCount;
+//	}
+	
+	// 입고 예정 항목 수정 비즈니스 작업 - 단일 폼 수정이니까 굳이 JSON 안쓰고 편하게 개별 파라미터 쓰는게 나을듯
 	@ResponseBody
-	@PostMapping(value = "/pdModifyPro.in")
-	public int productModify(@ModelAttribute V_Inbound_ProductVO inProduct, @RequestParam String product_name, 
-			@RequestParam int product_cd, @RequestParam int in_schedule_qty, 
-			@RequestParam Date in_date, @RequestParam String remarks, @RequestParam String in_schedule_cd,
-			@RequestParam Date ex_in_date ) {
+	@PostMapping("/pdModifyPro.in")
+	public int pdModifyPro(@RequestBody String data, @ModelAttribute V_Inbound_ProductVO inProduct) {
 		
-		int updateCount = service.modifyProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
+//		System.out.println("data : " + data);
+		JSONObject jsonObj = new JSONObject(data);
+//		System.out.println("jsonObj : " + jsonObj);
 		
-		return updateCount;
+		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			String product_name = jsonObj.getString("product_name");
+			int in_schedule_qty = jsonObj.getInt("in_schedule_qty");
+			int product_cd = jsonObj.getInt("product_cd");
+			// indate 날짜 변환
+			String str_in_date = jsonObj.getString("in_date");
+			java.sql.Date in_date = new java.sql.Date(dateformat.parse(str_in_date).getTime());
+			String remarks = jsonObj.getString("remarks");
+			String in_schedule_cd = jsonObj.getString("in_schedule_cd");
+			// ex_in_date 날짜 변환
+			String str_ex_in_date = jsonObj.getString("ex_in_date");
+			java.sql.Date ex_in_date = new java.sql.Date(dateformat.parse(str_ex_in_date).getTime());
+			
+			int updateCount = service.modifyProductInfo(inProduct, product_name, product_cd, in_schedule_qty, in_date, remarks, in_schedule_cd, ex_in_date);
+			
+			return updateCount; // updateCount 리턴
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return 0; // 예외발생시 0 리턴
 	}
 	
 	// -------------------------------------------------- 입고처리
@@ -552,15 +598,17 @@ public class IncomeController {
 					int wh_loc_in_area_cd = inProduct.getWh_loc_in_area_cd();
 					String remarks = inProduct.getRemarks();
 					
-					// ----- 재고 번호 처리 
-					if(inboundArr.getStock_cd()[i]==0) { // 불러온 재고코드가 0이면 (재고코드 존재X)
-						int stockcd = service.getnewStockcd(); // 새재고코드 조회하러감
+					// ----- 재고번호 처리 
+					int mstock_cd = service.getMaxstockcd(); // 가장 큰 재고번호
+					
+					if(inboundArr.getStock_cd()[i]>mstock_cd) { // 불러온 재고번호가 최대재고번호보다 크면 (신규 재고번호)
+						int stockcd = inboundArr.getStock_cd()[i];
 						inProduct.setStock_cd(stockcd); // 조회한 새재고번호 저장 
 						
-						// 조회한 재고번호 생성
+						// 새재고번호 생성
 						service.createStock_cd(stockcd, product_cd, wh_loc_in_area_cd); // 신규 재고번호를 생성
 					} else { // 불러온 재고코드가 비어있지 않으면
-						inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고코드로 변경
+						inProduct.setStock_cd(inboundArr.getStock_cd()[i]); // 받아온 재고번호로 변경
 					} // if문 끝
 					
 					int stock_cd = inProduct.getStock_cd();
@@ -599,11 +647,21 @@ public class IncomeController {
 	public int check_Locatecd(@RequestParam(defaultValue = "1") int location_cd,
 				@RequestParam(defaultValue = "1") int product_cd
 				) {
-		System.out.println("location_cd : " + location_cd + ", product_cd : " + product_cd);
+//		System.out.println("location_cd : " + location_cd + ", product_cd : " + product_cd);
 		
 		int count = service.checkLocatecd(location_cd, product_cd);
 		
 		return count;
+	}
+	
+	// 제일 큰 재고번호 검색
+	@ResponseBody
+	@GetMapping(value = "/getMaxstockcd")
+	public int Maxstockcd() {
+		
+		int mstock_cd = service.getMaxstockcd();
+		
+		return mstock_cd;
 	}
 		
 	// ---------------------------------------------- 팝업창
@@ -612,17 +670,18 @@ public class IncomeController {
 	public String searcheStockcd(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum,
-			@RequestParam(defaultValue = "1") int index
+			@RequestParam(defaultValue = "1") int index,
+			@RequestParam(defaultValue = "1") int product_cd
 			) {
 		
 		int listLimit = 10;
 		int startRow = (pageNum-1) * listLimit;
 		
 		// 재고 목록 조회
-		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit);
+		List<V_StockinfoVO> stockList = service.getStockList(searchType, keyword, startRow, listLimit, product_cd);
 		
 		// 재고 목록 갯수 조회
-		int listCount = service.getStockListCount(searchType, keyword);
+		int listCount = service.getStockListCount(searchType, keyword, product_cd);
 		int pageListLimit = 8;
 		int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 		int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;
@@ -639,6 +698,7 @@ public class IncomeController {
 		model.addAttribute("pageInfo", pageInfo);
 		// 부모인덱스를 자식창으로 넘겨줌
 		model.addAttribute("index", index);
+		model.addAttribute("product_cd", product_cd);
 		
 		return "inbound/search_stockcd";
 	}

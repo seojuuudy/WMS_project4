@@ -55,11 +55,10 @@
  	    window.open('SearchProduct', '품목명 검색', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	}
  	
- 	
  	<!-- 수정 작업 완료시 팝업창 닫힘 -->
  	<!-- 데이터 전송 후 팝업창을 닫기 위해 submit이 아닌 ajax로 동작시킴 -->
     function modify(product_name, ex_in_date) {
-// 		var formdata = $("form[name=modify_form]").serialize();
+// 		var formdata = $("form[name=modify_form]").serialize(); // 기존+변경 같이 넘겨줘야해서 serialize 안썼음
 		// 변경된 value 함께 넘겨주기
 		var product_cd = parseInt($("#product_cd").val());
 		var in_schedule_qty = parseInt($("#in_schedule_qty").val());
@@ -70,12 +69,24 @@
 		$.ajax({
 	        type:"POST",
 	        url:"pdModifyPro.in",
-	        data : { "product_name":product_name, "in_schedule_qty":in_schedule_qty, "product_cd":product_cd,
-		             "in_date":in_date, "remarks":remarks, "in_schedule_cd":in_schedule_cd, "ex_in_date":ex_in_date },
+// 	        data : { "product_name":product_name, "in_schedule_qty":in_schedule_qty, "product_cd":product_cd,
+// 		             "in_date":in_date, "remarks":remarks, "in_schedule_cd":in_schedule_cd, "ex_in_date":ex_in_date },
+			data: JSON.stringify({
+				"product_name": product_name, // 기존의 상품명
+				"in_schedule_qty": in_schedule_qty, // 수정될 상품의 코드
+				"product_cd": product_cd,
+	            "in_date": in_date, // 수정될 납기일자
+	            "remarks": remarks, 
+	            "in_schedule_cd": in_schedule_cd,
+	            "ex_in_date": ex_in_date // 기존의 납기일자
+		    }),
+		    contentType: "application/json",
 	        success: function(result){
 	          if(result > 0) {
 	        	  window.opener.location.reload();
 	        	  self.close();
+	          } else {
+	        	  alert("수정 실패!");
 	          }
 	        }
 		});

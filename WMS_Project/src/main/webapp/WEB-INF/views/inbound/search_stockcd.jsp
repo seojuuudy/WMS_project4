@@ -119,7 +119,7 @@
 						
 						<c:choose>
 							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='SearchStockcd?pageNum=${pageNum - 1}&searchType=${param.searchType}&keyword=${param.keyword}&index=${index} '">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='SearchStockcd?pageNum=${pageNum - 1}&searchType=${param.searchType}&keyword=${param.keyword}&index=${index}&&product_cd=${product_cd}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
@@ -132,14 +132,14 @@
 									${i }
 								</c:when>
 								<c:otherwise>
-									<a href="SearchStockcd?pageNum=${i }&searchType=${param.searchType}&keyword=${param.keyword}&index=${index}">${i }</a>
+									<a href="SearchStockcd?pageNum=${i }&searchType=${param.searchType}&keyword=${param.keyword}&index=${index}&product_cd=${product_cd}">${i }</a>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 				
 						<c:choose>
 							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='SearchStockcd?pageNum=${pageNum + 1}&searchType=${param.searchType}&keyword=${param.keyword}&index=${index}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='SearchStockcd?pageNum=${pageNum + 1}&searchType=${param.searchType}&keyword=${param.keyword}&index=${index}&&product_cd=${product_cd}'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">

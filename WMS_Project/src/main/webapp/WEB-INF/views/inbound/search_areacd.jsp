@@ -26,7 +26,27 @@
  	<!-- jquery -->
 	<script src="${pageContext.request.contextPath }/resources/assets/js/jquery-3.6.3.js"></script>
 	<script type="text/javascript">
-	
+	    
+		// 위치 중복 검사
+        function check(location_cd, product_cd, callback) {
+            $.ajax({
+                url: 'ck_Locatecd',
+                type: 'GET',
+                dataType: 'json',
+                data: { location_cd: location_cd, product_cd: product_cd }, // 데이터 전달
+                success: function(data) {
+                    if(data == 0) { 
+                    	callback(true); // 중복된 창고위치가 존재하지 않으면 true
+                    } else {
+                        callback(false); // 중복된 창고위치가 존재하면 false
+                    }
+                },
+                error: function() {
+                    callback(false);
+                }
+            }); // ajax
+        }
+		
 		<!-- 입고 처리의 구역명_선반위치에 값 전달 -->
         function send_area(i, area_cd, location_cd) {
 			const index = ${index}; // 부모창의 인덱스
@@ -50,49 +70,14 @@
 		        	// 구역코드, 위치코드 넘기기
 		       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_area_cd' value='"+ area_cd +"'>");
 		       		$("#location"+index, opener.document).append("<input type='hidden' name='wh_loc_in_area_cd' value='"+ location_cd +"'>");
-		        	
-		       		// 부모창에 재고번호 전달
 		       		
+		       		// 새재고번호를 생성하기위해 부모창의 newStockcd 함수 호출
+		        	window.opener.newStockcd(index);
 		        	window.close();
         		} else { // 중복된 창고 위치가 존재하면 알림창
         		 	 alert("해당 위치에 이미 재고가 존재합니다.");
         		} // if문 끝
         	}) // check 함수 끝
-        }
-        
-        // 신규 재고번호 (수정하는중)
-        function newStockcd() {
-        	$.ajax({
-        		  url: 'getMaxstock_cd',
-        		  type: 'GET',
-        		  dataType: 'json',
-        		  async: false, // 동기적 처리위해 async를 false로 설정
-        		  success: function(stock_cd) {
-        			  Maxstock_cd = stock_cd;
-        		  }
-       		}); // ajax
-        	return Maxstock_cd;
-        }
-        
-     	// 위치 중복 검사
-        function check(location_cd, product_cd, callback) {
-            $.ajax({
-                url: 'ck_Locatecd',
-                type: 'GET',
-                dataType: 'json',
-                data: { location_cd: location_cd, product_cd: product_cd }, // 데이터 전달
-                success: function(data) {
-                    if(data == 0) { // 중복검사 결과가 0이면 true
-//                         alert(data)
-                    	callback(true);
-                    } else {
-                        callback(false); 
-                    }
-                },
-                error: function() {
-                    callback(false);
-                }
-            }); // ajax
         }
 	</script>
 	<!-- jquery -->
