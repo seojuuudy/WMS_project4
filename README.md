@@ -31,46 +31,43 @@ Spring Legacy를 활용하여 협업하였습니다.
 
 ## 팀원 및 파트 분배
 
-GyeongBin Jo [Team leader]
+### GyeongBin Jo [Team leader]
+
+  :email: gyeongbin.project@gmail.com
+  
+  :computer: https://github.com/GyeongBinJ
+  
+  :pencil2: https://binj.tistory.com/3 (자세한 개발 일지)
 
 - 로그인, 내 정보 보기
 - 재고 전반
 - GitHub 관리 및 ReadMe 작성
 
-Minji Kim
+### Minji Kim
 
 - 인사 관리
 - 입고 예정
 
-Hyeyeon Kim
+### Hyeyeon Kim
 
 - 품목 관리
 - 메인 CSS
 
-Bitgoeun Moon
+### Bitgoeun Moon
 
 - 창고 관리 전반
 
-Jieun Moon
+### Jieun Moon
 
 - 인사 관리
 - 입고 처리
 
-Dayoung Seo
+### Dayoung Seo
 
 - 거래처 등록
 - 출고 전반
 
-YoungJun Choi
+### YoungJun Choi
 
 - 창고 등록
 - 출고 목록
-
-## 주 기능 소개
-
-### 입고
-
-### 출고
-
-### 재고 [담당자: GyeongBin Jo]
-
