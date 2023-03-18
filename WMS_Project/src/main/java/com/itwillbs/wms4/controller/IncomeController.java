@@ -390,7 +390,8 @@ public class IncomeController {
 	public String productList(Model model, @RequestParam(defaultValue = "") String searchType,
 			@RequestParam(defaultValue = "") String keyword, 
 			@RequestParam(defaultValue = "1") int pageNum, 
-			@RequestParam(defaultValue = "") String orderType,
+			@RequestParam(defaultValue = "") String order,
+			@RequestParam(defaultValue = "") String complete,
 			HttpSession session) {
 		
 		String sId = (String)session.getAttribute("sId");
@@ -408,10 +409,10 @@ public class IncomeController {
 				int startRow = (pageNum-1) * listLimit;
 		
 				// 입고 예정 항목 목록 조회
-				List<V_Inbound_ProductVO> inProductList = service.getinProductList(searchType, keyword, startRow, listLimit, orderType);
+				List<V_Inbound_ProductVO> inProductList = service.getinProductList(searchType, keyword, startRow, listLimit, order, complete);
 				
 				// 입고 예정 항목 목록 갯수 조회
-				int listCount = service.getinProductListCount(searchType, keyword);
+				int listCount = service.getinProductListCount(searchType, keyword, complete);
 				int pageListLimit = 8;
 				int maxPage = listCount/listLimit + (listCount%listLimit!=0? 1 : 0);
 				int startPage = (pageNum-1) / pageListLimit * pageListLimit + 1;

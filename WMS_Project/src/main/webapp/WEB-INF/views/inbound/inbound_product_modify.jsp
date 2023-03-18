@@ -30,16 +30,9 @@
 //  	document.getElementById("in_date").value = ${inProduct.in_date }
 
  	$("document").ready(function(){
-	 	<!-- 입고예정수량 변경시 수량 제어 -->
+	 	<!-- 입고예정수량 변경시 미입고수량 제어 -->
 	 	$('input[id="in_schedule_qty"]').on("input", function() {
-	   		 let in_schedule_qty = parseInt($(this).val()); // 입력받은 입고예정수량
-	    	 
-	   		 if($.isNumeric(in_schedule_qty)) { // 입력받은 입고예정수량이 숫자(정수)일 때 
-	        	$("#not_in_qty").val(parseInt($("#in_schedule_qty").val()) - parseInt($("#in_qty").val()));
-	    	 } else { // 입력받은 입고예정수량이 숫자가 아닐때
-	       		alert("숫자를 입력해주세요!");
-	        	$(this).val(""); // 입력값이 숫자가 아닌 경우 value 초기화
-	    	}
+	   		$("#not_in_qty").val(Number($("#in_schedule_qty").val()) - Number($("#in_qty").val()));
 		});
  	});
      	
@@ -58,6 +51,21 @@
  	<!-- 수정 작업 완료시 팝업창 닫힘 -->
  	<!-- 데이터 전송 후 팝업창을 닫기 위해 submit이 아닌 ajax로 동작시킴 -->
     function modify(product_name, ex_in_date) {
+   	    let inScheduleQty = parseInt($("#in_schedule_qty").val()); // 입고예정수량
+	    let notInQty = Number($("#not_in_qty").val()); // 미입고수량
+   		let InQty = Number($("#in_qty").val()); // 입고수량
+   		
+	   	if(isNaN(inScheduleQty)) { // 입고예정수량에 문자가 들어갔을때 알림창
+	        alert("입고예정수량을 숫자로 입력해주세요.");
+	        return false;
+	    }
+   		
+   		if(notInQty < 0) { // 미입고 수량이 음수라면 알림창
+	    	alert("입고예정수량은 입고수량보다 작을 수 없습니다.")
+    		$("#not_in_qty").val(inScheduleQty - InQty);
+   			return false;
+	    }
+    	
 // 		var formdata = $("form[name=modify_form]").serialize(); // 기존+변경 같이 넘겨줘야해서 serialize 안썼음
 		// 변경된 value 함께 넘겨주기
 		var product_cd = parseInt($("#product_cd").val());
@@ -86,7 +94,7 @@
 	        	  window.opener.location.reload();
 	        	  self.close();
 	          } else {
-	        	  alert("수정 실패!");
+	        	  alert("입고예정수량을 입력해주세요!\n\n ❌수량은 숫자로만 입력 가능합니다.❌"); // null 또는 int가 아닐때
 	          }
 	        }
 		});
@@ -141,7 +149,7 @@
                    	 <label class="col-sm-3 col-form-label">품목명</label>
                    	 <div class="col-sm-9">
                       <div class="input-group">
-                        <input type="text" class="form-control" id="product_name" value="${inProduct.product_name }" />
+                        <input type="text" class="form-control" id="product_name" value="${inProduct.product_name }" readonly="readonly" />
                         <div class="input-group-append">
                           <button class="btn btn-sm btn-primary" type="button" onclick="search_pname()">검색</button>
                         </div>
@@ -209,13 +217,6 @@
         <!-- 본문 영역 --> 
            </div>
     <!-- container-scroller -->
-    
-<!--       page-body-wrapper ends -->
-<!--           </div> -->
-<!-- 		<!-- table -->	 -->
-<!--         </div> -->
-<!--       </div> -->
-<!--     </div> -->
     
     <!-- plugins:js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendors/js/vendor.bundle.base.js"></script>

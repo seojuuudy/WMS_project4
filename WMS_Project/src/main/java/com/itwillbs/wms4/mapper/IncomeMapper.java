@@ -52,13 +52,16 @@ public interface IncomeMapper {
 			@Param("keyword") String keyword, 
 			@Param("startRow") int startRow, 
 			@Param("listLimit") int listLimit,
-			@Param("orderType") String orderType 
+			@Param("order") String order,
+			@Param("complete") String complete
 			);
 
 	// 입고 예정 항목 목록 갯수
 	int selectinProductListCount(
 			@Param("searchType") String searchType, 
-			@Param("keyword") String keyword);
+			@Param("keyword") String keyword,
+			@Param("complete") String complete
+			);
 
 	// 입고 예정 항목의 정보 가져오기 (수정폼)
 	V_Inbound_ProductVO selectinProductInfo(

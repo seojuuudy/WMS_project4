@@ -68,7 +68,7 @@
 	        +'<td><input type="text" name="inSchedulePerList[' + idx + '].size_des" id="size_des' + idx + '" class="form-control"/></td>'
 	        +'<td><input type="text" name="inSchedulePerList[' + idx + '].in_schedule_qty" class="form-control"/></td>'
 	        +'<td><input type="date" name="inSchedulePerList[' + idx + '].in_date" class="form-control"/></td>'
-	        +'<td><input type="text" name="inSchedulePerList[' + idx + '].remarks" class="form-control"/></td>'
+	        +'<td><input type="text" name="inSchedulePerList[' + idx + '].remarks" value="-" class="form-control"/></td>'
 	        +'<td><a href="javascript:void(0);" class="badge badge-info" onclick="addTag(); return false;">+</a></td>'
 	        +'</tr>';
 	        
@@ -231,7 +231,7 @@
 		                        <input type="date" name="inSchedulePerList[${k }].in_date" class="form-control"/>
 		                    </td>
                             <td>
-                            	<input type="text" name="inSchedulePerList[${k }].remarks" class="form-control"/>
+                            	<input type="text" name="inSchedulePerList[${k }].remarks" value="-" class="form-control"/>
                             </td>
                             <td>
 	                            <a href="javascript:void(0);" class="badge badge-info" onclick="addTag(); return false;">+</a>

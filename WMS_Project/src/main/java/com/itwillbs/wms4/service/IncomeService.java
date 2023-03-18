@@ -64,13 +64,13 @@ public class IncomeService {
 	// --------------------- 입고예정항목 --------------------
 	// 입고 예정 항목 목록 조회
 	public List<V_Inbound_ProductVO> getinProductList(String searchType, String keyword, int startRow,
-			int listLimit, String orderType) {
-		return mapper.selectinProductList(searchType, keyword, startRow, listLimit, orderType);
+			int listLimit, String order, String complete) {
+		return mapper.selectinProductList(searchType, keyword, startRow, listLimit, order, complete);
 	}
 
 	// 입고 예정 항목 목록 갯수
-	public int getinProductListCount(String searchType, String keyword) {
-		return mapper.selectinProductListCount(searchType, keyword);
+	public int getinProductListCount(String searchType, String keyword, String complete) {
+		return mapper.selectinProductListCount(searchType, keyword, complete);
 	}
 
 	// 입고 예정 항목의 정보 가져오기

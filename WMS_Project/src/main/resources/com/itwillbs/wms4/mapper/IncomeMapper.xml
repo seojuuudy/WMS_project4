@@ -116,42 +116,50 @@
 	<select id="selectinProductList" resultType="com.itwillbs.wms4.vo.V_Inbound_ProductVO">
 		SELECT *
 			FROM V_inbound_product
-			WHERE in_complete = 0
     	<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('in_schedule_cd')">
-					AND in_schedule_cd LIKE '%${keyword}%'
+				<when test='searchType.equals("in_schedule_cd")'>
+					WHERE in_schedule_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('cust_name')">
-					AND cust_name LIKE '%${keyword}%'
+				<when test='searchType.equals("cust_name")'>
+					WHERE cust_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('product_name')">
-					AND product_name LIKE '%${keyword}%'
+				<when test='searchType.equals("product_name")'>
+					WHERE product_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('in_date')">
-					AND in_date LIKE '%${keyword}%' 
+				<when test='searchType.equals("in_date")'>
+					WHERE in_date LIKE '%${keyword}%' 
 				</when>
-			</choose>		
+				<when test='complete.equals("0")'>
+					AND in_complete = #{complete}
+				</when>	
+				<when test='complete.equals("1")'>
+					AND in_complete = #{complete}
+				</when>	
+			</choose>
 		</if>
-		<if test='keyword.equals("")'>
-			ORDER BY in_schedule_cd
-		</if>
-		<if test='!keyword.equals("")'>
-			<choose>
-				<when test="searchType.equals('incd_asc')">
-					ORDER BY in_schedule_cd 
-				</when>
-				<when test="searchType.equals('incd_desc')">
-					ORDER BY in_schedule_cd DESC
-				</when>
-				<when test="searchType.equals('indate_asc')">
-					ORDER BY in_date
-				</when>
-				<when test="searchType.equals('indate_desc')">
-					ORDER BY in_date DESC
-				</when>
-			</choose>		
-		</if>
+		<choose>
+			<when test='complete.equals("0")'>
+				WHERE in_complete = #{complete}
+			</when>	
+			<when test='complete.equals("1")'>
+				WHERE in_complete = #{complete}
+			</when>	
+		</choose>
+		<choose>
+			<when test='order.equals("incd_asc") or searchType.equals("")'>
+				ORDER BY in_schedule_cd 
+			</when>
+			<when test='order.equals("incd_desc")'>
+				ORDER BY in_schedule_cd DESC
+			</when>
+			<when test='order.equals("indate_asc")'>
+				ORDER BY in_date
+			</when>
+			<when test='order.equals("indate_desc")'>
+				ORDER BY in_date DESC
+			</when>
+		</choose>		
 			LIMIT #{startRow}, #{listLimit}
 	</select>
 	
@@ -159,23 +167,36 @@
 	<select id="selectinProductListCount" resultType="int">
 		SELECT COUNT(*) 
 			FROM V_inbound_product
-			WHERE in_complete = 0
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('in_schedule_cd')">
-					AND in_schedule_cd LIKE '%${keyword}%'
+				<when test='searchType.equals("in_schedule_cd")'>
+					WHERE in_schedule_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('cust_name')">
-					AND cust_name LIKE '%${keyword}%'
+				<when test='searchType.equals("cust_name")'>
+					WHERE cust_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('product_name')">
-					AND product_name LIKE '%${keyword}%'
+				<when test='searchType.equals("product_name")'>
+					WHERE product_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('in_date')">
-					AND in_date LIKE '%${keyword}%' 
+				<when test='searchType.equals("in_date")'>
+					WHERE in_date LIKE '%${keyword}%' 
 				</when>
+				<when test='complete.equals("0")'>
+					AND in_complete = #{complete}
+				</when>	
+				<when test='complete.equals("1")'>
+					AND in_complete = #{complete}
+				</when>	
 			</choose>		
 		</if>
+		<choose>
+			<when test='complete.equals("0")'>
+				WHERE in_complete = #{complete}
+			</when>	
+			<when test='complete.equals("1")'>
+				WHERE in_complete = #{complete}
+			</when>	
+		</choose>
 			ORDER BY in_schedule_cd
 	</select>
 	
@@ -310,16 +331,16 @@
 	 	WHERE product_cd = #{product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('product_name')">
+				<when test='searchType.equals("product_name")'>
 					AND product_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('stock_cd')">
+				<when test='searchType.equals("stock_cd")'>
 					AND stock_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_area')">
+				<when test='searchType.equals("wh_area")'>
 					AND wh_area LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_loc_in_area')">
+				<when test='searchType.equals("wh_loc_in_area")'>
 					AND wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>		
@@ -335,16 +356,16 @@
  		WHERE product_cd = #{product_cd}
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('product_name')">
+				<when test='searchType.equals("product_name")'>
 					AND product_name LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('stock_cd')">
+				<when test='searchType.equals("stock_cd")'>
 					AND stock_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_area')">
+				<when test='searchType.equals("wh_area")'>
 					AND wh_area LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_loc_in_area')">
+				<when test='searchType.equals("wh_loc_in_area")'>
 					AND wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>			
@@ -357,10 +378,10 @@
 			From product
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('product_cd')">
+				<when test='searchType.equals("product_cd")'>
 					WHERE product_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('product_name')">
+				<when test='searchType.equals("product_name")'>
 					WHERE product_name LIKE '%${keyword}%'
 				</when>
 			</choose>		
@@ -375,10 +396,10 @@
 			FROM product
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('product_cd')">
+				<when test='searchType.equals("product_cd")'>
 					WHERE product_cd LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('product_name')">
+				<when test='searchType.equals("product_name")'>
 					WHERE product_name LIKE '%${keyword}%'
 				</when>
 			</choose>		
@@ -392,10 +413,10 @@
 			JOIN wh_location wl USING(wh_area_cd)
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('wh_area')">
+				<when test='searchType.equals("wh_area")'>
 					WHERE wa.wh_area LIKE '%${keyword}%'
 				</when>
-				<when test="searchType.equals('wh_loc_in_area')">
+				<when test='searchType.equals("wh_loc_in_area")'>
 					WHERE wl.wh_loc_in_area LIKE '%${keyword}%'
 				</when>
 			</choose>		
@@ -411,13 +432,13 @@
 			JOIN wh_location wl USING(wh_area_cd)
 		<if test='!keyword.equals("")'>
 			<choose>
-				<when test="searchType.equals('wh_area')">
-					WHERE wa.wh_area LIKE '%${keyword}%'
-				</when>
-				<when test="searchType.equals('wh_loc_in_area')">
-					WHERE wl.wh_loc_in_area LIKE '%${keyword}%'
-				</when>
-			</choose>		
+			<when test='searchType.equals("wh_area")'>
+				WHERE wa.wh_area LIKE '%${keyword}%'
+			</when>
+			<when test='searchType.equals("wh_loc_in_area")'>
+				WHERE wl.wh_loc_in_area LIKE '%${keyword}%'
+			</when>
+			</choose>
 		</if>
 	</select>
 </mapper>
