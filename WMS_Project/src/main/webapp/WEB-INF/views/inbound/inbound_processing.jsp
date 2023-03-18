@@ -32,13 +32,13 @@
 		<!-- 합계 계산 -->
 	    let sum1 = 0;
 	    $('input[id*="in_schedule_qty"]').each(function(){
-            sum1 += parseInt($(this).val());
+            sum1 += Number($(this).val());
 	    });
 	    $("input[name=sum1]").val(sum1);
 	    
 	    let sum2 = 0;
 	    $('input[id*="not_in_qty"]').each(function(){
-            sum2 += parseInt($(this).val());
+            sum2 += Number($(this).val());
 	    });
 	    $("input[name=sum2]").val(sum2);
 	 
@@ -69,6 +69,7 @@
 			        } // 위치가 선택되어 있으면 true
 			    });
 			}
+			
 			if(isValid) { // 모든 유효성 검사 통과
 			    $("#processform").submit(); // 폼전송
 			    alert("입고처리 완료되었습니다.");

@@ -38,7 +38,7 @@
  	    window.open("pdModify.in?in_schedule_cd="+in_schedule_cd+"&product_name="+product_name+"&in_date="+in_date, '항목 수정', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top );
  	}
 
-	// 입고 버튼 클릭시 
+	<!-- 입고 버튼 클릭 -->
 	function inbound() {
 		
 		let arr = new Array();
@@ -70,6 +70,17 @@
 		}
 	}
 		
+	<!-- 정렬타입 선택 -->
+	function submitSortForm() {
+	    document.getElementById("sortForm").submit();
+	}
+	
+	<!-- 상태 탭 선택 -->
+	function submitCompleteForm(value) {
+		document.getElementById("complete").value = value;
+	    document.getElementById("sortForm").submit();
+	}
+</script>
 </script>
 	<!-- jquery -->
   </head>
@@ -107,13 +118,14 @@
               	<div class="card-body">
                     <h4 class="card-title">입고 예정 항목</h4>
                     <p class="card-description">inbound product list</p>
-					 <form action="pdList.in">
+					 <form id="sortForm" action="pdList.in">
 					 	<input type="hidden" name="pageNum" value="${pageNum }">
+					 	<input type="hidden" name="complete" id="complete" value="">
 						<!-- 검색 타입 추가 -->
 						<div class="form-group">
                       	<div class="input-group">
                         <div class="input-group-prepend">
-                          <select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <select name="searchType" id="searchType" class="btn btn-sm btn-outline-primary dropdown-toggle">
                             <option class="dropdown-item" value="in_schedule_cd" <c:if test="${param.searchType eq 'in_schedule_cd'}">selected</c:if>>입고예정번호</option>
                             <option class="dropdown-item" value="business_no" <c:if test="${param.searchType eq 'business_no'}">selected</c:if>>거래처명</option>
                             <option class="dropdown-item" value="product_name" <c:if test="${param.searchType eq 'product_name'}">selected</c:if>>품목명</option>
@@ -123,17 +135,24 @@
                        	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
                         </div>
-                    </div>
-					</form>
-						<div class="input-group">
-                          <select name="orderType" id="orderType" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                               <option class="dropdown-item" value="" disabled selected>정렬</option>
-							   <option class="dropdown-item" value="incd_asc" onclick="location.href='pdList.in?orderType=incd_asc'" <c:if test="${param.orderType eq 'incd_asc'}">selected</c:if>>입고예정번호(오름차순)</option>
-							   <option class="dropdown-item" value="incd_desc" onclick="location.href='pdList.in?orderType=incd_desc'" <c:if test="${param.orderType eq 'incd_desc'}">selected</c:if>>입고예정번호(내림차순)</option>
-							   <option class="dropdown-item" value="indate_asc" onclick="location.href='pdList.in?orderType=indate_asc'" <c:if test="${param.orderType eq 'indate_asc'}">selected</c:if>>납기일자(오름차순)</option>
-							   <option class="dropdown-item" value="indate_desc" onclick="location.href='pdList.in?orderType=indate_desc'" <c:if test="${param.orderType eq 'indate_desc'}">selected</c:if>>납기일자(내림차순)</option>
-						  </select>
-                        </div>
+                    	</div>
+	                    <div class="page-header">
+			              <nav aria-label="breadcrumb">
+							  <ol class="breadcrumb">
+							    <li class="breadcrumb-item" value=""><a href="javascript:void(0);" onclick="submitCompleteForm('')">전체</a></li>
+							    <li class="breadcrumb-item" value="0"><a href="javascript:void(0);" onclick="submitCompleteForm('0')">진행중</a></li>
+							    <li class="breadcrumb-item" value="1"><a href="javascript:void(0);" onclick="submitCompleteForm('1')">완료</a></li>
+							  </ol>
+						  </nav>
+							<select name="order" id="order" class="btn btn-sm btn-outline-primary dropdown-toggle" onchange="submitSortForm()">
+							    <option class="dropdown-item" value="" disabled selected>정렬</option>
+							    <option class="dropdown-item" value="incd_asc" <c:if test="${param.order eq 'incd_asc'}">selected</c:if>>입고예정번호(오름차순)</option>
+							    <option class="dropdown-item" value="incd_desc" <c:if test="${param.order eq 'incd_desc'}">selected</c:if>>입고예정번호(내림차순)</option>
+							    <option class="dropdown-item" value="indate_asc" <c:if test="${param.order eq 'indate_asc'}">selected</c:if>>납기일자(오름차순)</option>
+							    <option class="dropdown-item" value="indate_desc" <c:if test="${param.order eq 'indate_desc'}">selected</c:if>>납기일자(내림차순)</option>
+						  	</select>
+			            </div>
+<!-- 					</form> -->
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -175,6 +194,7 @@
                          
                         </tbody>
                       </table>
+                    </form>
                     </div>
 			        <div class="template-demo" style="text-align: right;">
 	           			<button type="button" id="inboundbtn" class="btn btn-primary btn-rounded btn-fw" onclick="inbound()">입고</button>
@@ -184,7 +204,7 @@
 				    
 						<c:choose>
 							<c:when test="${pageNum > 1}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='pdList.in?pageNum=${pageNum - 1}&searchType=${param.searchType}&keyword=${param.keyword}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='pdList.in?pageNum=${pageNum - 1}&searchType=${param.searchType}&keyword=${param.keyword}&order=${param.order }&complete=${param.complete }'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
@@ -197,14 +217,14 @@
 									${i }
 								</c:when>
 								<c:otherwise>
-									<a href="pdList.in?pageNum=${i }&searchType=${param.searchType}&keyword=${param.keyword}">${i }</a>
+									<a href="pdList.in?pageNum=${i }&searchType=${param.searchType}&keyword=${param.keyword}&order=${param.order }&complete=${param.complete }">${i }</a>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 				
 						<c:choose>
 							<c:when test="${pageNum < pageInfo.maxPage}">
-								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='pdList.in?pageNum=${pageNum + 1}&searchType=${param.searchType}&keyword=${param.keyword}'">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='pdList.in?pageNum=${pageNum + 1}&searchType=${param.searchType}&keyword=${param.keyword}&order=${param.order }&complete=${param.complete }'">
 							</c:when>
 							<c:otherwise>
 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">
