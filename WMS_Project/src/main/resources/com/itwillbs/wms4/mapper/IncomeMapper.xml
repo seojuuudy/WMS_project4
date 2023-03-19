@@ -117,35 +117,41 @@
 		SELECT *
 			FROM V_inbound_product
     	<if test='!keyword.equals("")'>
-			<choose>
-				<when test='searchType.equals("in_schedule_cd")'>
-					WHERE in_schedule_cd LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("cust_name")'>
-					WHERE cust_name LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("product_name")'>
-					WHERE product_name LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("in_date")'>
-					WHERE in_date LIKE '%${keyword}%' 
-				</when>
-				<when test='complete.equals("0")'>
-					AND in_complete = #{complete}
-				</when>	
-				<when test='complete.equals("1")'>
-					AND in_complete = #{complete}
-				</when>	
-			</choose>
+	        <choose>
+	            <when test='searchType.equals("in_schedule_cd")'>
+	                WHERE in_schedule_cd LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("cust_name")'>
+	                WHERE cust_name LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("product_name")'>
+	                WHERE product_name LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("in_date")'>
+	                WHERE in_date LIKE '%${keyword}%' 
+	            </when>
+	        </choose>
 		</if>
-		<choose>
-			<when test='complete.equals("0")'>
-				WHERE in_complete = #{complete}
-			</when>	
-			<when test='complete.equals("1")'>
-				WHERE in_complete = #{complete}
-			</when>	
-		</choose>
+		<if test='!keyword.equals("") and !complete.equals("")'>
+	        <choose>
+	            <when test='complete.equals("0")'>
+	                AND in_complete = #{complete}
+	            </when>   
+	            <when test='complete.equals("1")'>
+	                AND in_complete = #{complete}
+	            </when>   
+	        </choose>
+		</if>
+		<if test='keyword.equals("") and !complete.equals("")'>
+	        <choose>
+	            <when test='complete.equals("0")'>
+	                WHERE in_complete = #{complete}
+	            </when>   
+	            <when test='complete.equals("1")'>
+	                WHERE in_complete = #{complete}
+	            </when>   
+	        </choose>
+		</if>
 		<choose>
 			<when test='order.equals("incd_asc") or searchType.equals("")'>
 				ORDER BY in_schedule_cd 
@@ -168,35 +174,41 @@
 		SELECT COUNT(*) 
 			FROM V_inbound_product
 		<if test='!keyword.equals("")'>
-			<choose>
-				<when test='searchType.equals("in_schedule_cd")'>
-					WHERE in_schedule_cd LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("cust_name")'>
-					WHERE cust_name LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("product_name")'>
-					WHERE product_name LIKE '%${keyword}%'
-				</when>
-				<when test='searchType.equals("in_date")'>
-					WHERE in_date LIKE '%${keyword}%' 
-				</when>
-				<when test='complete.equals("0")'>
-					AND in_complete = #{complete}
-				</when>	
-				<when test='complete.equals("1")'>
-					AND in_complete = #{complete}
-				</when>	
-			</choose>		
+	        <choose>
+	            <when test='searchType.equals("in_schedule_cd")'>
+	                WHERE in_schedule_cd LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("cust_name")'>
+	                WHERE cust_name LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("product_name")'>
+	                WHERE product_name LIKE '%${keyword}%'
+	            </when>
+	            <when test='searchType.equals("in_date")'>
+	                WHERE in_date LIKE '%${keyword}%' 
+	            </when>
+	        </choose>
 		</if>
-		<choose>
-			<when test='complete.equals("0")'>
-				WHERE in_complete = #{complete}
-			</when>	
-			<when test='complete.equals("1")'>
-				WHERE in_complete = #{complete}
-			</when>	
-		</choose>
+		<if test='!keyword.equals("") and !complete.equals("")'>
+	        <choose>
+	            <when test='complete.equals("0")'>
+	                AND in_complete = #{complete}
+	            </when>   
+	            <when test='complete.equals("1")'>
+	                AND in_complete = #{complete}
+	            </when>   
+	        </choose>
+		</if>
+		<if test='keyword.equals("") and !complete.equals("")'>
+	        <choose>
+	            <when test='complete.equals("0")'>
+	                WHERE in_complete = #{complete}
+	            </when>   
+	            <when test='complete.equals("1")'>
+	                WHERE in_complete = #{complete}
+	            </when>   
+	        </choose>
+		</if>
 			ORDER BY in_schedule_cd
 	</select>
 	
