@@ -74,7 +74,7 @@ public class OutcomeController {
 			return "out_schedule/out_detail_modify";
 	}
 	
-//	// 한시적 출고 수정 비즈니스 로직 처리
+	// 한시적 출고 수정 비즈니스 로직 처리
 //	@PostMapping("/OutUpdatePro.out")
 //	public String OutUpdatePro(
 //			@ModelAttribute Out_schedule_per_productVO outProductVO,

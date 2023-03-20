@@ -80,9 +80,21 @@
 			AND product_cd = #{product_cd}
 	</select>
 	
+<!-- 	<update id="updateOutList"> -->
+<!--   	    UPDATE -->
+<!-- 			out_schedule_per_product ospp -->
+<!-- 		SET  -->
+<!--         	ospp.OUT_DATE = #{out_date}, -->
+<!--         	ospp.OUT_SCHEDULE_QTY = #{out_schedule_qty}, -->
+<!--         	ospp.OUT_QTY = #{out_qty}, -->
+<!--         	ospp.REMARKS = #{remarks} -->
+<!--     	WHERE -->
+<!-- 	    	ospp.OUT_SCHEDULE_CD = #{out_schedule_cd} -->
+<!--         	AND ospp.PRODUCT_CD = #{product_cd} -->
+<!--   	</update> -->
 	<update id="updateOutList">
   	    UPDATE
-			out_schedule_per_product ospp
+			out_schedule_product
 		SET 
         	ospp.OUT_DATE = #{out_date},
         	ospp.OUT_SCHEDULE_QTY = #{out_schedule_qty},
