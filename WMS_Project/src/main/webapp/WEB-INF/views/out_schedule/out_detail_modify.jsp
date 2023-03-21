@@ -136,15 +136,6 @@ $(function() {
                     </div>
                   </div>
                   
-<!--                   <div class="col-md-6"> -->
-<!--                     <div class="form-group row"> -->
-<!--                       <label class="col-sm-3 col-form-label">출고지시수량</label> -->
-<!--                       <div class="col-sm-9"> -->
-<%--                         <input type="number" class="form-control" value="${out.out_qty }" name="out_qty" id="out_qty"/> --%>
-<!--                       </div> -->
-<!--                     </div> -->
-<!--                   </div> -->
-                
                   <div class="col-md-6">
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">적요</label>

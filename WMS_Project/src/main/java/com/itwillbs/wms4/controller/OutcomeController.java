@@ -27,42 +27,42 @@ public class OutcomeController {
 	// 출고예정항목리스트
 	@GetMapping(value = "/OutScheduleProductList.out")
 	public String WarehouseList(
-			@RequestParam(defaultValue = "") String searchType,
-			@RequestParam(defaultValue = "") String keyword,
-			@RequestParam(defaultValue = "1") int pageNum,
-			Model model,
-			HttpSession session) {
-				// 페이징 처리를 위한 변수 선언
-				int listLimit = 11; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
-				int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
-				
-				List<Out_schedule_per_productVO> outList = service.getOutList(searchType, keyword, startRow, listLimit);
-				// 페이징 처리
-				int listCount = service.getBoardListCount(searchType, keyword);
-				System.out.println("총 게시물 수 : " + listCount);
-				
-				int pageListLimit = 10;
-				
-				int maxPage = listCount / listLimit 
-						+ (listCount % listLimit == 0 ? 0 : 1); 
-				
-				int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
-				
-				int endPage = startPage + pageListLimit - 1;
-				
-				if(endPage > maxPage) {
-					endPage = maxPage;
-				}
-				if(pageNum > endPage) {
-				    pageNum = endPage;
-				}
-				
-				PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
-				// ---------------------------------------------------------------------------
-				model.addAttribute("outList", outList);
-				model.addAttribute("pageInfo", pageInfo);
-				System.out.println("outList" + outList);
-				return "out_schedule/out_schedule_product_list";
+	@RequestParam(defaultValue = "") String searchType,
+	@RequestParam(defaultValue = "") String keyword,
+	@RequestParam(defaultValue = "1") int pageNum,
+	Model model,
+	HttpSession session) {
+		// 페이징 처리를 위한 변수 선언
+		int listLimit = 11; // 한 페이지에서 표시할 게시물 목록을 10개로 제한
+		int startRow = (pageNum - 1) * listLimit; // 조회 시작 행번호 계산
+		
+		List<Out_schedule_per_productVO> outList = service.getOutList(searchType, keyword, startRow, listLimit);
+		// 페이징 처리
+		int listCount = service.getBoardListCount(searchType, keyword);
+		System.out.println("총 게시물 수 : " + listCount);
+		
+		int pageListLimit = 10;
+		
+		int maxPage = listCount / listLimit 
+				+ (listCount % listLimit == 0 ? 0 : 1); 
+		
+		int startPage = (pageNum - 1) / pageListLimit * pageListLimit + 1;
+		
+		int endPage = startPage + pageListLimit - 1;
+		
+		if(endPage > maxPage) {
+			endPage = maxPage;
+		}
+		if(pageNum > endPage) {
+		    pageNum = endPage;
+		}
+		
+		PageInfo pageInfo = new PageInfo(listCount, pageListLimit, maxPage, startPage, endPage);
+		// ---------------------------------------------------------------------------
+		model.addAttribute("outList", outList);
+		model.addAttribute("pageInfo", pageInfo);
+		System.out.println("outList" + outList);
+		return "out_schedule/out_schedule_product_list";
 	}
 	
 	// 한시적 출고 수정폼 요청
@@ -74,59 +74,28 @@ public class OutcomeController {
 			return "out_schedule/out_detail_modify";
 	}
 	
-//	// 한시적 출고 수정 비즈니스 로직 처리
-//	@PostMapping("/OutUpdatePro.out")
-//	public String OutUpdatePro(
-//			@ModelAttribute Out_schedule_per_productVO outProductVO,
-//			Model model,
-//			HttpSession session ) {
-//		System.out.println("출고 항목 수정작업 컨트롤러 : " + outProductVO);
-//		
-//		int modifyCount = service.OutUpdate(outProductVO);
-//		
-//		if(modifyCount > 0) {
-//			session.setAttribute("outProductVO", outProductVO);
-//			return "redirect:/OutScheduleList.out";
-//			
-//		} else {
-//			model.addAttribute("msg", "수정에 실패하였습니다.");
-//			return "fail_back";
-//		}
-//	}
 	// 입고 예정 항목 수정 비즈니스 작업 
-		@ResponseBody
-		@PostMapping(value = "/OutUpdatePro.out")
-		public int OutUpdatePro(
-				@ModelAttribute Out_schedule_per_productVO outProductVO, 
-				@RequestParam int product_cd, 
-				@RequestParam Date out_date, 
-				@RequestParam int out_schedule_qty, 
-				@RequestParam int out_qty,
-				@RequestParam String out_schedule_cd,
-				@RequestParam String remarks) {
-			
-			System.out.println("product_cd: " + product_cd);
-			System.out.println("out_date: " + out_date);
-			System.out.println("out_schedule_qty: " + out_schedule_qty);
-			System.out.println("out_qty: " + out_qty);
-			System.out.println("remarks: " + remarks);
-			System.out.println("out_schedule_cd: " + out_schedule_cd);
-			
-			int updateCount = service.OutUpdate(
-					outProductVO, 
-					product_cd,
-					out_date, 
-					out_schedule_qty, 
-					out_qty,
- 					out_schedule_cd, 
-					remarks);
-			
-			return updateCount;
-		}
-	
-	
-	
-	
-	
-	
+	@ResponseBody
+	@PostMapping(value = "/OutUpdatePro.out")
+	public int OutUpdatePro(
+			 @ModelAttribute Out_schedule_per_productVO outProductVO, 
+			 @RequestParam Date out_date, 
+			 @RequestParam int out_schedule_qty, 
+			 @RequestParam String out_schedule_cd,
+			@RequestParam String remarks) {
+		
+		 System.out.println("out_date: " + out_date);
+		 System.out.println("out_schedule_qty: " + out_schedule_qty);
+		 System.out.println("remarks: " + remarks);
+		 System.out.println("out_schedule_cd: " + out_schedule_cd);
+		
+		 int updateCount = service.OutUpdate(
+		 		outProductVO, 
+		 		out_date, 
+		 		out_schedule_qty, 
+		 		out_schedule_cd, 
+		 		remarks);
+		
+		 return updateCount;
+	}
 }
