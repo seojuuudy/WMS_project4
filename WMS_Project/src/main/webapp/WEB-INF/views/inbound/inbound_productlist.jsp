@@ -72,6 +72,24 @@
 		
 	<!-- 정렬타입 선택 -->
 	function submitSortForm() {
+		
+		// url에서 keyword, complete 파라미터 추출
+		let urlParams = new URLSearchParams(window.location.search);
+		let searchTerm = urlParams.get('keyword');		
+		let comstatus = urlParams.get('complete');		
+    	
+    	if(searchTerm == null) {
+    		searchTerm = "";
+    	}
+    	
+    	if(comstatus == null) {
+    		comstatus = "";
+    	}
+    	
+    	// 검색, 탭 선택 후의 결과를 유지한채 정렬하기위해 url에서 추출한 파라미터를 각 요소의 value로 설정
+   		document.getElementById("keyword").value = searchTerm; 
+    	document.getElementById("complete").value = comstatus; 
+    	
 	    document.getElementById("sortForm").submit();
 	}
 	
@@ -132,7 +150,7 @@
                             <option class="dropdown-item" value="in_date" <c:if test="${param.searchType eq 'in_date'}">selected</c:if>>납기일자</option>
                           </select>
                         </div>
-                       	  <input type="text" name="keyword" value="${param.keyword }" class="form-control"/>
+                       	  <input type="text" name="keyword" id="keyword" value="${param.keyword }" class="form-control"/>
                           <input type="submit" class="btn btn-sm btn-primary" value="search" />
                         </div>
                     	</div>
