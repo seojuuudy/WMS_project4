@@ -227,15 +227,15 @@ public class StockController {
 	         if(control.getWh_loc_in_area_arr().length != 0) {
 	            loc_in_area = control.getWh_loc_in_area_arr()[i];
 	            wh_area = loc_in_area.substring(loc_in_area.indexOf(" ") + 1);
-	            wh_area = wh_area.substring(0, wh_area.indexOf(" "));
+	            
+	            if (!wh_area.isEmpty()) {
+	                wh_area = wh_area.substring(0, wh_area.indexOf(" "));
+	            }
 	            
 	            loc_in_area = loc_in_area.substring(loc_in_area.lastIndexOf(" ") + 1);
 	            
-//	            System.out.println("문자열 찾기: " + wh_area);
 	         } 
 	         
-//	         System.out.println("remarks 찾기!: " + control.getRemarks_arr()[i]);
-//	         System.out.println("remarks 찾기!: " + control.getRemarks_arr().length );
 	         String remarks = "";
 	         // 가져온 적요배열의 길이가 0이 아닌 경우 적요 저장
 	         if(control.getRemarks_arr().length != 0) {
@@ -244,9 +244,6 @@ public class StockController {
 	        	 remarks = control.getRemarks_arr()[i];
 	          }
 
-	         
-//	         System.out.println("기존 재고 번호: " + control.getStock_cd_arr()[i] + ", " + "조정 재고수량: " + control.getControl_qty_arr()[i] 
-//	               + ", 이동할 재고 번호: " + control.getMoving_stock_cd_arr()[i] + ", 이동 재고수량 : " + control.getMoving_qty_arr()[i]);
 	         
 	         int stock_cd = stock_control.getStock_cd();
 //	         System.out.println("stock_cd: " + stock_cd);
@@ -278,7 +275,6 @@ public class StockController {
 	        				 
 	        				 int wh_loc_in_area_cd = service.getLocInAreaCd(loc_in_area, area_cd);
 	        				 
-//	        				 System.out.println("가져온 위치 번호: " + wh_loc_in_area_cd);
 	        				 // 새 재고번호 추가하기
 	        				 int insertCount = service.registStock(product_cd, moving_qty, wh_loc_in_area_cd);
 	        				 // 재고를 등록 성공시 재고 이력에 추가 필요
@@ -302,7 +298,7 @@ public class StockController {
 	        					 int product_cd = service.getProduct_cd(product_name);
 	        					 System.out.println("product_cd: " + product_cd);
 	        					 String emp_num = service.getEmpNum(sId);
-//	                     String remarks = stock_control.getRemarks();
+	        					 
 	        					 int insertCount = service.registStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
 	        					 int insertCount2 = service.registMovingStockHistory(stock_cd, product_cd, moving_stock_cd, moving_qty, emp_num, remarks);
 	        					 
