@@ -225,76 +225,56 @@
                </tbody>
              </table>
            </div>
+           <br>
+   			<section id="pageList" style="text-align: center;">
+<!-- 			     만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
+			<c:choose>
+	               <c:when test="${not empty stList }">
+						<c:choose>
+							<c:when test="${empty param.pageNum }">
+								<c:set var="pageNum" value="1" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="pageNum" value="${param.pageNum }" />
+							</c:otherwise>
+						</c:choose>
+						
+						<c:choose>
+							<c:when test="${pageNum > 1}">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?pageNum=${pageNum - 1}'">
+							</c:when>
+							<c:otherwise>
+								<input type="button" class="btn btn-sm btn-outline-primary" value="이전">
+							</c:otherwise>
+						</c:choose>
+							
+						<c:forEach var="i" begin="${pageInfo.startPage }" end="${pageInfo.endPage }">
+							<c:choose>
+								<c:when test="${pageNum eq i}">
+									${i }
+								</c:when>
+								<c:otherwise>
+									<a href="Wh.wms?pageNum=${i }">${i }</a>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+				
+						<c:choose>
+							<c:when test="${pageNum < pageInfo.maxPage}">
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?pageNum=${pageNum + 1}'">
+							</c:when>
+							<c:otherwise>
+								<input type="button" class="btn btn-sm btn-outline-primary" value="다음">
+							</c:otherwise>
+						</c:choose>
+	               </c:when>
+	               <c:otherwise>
+	               </c:otherwise>
+               </c:choose>
+			</section>
 		</div>
-<!--    			<section id="pageList" style="text-align: center;"> -->
-<!-- <!-- 			     만약, pageNum 파라미터가 비어있을 경우 pageNum 변수 선언 및 기본값 1로 설정 -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${empty param.pageNum }"> --%>
-<%-- 						<c:set var="pageNum" value="1" /> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<%-- 						<c:set var="pageNum" value="${param.pageNum }" /> --%>
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-				
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${pageNum > 1}"> --%>
-<%-- 						<c:choose> --%>
-<%-- 							<c:when test="${empty arList}"> --%>
-<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?pageNum=${pageNum - 1}'"> --%>
-<%-- 							</c:when> --%>
-<%-- 							<c:otherwise> --%>
-<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}&pageNum=${pageNum - 1}'"> --%>
-<%-- 										<c:when test="!${empty loList }"> --%>
-<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd }&seachLocation=${ar.wh_area_cd}&pageNum=${pageNum - 1}'"> --%>
-<%-- 										</c:when> --%>
-<%-- 										<c:otherwise> --%>
-<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="이전" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd }&seachLocation=${lo.wh_area_cd }&seachGo=${lo.wh_loc_in_area_cd }&pageNum=${pageNum - 1}'"> --%>
-<%-- 										</c:otherwise> --%>
-<%-- 							</c:otherwise> --%>
-<%-- 						</c:choose> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<input type="button" class="btn btn-sm btn-outline-primary" value="이전"> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-					
-<%-- 				<c:forEach var="i" begin="${pageInfo.startPage }" end="${pageInfo.endPage }"> --%>
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${pageNum eq i}"> --%>
-<%-- 							${i } --%>
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-<%-- 							<a href="Wh.wms?pageNum=${i }">${i }</a> --%>
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
-<%-- 				</c:forEach> --%>
-				
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${pageNum < pageInfo.maxPage}"> --%>
-<%-- 						<c:choose> --%>
-<%-- 							<c:when test="${empty arList}"> --%>
-<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?pageNum=${pageNum + 1}'"> --%>
-<%-- 							</c:when> --%>
-<%-- 							<c:otherwise> --%>
-<%-- 								<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${wh.wh_cd}&pageNum=${pageNum + 1}'"> --%>
-<%-- 										<c:when test="!${empty loList }"> --%>
-<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${ar.wh_cd }&seachLocation=${ar.wh_area_cd}&pageNum=${pageNum + 1}'"> --%>
-<%-- 										</c:when> --%>
-<%-- 										<c:otherwise> --%>
-<%-- 											<input type="button" class="btn btn-sm btn-outline-primary" value="다음" onclick="location.href='Wh.wms?searchArea=${lo.wh_cd }&seachLocation=${lo.wh_area_cd }&seachGo=${lo.wh_loc_in_area_cd }&pageNum=${pageNum + 1}'"> --%>
-<%-- 										</c:otherwise> --%>
-<%-- 							</c:otherwise> --%>
-<%-- 						</c:choose> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<input type="button" class="btn btn-sm btn-outline-primary" value="다음"> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</section> -->
         <!-- table 영역 -->
         </div>
-        
         <!-- 본문 영역 --> 
       </div>
       <!-- page-body-wrapper ends -->
