@@ -52,7 +52,7 @@
 			
 			// 1. 입고지시수량 유효성 검사 
 			inQtyArr.each(function(index) {
-			    if (this.value <= 0) { // 입고지시수량이 0 이하이면 알림창
+			    if(this.value <= 0) { // 입고지시수량이 0 이하이면 알림창
 			        alert("입고지시수량을 입력해주세요!\n\n ❌수량은 숫자로만 입력 가능합니다.❌");
 			        isValid = false; // 유효성 체크 실패
 			        return false; // 반복문 종료
@@ -97,9 +97,9 @@
 		    
 		    let sum = 0; // 입고지시수량 합계
 		    
-		    for (let i = 0; i < $("input[id^=in_qty]").length; i++) {
+		    for(let i = 0; i < $("input[id^=in_qty]").length; i++) {
 		        let qty = Number($('input[id^="in_qty"]').eq(i).val()); // 각 인덱스의 입고지시수량
-		        if (!isNaN(qty)) { // 숫자인 경우에만 합산
+		        if(!isNaN(qty)) { // 숫자인 경우에만 합산
 		            sum += qty;
 		        }
 		    }
@@ -113,11 +113,11 @@
 	  	
 	<!-- 새 재고번호 생성 -->
 	function newStockcd(index) {
-		  if ($("#stockcd"+index).val() && $("#stockcd"+index).val() != 0) { // value 값이 이미 존재하는 경우
+		  if($("#stockcd"+index).val() != 0 && $("#stockcd"+index).val() == maxStockCd) { // value 값이 존재하고 이미 신규재고번호가 할당되어있다면
 		    maxStockCd = $("#stockcd"+index).val(); // maxStockCd에 해당 값을 대입
-		  } else if (maxStockCd) { // value 값이 존재하지않고 maxStockCd 값이 설정되어있다면 +1
-		    ++maxStockCd;
-		  } else { // value 값이 존재하지않고 maxStockCd 값이 초기화되지 않은 상태면 최대 재고번호로 설정
+		  } else if(maxStockCd) { // maxStockCd 값이 설정되어있다면 +1
+		  	++maxStockCd;
+		  } else { // value 값이 존재하지않고 maxStockCd 값이 초기화되지 않은 상태면 최대 재고번호+1로 설정
 		   	  $.ajax({
 			      url: 'getMaxstockcd',
 			      type: 'GET',

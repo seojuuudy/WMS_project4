@@ -46,7 +46,7 @@
 		let arr3 = new Array();
 		
 		if($(".checkbox").is(":checked")==false) {
-			alert("항목을 체크해주세용!");
+			alert("입고처리할 항목을 체크해주세요!");
 			return;
 		} else {
 // 		 $('input:checkbox[name="inboundchk"]:checked').each(function(index, item) {
